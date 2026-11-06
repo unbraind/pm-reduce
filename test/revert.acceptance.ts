@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { npmEnvironment, testEnvironment } from '../scripts/environment.ts';
 const changes = [
+  { name: 'complete witness content binding removed', file: 'kernel', pattern: /witness_digest: digest\(\{ certificate: content, owner_identity: state.replay_receipts\[0\].result.identity, algorithm_version: state.algorithm_version, definition: state.definition, requests: state.requests, observations: state.observations \}\)/, replacement: 'witness_digest: digest(content)', test: 'kernel', filter: 'certificate digest binds full' },
   { name: 'native CAS removed', file: 'api', pattern: /const guarded = await host\.client\.withExpectedItemRevisions\(\[\{ id: snapshot.id, itemHash: snapshot.revision \}\], \(\) => host\.client\.update\(snapshot.id, (\{[^\n]+\})\)\);/, replacement: 'const guarded = { result: await host.client.update(snapshot.id, $1), checked: [snapshot.id], unchecked: [] };', test: 'concurrency', filter: 'a competing native write' },
   { name: 'durable replay removed', file: 'api', pattern: /const found = state.replay_receipts.find\(row => row.operation_id === op\);/, replacement: 'const found = undefined;', test: 'api', filter: 'native no-git round trips' },
   { name: 'caller revision check removed', file: 'api', pattern: /snapshot.revision === input.revision/, replacement: 'true', test: 'api', filter: 'typed guards and output budget' },

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
-import { createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, createDirectoryHost } from '../dist/index.js';
+import { createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, createDirectoryHost, canonical } from '../dist/index.js';
 import type { Host } from '../dist/index.js';
 import { fixture, definition, source, reserve, runTrial, outcome, hasCode, historyEvents } from './helpers.ts';
 
@@ -20,6 +20,7 @@ test('native no-git round trips preserve exact text, links, comments, replay and
   for (const cursor of ['garbage', Buffer.from('null').toString('base64url'), packet.next_cursor as string]) await assert.rejects(reductionPacket(host, { id, limit: 2, cursor }), hasCode('stale_cursor'));
   const old = await createReduction(host, input); assert.equal(old.replayed, true); assert.notEqual(old.revision, created.revision); assert.deepEqual(old.result, created.result);
   await assert.rejects(readReduction(host, 'corpus-missing'), hasCode('not_found'));
+  await host.client.create({id:'corpus-transplant',title:'Wrong native owner',type:'Reduction',field:[`reduce_state=${canonical((await readReduction(host,id)).state)}`]}); await assert.rejects(readReduction(host,'corpus-transplant'),hasCode('invalid_record'));
 });
 test('typed guards and output budget refuse before native side effects', async t => {
   const { host, native, id, pmRoot, birth } = await fixture(t); const before = await historyEvents(pmRoot); const next = await nextReductionTrial(host, { id });

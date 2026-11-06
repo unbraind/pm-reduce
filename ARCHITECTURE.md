@@ -40,7 +40,7 @@ If any exact cache identity has both pass and target-fail evidence, reuse is sus
 
 ## Minimality qualification
 
-The certificate checker reconstructs all witnesses independently from observations. A valid certificate binds the complete witness set by digest and includes the best subset, failing observations, every single deletion's exact subset digest, pass witness IDs, observed status and all missing deletion IDs. Supplying a claimed certificate requires exact canonical equality with this independently reconstructed receipt.
+The certificate checker reconstructs all witnesses independently from observations. A valid certificate hashes the owner identity, algorithm version, full frozen definition, all reservations and complete observation contents, including evidence references and attribution; it binds the complete witness set by digest and includes the best subset, failing observations, every single deletion's exact subset digest, pass witness IDs, observed status and all missing deletion IDs. Supplying a claimed certificate requires exact canonical equality with this independently reconstructed receipt.
 
 `one_minimal_under_recorded_oracle` requires a matching failing witness and explicit passes for all single deletions, with no pending or conflicting verdicts. Unknown, invalid, timed-out, missing or unreachable results cannot fill a deletion obligation. Empty failures have a separate non-causal label. Qualification is relative to the declared atomization, original order and recorded oracle. It does not establish a globally smallest input, root cause, authenticated testimony, exhaustive subset search or future reproduction.
 

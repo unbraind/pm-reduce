@@ -18,7 +18,8 @@ export async function readReduction(host: Host, id: string): Promise<Snapshot> {
     const got = await host.client.get(id, { outputInclude: 'full', outputBudget: 'unbounded', outputLimit: 'unbounded' });
     insist('item' in got && 'item_hash' in got && typeof got.item_hash === 'string', 'incomplete_read', 'The host omitted the selected owner revision');
     insist(got.item.type === 'Reduction', 'invalid_record', 'Selected owner is not a Reduction');
-    return { id: got.item.id, revision: got.item_hash, state: readState(got.item.reduce_state) };
+    const state = readState(got.item.reduce_state); insist(state.replay_receipts[0].result.identity === got.item.id, 'invalid_record', 'Stored creation identity differs from the native owner', 'Use the original owner or create a fresh reduction; do not transplant cached journals');
+    return { id: got.item.id, revision: got.item_hash, state };
   } catch (error) { const failure = refusal(error); if (failure.code === 'item_not_found') throw new ReductionRefusal('not_found', 'Reduction owner was not found', 'Select an existing authorized owner'); throw failure; }
 }
 /** Optional crash/interleaving seam; never authoritative state or a lock. */

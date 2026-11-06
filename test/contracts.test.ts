@@ -43,7 +43,7 @@ test('structured input rejects malformed UTF-8, scalar JSON, oversized and ambig
   assert.deepEqual(await inputJson('-', stream(Buffer.from('{"safe":"é"}'))), { safe: 'é' });
   for (const text of ['{', 'null', '[]', '"scalar"', 'x'.repeat(262145)]) await assert.rejects(inputJson(text), hasCode('invalid_input'));
   await assert.rejects(inputJson('-', stream(Buffer.from([255]))), hasCode('invalid_input'));
-  await assert.rejects(inputJson('-', stream(Buffer.concat([Buffer.from('{\"safe\":\"'), Buffer.from([255]), Buffer.from('\"}')]))), hasCode('invalid_input')); await assert.rejects(inputJson('-', stream(Buffer.alloc(262145))), hasCode('invalid_input'));
+  await assert.rejects(inputJson('-', stream(Buffer.concat([Buffer.from('{"safe":"'), Buffer.from([255]), Buffer.from('"}')]))), hasCode('invalid_input')); await assert.rejects(inputJson('-', stream(Buffer.alloc(262145))), hasCode('invalid_input'));
 });
 test('schema ownership, directory routing and native field preservation are explicit', async t => {
   const { native, host, id, birth, pmRoot } = await fixture(t); const port = persistedSchemaPort(native);

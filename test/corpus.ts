@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { editedText, tokenize, exemplarContext } from './fixtures/history.ts';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, fitEnvelope, envelope, OutcomeSchema, canonical } from '../dist/index.js';
+import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, fitEnvelope, envelope, OutcomeSchema, canonical, canonicalSubsetDigest } from '../dist/index.js';
 import { wire } from '../dist/src/output.js';
 import { definition, outcome } from './helpers.ts';
 import type { Host } from '../dist/index.js';
@@ -45,7 +45,7 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
   }
   /** Persist the caller-owned external result before recording it into the reduction journal. */
   async function evidence(subset: string[], result: 'target_fail' | 'pass', execution: number) {
-    const observed_at = new Date().toISOString(); const description = canonical({ scenario: name, subset_ids: subset, result, observed_at, signature: result === 'target_fail' ? name : null });
+    const observed_at = new Date().toISOString(); const description = canonical({ scenario: name, subset_ids: subset, subset_digest: canonicalSubsetDigest(def, subset), oracle_digest: digest(def.oracle), recipe_digest: def.oracle.recipe_digest, subject_digest: def.oracle.subject_digest, environment_digest: def.oracle.environment_digest, result_schema_digest: def.oracle.result_schema_digest, result, observed_at, signature: result === 'target_fail' ? name : null });
     const created = await delivered(host.client.create({ id: `${id}-evidence-${execution}`, title: 'Public historical oracle result', type: 'Task', description }), 1600);
     const revision = await delivered(host.client.readItemRevision(created.item.id), 1600);
     const source_ref = { item_id: created.item.id, item_hash: revision.item_hash, field_pointer: '/description', content_digest: digest(description) }; oracleEvidence.push({ source_ref, description }); return { evidence_ref: source_ref, observed_at };
@@ -54,24 +54,28 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
   const anchor = provenance.sources[name === 'beads-precision' ? 2 : 0]; const payloads = atomsFor(name); const def = definition(16);
   def.original_digest = bytesDigest(materialize(name, payloads)); def.oracle.oracle_key = name; def.oracle.recipe_digest = digest({ harness: historicalOracle.toString(), materialize: materialize.toString(), historical_source: anchor.source_sha256 }); def.oracle.environment_digest = digest({ runtime: process.version, platform: process.platform, architecture: process.arch, harness: 'historical-excerpts-v1' }); def.oracle.result_schema_digest = digest(z.toJSONSchema(OutcomeSchema)); def.oracle.subject_digest = anchor.source_sha256; def.oracle.target_failure_signature = name;
   def.atoms = payloads.map((text, index) => ({ atom_id: `a${index}`, payload_digest: bytesDigest(text), source_ref: { item_id: anchor.native_anchor.item_id, item_hash: anchor.native_anchor.item_hash, field_pointer: anchor.native_anchor.field_pointer, content_digest: anchor.native_anchor.content_digest, citation_id: anchor.revision } }));
-  assert.equal(historicalOracle(name, payloads), true, `${name} must reproduce before reduction`);
+  /** Verify every exact caller artifact byte digest and the original order before execution. */
+  function materialized(ids: string[]): string[] {
+    const selected = new Set(ids); assert.deepEqual(ids, def.atoms.filter(atom => selected.has(atom.atom_id)).map(atom => atom.atom_id));
+    return ids.map(key => { const index = def.atoms.findIndex(atom => atom.atom_id === key); assert.ok(index >= 0); const text = payloads[index]; assert.equal(bytesDigest(text), def.atoms[index].payload_digest); return text; });
+  }
   await delivered(createReduction(host, { id, op: 'birth', title: name, definition: def }), 1600); let actual = 0; let resumes = 0; let cacheHits = 0; const started = performance.now(); const log: { request: string; subset: string[]; result: 'target_fail' | 'pass' }[] = [];
   for (;;) {
     const next = await delivered(nextReductionTrial(host, { id }), 1600); cacheHits = Number(next.cache_hits); if (!next.candidate) break;
     const reserved = await delivered(requestReductionTrial(host, { id, op: `reserve-${actual}`, revision: next.revision, proposal: next.proposal_digest! }), 1600);
-    const reservedInput = next.candidate.subset_ids.map(key => payloads[Number(key.slice(1))]);
+    const reservedInput = materialized(next.candidate.subset_ids); assert.equal(canonicalSubsetDigest(def, next.candidate.subset_ids), next.candidate.subset_digest);
     const result = historicalOracle(name, reservedInput) ? 'target_fail' as const : 'pass' as const; actual++; const retainedEvidence = await evidence(next.candidate.subset_ids, result, actual);
     // Caller retains an externally completed result during the interruption; package never reruns it.
     if (resumes < 5) { const resumed = await delivered(nextReductionTrial(host, { id }), 1600); assert.equal(resumed.status, 'pending_trial'); host = { ...host }; const packet = await delivered(reductionPacket(host, { id, limit: 1 }), 1600); assert.ok(packet.outstanding); resumes++; }
     const current = await delivered(readReduction(host, id), 1600); const request = reserved.result.identity;
     const input = { id, op: `record-${actual}`, revision: current.revision, request, outcome: outcome(def, next.candidate.subset_digest, result, retainedEvidence) };
-    await delivered(recordReductionOutcome(host, input), 1600); log.push({ request, subset: next.candidate.subset_ids, result });
+    await delivered(recordReductionOutcome(host, input), 1600); if (actual === 1) assert.equal(result, 'target_fail', `${name} must reproduce before search`); log.push({ request, subset: next.candidate.subset_ids, result });
     const replay = await delivered(recordReductionOutcome(host, input), 1600); assert.equal(replay.replayed, true);
   }
   let certificate = (await delivered(reductionCertificate(host, { id, budget: 8192 }), 8192)).certificate; assert.equal(certificate.qualification, 'one_minimal_under_recorded_oracle');
   const best = certificate.best_subset!; const independent = [best, ...best.map((_, at) => best.filter((__, index) => index !== at))];
   for (let at = 0; at < independent.length; at++) {
-    const subset = independent[at]; const result = historicalOracle(name, subset.map(key => payloads[Number(key.slice(1))])) ? 'target_fail' as const : 'pass' as const; actual++;
+    const subset = independent[at]; const result = historicalOracle(name, materialized(subset)) ? 'target_fail' as const : 'pass' as const; actual++;
     assert.equal(result, at === 0 ? 'target_fail' : 'pass'); const current = await delivered(readReduction(host, id), 1600); const request = current.state.requests.find(row => JSON.stringify(row.subset_ids) === JSON.stringify(subset))!;
     await delivered(recordReductionOutcome(host, { id, op: `independent-${at}`, revision: current.revision, request: request.request_id, outcome: outcome(def, request.subset_digest, result, await evidence(subset, result, actual)) }), 1600);
   }

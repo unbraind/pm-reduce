@@ -84,3 +84,11 @@ test('pure certificate API validates signatures and frozen journals rather than 
   assert.throws(() => validateReductionCertificate(s, {} as ReturnType<typeof validateReductionCertificate>), hasCode('invalid_certificate'));
   const inherited = structuredClone(s); inherited.definition.original_digest = digest('different-source'); assert.throws(() => validateReductionCertificate(inherited));
 });
+
+test('certificate digest binds full immutable witness content and source identities', () => {
+  const s = state(1); observe(s, 'target_fail'); observe(s, 'pass'); const original = validateReductionCertificate(s); const changed = structuredClone(s);
+  changed.observations[0].evidence_ref.content_digest = digest('different immutable result');
+  const record = changed.replay_receipts.find(row => row.result.kind === 'record' && row.result.identity === changed.observations[0].observation_id)!;
+  record.result.digest = digest(changed.observations[0]); record.result_digest = digest(record.result); readState(changed);
+  assert.throws(() => validateReductionCertificate(changed, original), hasCode('invalid_certificate')); assert.notEqual(validateReductionCertificate(changed).witness_digest, original.witness_digest);
+});

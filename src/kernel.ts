@@ -10,12 +10,12 @@ export function canonicalSubsetDigest(definition: ReductionDefinition, subset: s
 }
 /** Check all frozen oracle and subset identities before any observation is admitted. */
 export function validateOutcome(definition: ReductionDefinition, subsetDigest: string, outcome: Outcome): void {
-  insist(outcome.subset_digest === subsetDigest, 'subset_mismatch', 'Observed subset differs from the reserved trial');
+  insist(outcome.subset_digest === subsetDigest, 'subset_mismatch', 'Observed subset differs from the reserved trial', 'Reconcile the reserved input identity; do not relabel a different materialized subset');
   const oracle = definition.oracle;
-  insist(outcome.oracle_digest === digest(oracle) && outcome.recipe_digest === oracle.recipe_digest && outcome.subject_digest === oracle.subject_digest && outcome.environment_digest === oracle.environment_digest && outcome.result_schema_digest === oracle.result_schema_digest, 'oracle_mismatch', 'Observed oracle differs from the frozen contract');
-  insist(outcome.result === 'unresolved' || outcome.completed, 'invalid_signature', 'A conclusive outcome needs an explicit completed verdict');
-  insist(outcome.result !== 'target_fail' || outcome.actual_signature === oracle.target_failure_signature, 'invalid_signature', 'Target failure signature does not match the declared signature');
-  insist(outcome.result !== 'pass' || outcome.actual_signature === null, 'invalid_signature', 'A pass cannot carry a failure signature; record other failures as unresolved');
+  insist(outcome.oracle_digest === digest(oracle) && outcome.recipe_digest === oracle.recipe_digest && outcome.subject_digest === oracle.subject_digest && outcome.environment_digest === oracle.environment_digest && outcome.result_schema_digest === oracle.result_schema_digest, 'oracle_mismatch', 'Observed oracle differs from the frozen contract', 'Reconcile the frozen contract; create a new owner for a changed source, recipe or environment');
+  insist(outcome.result === 'unresolved' || outcome.completed, 'invalid_signature', 'A conclusive outcome needs an explicit completed verdict', 'Record incomplete execution as unresolved with its retained evidence');
+  insist(outcome.result !== 'target_fail' || outcome.actual_signature === oracle.target_failure_signature, 'invalid_signature', 'Target failure signature does not match the declared signature', 'Keep other failures as unresolved with their actual signature and reason');
+  insist(outcome.result !== 'pass' || outcome.actual_signature === null, 'invalid_signature', 'A pass cannot carry a failure signature; record other failures as unresolved', 'Record a non-target failure as unresolved; pass requires an explicit successful verdict');
 }
 /** Partition a candidate into nonempty ordered chunks without changing its atoms. */
 function partitions(subset: string[], count: number): string[][] {
@@ -107,7 +107,7 @@ function certificateFromJournal(state: ReductionState, claimed?: ReductionCertif
   const missing = deletions.filter(row => row.status !== 'pass').map(row => row.removed_atom);
   const qualification = advanced.status === 'flaky_oracle' ? 'flaky_oracle' : best === null ? (advanced.status === 'baseline_not_failing' ? 'baseline_not_failing' : 'baseline_unresolved') : best.length === 0 ? 'empty_target_failure' : missing.length === 0 && failing.length > 0 && !state.requests.some(row => row.state === 'pending') ? 'one_minimal_under_recorded_oracle' : 'minimality_unproven';
   const content = { qualification, best_subset: best, oracle_digest: digest(state.definition.oracle), failing_witnesses: failing, deletion_witnesses: deletions, missing_deletions: missing, evidence: 'recorded_oracle', limitations: ['Relative to declared ordered atoms and recorded oracle only.', 'Not globally smallest, a proven cause, authenticated testimony or a future reproducibility guarantee.'] } as const;
-  const certificate = parse(ReductionCertificateSchema, { ...content, witness_digest: digest(content) }, true);
+  const certificate = parse(ReductionCertificateSchema, { ...content, witness_digest: digest({ certificate: content, owner_identity: state.replay_receipts[0].result.identity, algorithm_version: state.algorithm_version, definition: state.definition, requests: state.requests, observations: state.observations }) }, true);
   if (claimed !== undefined) { const parsed = ReductionCertificateSchema.safeParse(claimed); insist(parsed.success && canonical(certificate) === canonical(parsed.data), 'invalid_certificate', 'Certificate does not match the complete recorded witness set'); }
   return certificate;
 }

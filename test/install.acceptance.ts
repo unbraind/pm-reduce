@@ -41,10 +41,19 @@ test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', 
       const birth = JSON.parse(run(['reduce', 'create', '--id', 'packed-repro', '--op', 'birth', '--input', '-', '--json'], birthInput)); assert.equal(birth.ok, true);
       assert.equal(JSON.parse(run(['reduce','create','--id','packed-repro','--op','birth','--input','-','--json'],birthInput)).replayed,true);
       let next = JSON.parse(run(['reduce','next','packed-repro','--json'])); assert.equal(next.data.candidate.purpose,'baseline');
+      assert.equal(JSON.parse(run(['reduce','create','--id','packed-repro','--op','birth','--input','-','--json'],JSON.stringify({title:'Different',definition:def}),4)).refusal.code,'operation_conflict');
+      for(const flag of ['--budget','--output-budget']) { const tiny=JSON.parse(run(['reduce','create','--id','packed-tiny','--op','tiny','--input','-',flag,'1','--json'],birthInput,2)); assert.ok(tiny.refusal?.code==='output_budget'||typeof tiny.code==='string'); assert.equal(JSON.parse(run(['reduce','next','packed-tiny','--json'],undefined,3)).refusal.code,'not_found'); }
+      assert.equal(JSON.parse(run(['reduce','request','packed-repro','--op','wrong-proposal','--proposal','f'.repeat(64),'--revision',next.revision,'--json'],undefined,4)).refusal.code,'stale_proposal');
+
       const staleRevision = next.revision;
       for (let index=0;index<2;index++) {
         const requested = JSON.parse(run(['reduce','request','packed-repro','--op',`request-${index}`,'--proposal',next.data.proposal_digest,'--revision',next.revision,'--json'])); assert.equal(requested.ok,true);
         const verdict=outcome(def,next.data.candidate.subset_digest,index===0?'target_fail':'pass');
+        if(index===0) {
+          assert.equal(JSON.parse(run(['reduce','request','packed-repro','--op','pending','--proposal','f'.repeat(64),'--revision',requested.revision,'--json'],undefined,2)).refusal.code,'pending_trial');
+          for(const [patch,expected] of [[{environment_digest:'f'.repeat(64)},'oracle_mismatch'],[{subset_digest:'f'.repeat(64)},'subset_mismatch'],[{actual_signature:'other'},'invalid_signature']] as const) assert.equal(JSON.parse(run(['reduce','record','packed-repro','--request',requested.data.result.identity,'--op',expected,'--revision',requested.revision,'--input','-','--json'],JSON.stringify({...verdict,...patch}),2)).refusal.code,expected);
+        }
+
         const recorded=JSON.parse(run(['reduce','record','packed-repro','--request',requested.data.result.identity,'--op',`record-${index}`,'--revision',requested.revision,'--input','-','--json'],JSON.stringify(verdict)));assert.equal(recorded.ok,true);
         const replayed=JSON.parse(run(['reduce','record','packed-repro','--request',requested.data.result.identity,'--op',`record-${index}`,'--revision',requested.revision,'--input','-','--json'],JSON.stringify(verdict)));assert.equal(replayed.replayed,true);
         next=JSON.parse(run(['reduce','next','packed-repro','--json']));
@@ -52,6 +61,7 @@ test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', 
       assert.equal(JSON.parse(run(['reduce','certificate','packed-repro','--json'])).data.certificate.qualification,'one_minimal_under_recorded_oracle');
       assert.match(run(['reduce','certificate','packed-repro']),/one_minimal_under_recorded_oracle/);
       const page=JSON.parse(run(['reduce','packet','packed-repro','--limit','1','--json']));assert.equal(page.omitted,1);assert.ok(page.next_cursor);
+      assert.equal(JSON.parse(run(['reduce','packet','packed-repro','--limit','2','--cursor',page.next_cursor,'--json'],undefined,4)).refusal.code,'stale_cursor');
       assert.equal(JSON.parse(run(['reduce','packet','packed-repro','--limit','1','--output-cursor',page.next_cursor,'--json'],undefined,2)).code,'read_output_cursor_invalid');
       assert.equal(JSON.parse(run(['reduce','packet','packed-repro','--limit','1','--cursor',page.next_cursor,'--json'])).data.offset,1);
       assert.equal(JSON.parse(run(['reduce','request','packed-repro','--op','stale','--proposal','f'.repeat(64),'--revision',staleRevision,'--json'],undefined,4)).refusal.code,'revision_conflict');
@@ -60,10 +70,15 @@ test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', 
       assert.equal(JSON.parse(run(['reduce','create','--id','packed-unsafe','--op','unsafe','--input','-','--json'],JSON.stringify({title:'\u001b[31m',definition:def}),2)).refusal.code,'invalid_input');
       assert.equal(JSON.parse(run(['reduce','packet','packed-missing','--json'],undefined,3)).refusal.code,'not_found');
       for(const name of ['next','certificate','packet']) {const text=run(['reduce',name,'packed-repro']);assert.ok(Buffer.byteLength(text)<=6400);assert.match(text,/schema_version: 1/);}
-      writeFileSync(join(cwd, 'sdk-write.mjs'), "import assert from 'node:assert/strict';import {createDirectoryHost,readReduction,recordReductionOutcome} from 'pm-reduce';const host=createDirectoryHost(process.cwd()+'/.agents/pm','consumer');const owner=await readReduction(host,'packed-repro');const {observation_id,request_id,evidence,verification_digest,...outcome}=owner.state.observations[0];void observation_id;void evidence;void verification_digest;const input={id:owner.id,op:'packed-sdk-write',revision:owner.revision,request:request_id,outcome};await recordReductionOutcome(host,input);assert.equal((await recordReductionOutcome(host,input)).replayed,true);assert.equal((await readReduction(host,owner.id)).state.observations.length,3);console.log('SDK WRITE OK');\n");
-      assert.match(execute(manager === 'npm' ? 'node' : 'bun', ['sdk-write.mjs'], cwd, safe), /SDK WRITE OK/);
+      writeFileSync(join(cwd, 'sdk-write.ts'), readFileSync('test/packed-sdk-consumer.ts','utf8'));
+      assert.match(execute(manager === 'npm' ? 'node' : 'bun', ['sdk-write.ts'], cwd, safe), /SDK WRITE AND BOUNDARIES OK/);
+      assert.equal(JSON.parse(run(['reduce','next','packed-peer','--json'],undefined,2)).refusal.code,'invalid_record');
       writeFileSync(join(cwd, 'sdk.mjs'), "import assert from 'node:assert/strict';import {createDirectoryHost,readReduction,reductionCertificate,recordReductionOutcome} from 'pm-reduce';const host=createDirectoryHost(process.cwd()+'/.agents/pm','consumer');const owner=await readReduction(host,'packed-repro');assert.equal(owner.state.requests.length,2);assert.equal((await reductionCertificate(host,{id:owner.id})).certificate.qualification,'one_minimal_under_recorded_oracle');const {observation_id,request_id,evidence,verification_digest,...outcome}=owner.state.observations[0];assert.equal(outcome.result,'target_fail');void recordReductionOutcome;void observation_id;void request_id;void evidence;void verification_digest;console.log('SDK OK '+(globalThis.Bun?'bun':'node'));\n");
       const runtime = manager === 'npm' ? 'node' : 'bun'; assert.match(execute(runtime, ['sdk.mjs'], cwd, safe), new RegExp(`SDK OK ${runtime}`));
+      const boundedDef={...def,max_trials:1}; const bounded=JSON.parse(run(['reduce','create','--id','packed-bounded','--op','birth','--input','-','--json'],JSON.stringify({title:'Bounded',definition:boundedDef})));
+      const proposed=JSON.parse(run(['reduce','next','packed-bounded','--json'])); const requested=JSON.parse(run(['reduce','request','packed-bounded','--op','one','--revision',proposed.revision,'--proposal',proposed.data.proposal_digest,'--json']));
+      const completed=JSON.parse(run(['reduce','record','packed-bounded','--op','observed','--request',requested.data.result.identity,'--revision',requested.revision,'--input','-','--json'],JSON.stringify(outcome(boundedDef,proposed.data.candidate.subset_digest))));
+      assert.equal(JSON.parse(run(['reduce','request','packed-bounded','--op','exhausted','--revision',completed.revision,'--proposal','f'.repeat(64),'--json'],undefined,2)).refusal.code,'trial_budget_exhausted'); assert.ok(bounded.ok);
       const installed = join(dirname(dirname(dirname(process.execPath))));
       for (const version of ['v22.19.0', 'v26.13.0']) {
         const node = join(installed, version, 'bin/node');
