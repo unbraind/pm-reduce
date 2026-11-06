@@ -35,7 +35,7 @@ test('ddmin and independent deletion witnesses retain 1-minimality for monotone 
 test('baseline, unresolved, empty failure, budget and conflicting observations cannot fabricate minimality', () => {
   const pass = state(1); observe(pass, 'pass'); assert.equal(advanceReduction(pass).status, 'baseline_not_failing'); assert.equal(validateReductionCertificate(pass).qualification, 'baseline_not_failing');
   const unknown = state(1); observe(unknown, 'unresolved'); assert.equal(advanceReduction(unknown).status, 'baseline_unresolved');
-  const s = state(1); observe(s, 'target_fail'); assert.equal(validateReductionCertificate(s).qualification, 'minimality_unproven'); observe(s, 'unresolved'); assert.equal(validateReductionCertificate(s).qualification, 'minimality_unproven');
+  const s = state(1); observe(s, 'target_fail'); assert.equal(validateReductionCertificate(s).qualification, 'minimality_unproven', 'proof:deletion_obligations'); observe(s, 'unresolved'); assert.equal(validateReductionCertificate(s).qualification, 'minimality_unproven', 'proof:deletion_obligations');
   const empty = state(1); observe(empty, 'target_fail'); observe(empty, 'target_fail'); assert.equal(validateReductionCertificate(empty).qualification, 'empty_target_failure');
   const exhausted = state(1); exhausted.definition.max_trials = 1; exhausted.replay_receipts[0].result.digest = digest(exhausted.definition); exhausted.replay_receipts[0].result_digest = digest(exhausted.replay_receipts[0].result); projectState(exhausted); observe(exhausted, 'target_fail'); assert.equal(advanceReduction(exhausted).status, 'trial_budget_exhausted');
   const pending = state(); const next = advanceReduction(pending).candidate!; pending.requests.push({ ...next, request_id: 'pending', state: 'pending' }); projectState(pending); assert.equal(advanceReduction(pending).status, 'pending_trial');
@@ -47,12 +47,23 @@ test('subset identity preserves order and exact whitespace; observed contracts m
   const key = canonicalSubsetDigest(def, ['a0']); const base = outcome(def, key); validateOutcome(def, key, base);
   for (const field of ['oracle_digest', 'recipe_digest', 'subject_digest', 'environment_digest', 'result_schema_digest'] as const) assert.throws(() => validateOutcome(def, key, { ...base, [field]: digest('different') }), hasCode('oracle_mismatch'));
   assert.throws(() => validateOutcome(def, key, { ...base, subset_digest: digest('different') }), hasCode('subset_mismatch'));
-  for (const patch of [{ actual_signature: 'other' }, { completed: false }, { result: 'pass' as const }]) assert.throws(() => validateOutcome(def, key, { ...base, ...patch }), hasCode('invalid_signature'));
+  for (const patch of [{ actual_signature: 'other' }, { completed: false }, { result: 'pass' as const }]) assert.throws(() => validateOutcome(def, key, { ...base, ...patch }), hasCode('invalid_signature'), 'proof:oracle_signature');
 });
 test('stored state validates versions, relationships, reservations, digests and derived projections', () => {
   const s = state(1); observe(s, 'target_fail'); readState(s);
-  const mutations: ((copy: ReductionState) => void)[] = [copy => { copy.requests.push(copy.requests[0]); }, copy => { copy.requests[0].subset_digest = digest('wrong'); }, copy => { copy.requests[0].oracle_digest = digest('wrong'); }, copy => { copy.requests[0].state = 'pending'; }, copy => { copy.observations[0].request_id = 'absent'; }, copy => { copy.observations[0].verification_digest = digest('fake'); }, copy => { copy.replay_receipts[0].result_digest = digest('wrong'); }, copy => { copy.qualification = 'wrong'; }, copy => { copy.observations.push(copy.observations[0]); }, copy => { copy.replay_receipts.push(copy.replay_receipts[0]); }];
-  for (const change of mutations) { const copy = structuredClone(s); change(copy); assert.throws(() => readState(copy)); }
+  const mutations: [string, (copy: ReductionState) => void][] = [
+    ['Journal identities are duplicated', copy => { copy.requests.push(copy.requests[0]); }],
+    ['Stored trial contract is inconsistent', copy => { copy.requests[0].subset_digest = digest('wrong'); }],
+    ['Stored trial contract is inconsistent', copy => { copy.requests[0].oracle_digest = digest('wrong'); }],
+    ['Stored reservation completion is inconsistent', copy => { copy.requests[0].state = 'pending'; }],
+    ['Observation has no reserved request', copy => { copy.observations.push({ ...copy.observations[0], observation_id: 'orphan', request_id: 'absent' }); appendOperation(copy, 'record', 'orphan', copy.observations.at(-1)); }],
+    ['Verification attribution is inconsistent', copy => { copy.observations[0].verification_digest = digest('fake'); }],
+    ['Replay result or frozen definition digest is inconsistent', copy => { copy.replay_receipts[0].result_digest = digest('wrong'); }],
+    ['Stored reduction projections do not match the journal', copy => { copy.qualification = 'wrong'; }],
+    ['Journal identities are duplicated', copy => { copy.observations.push(copy.observations[0]); }],
+    ['Journal identities are duplicated', copy => { copy.replay_receipts.push(copy.replay_receipts[0]); }],
+  ];
+  for (const [detail, change] of mutations) { const copy = structuredClone(s); change(copy); assert.throws(() => readState(copy), error => hasCode('invalid_record')(error) && error instanceof Error && error.message === detail); }
   assert.throws(() => readState({ ...s, version: 2 }), hasCode('invalid_record'));
 });
 
@@ -82,7 +93,7 @@ test('pure certificate API validates signatures and frozen journals rather than 
   const s = state(1); observe(s, 'target_fail'); observe(s, 'pass'); const corrupted = structuredClone(s); corrupted.observations[0].actual_signature = 'wrong';
   assert.throws(() => validateReductionCertificate(corrupted), hasCode('invalid_signature'));
   assert.throws(() => validateReductionCertificate(s, {} as ReturnType<typeof validateReductionCertificate>), hasCode('invalid_certificate'));
-  const inherited = structuredClone(s); inherited.definition.original_digest = digest('different-source'); assert.throws(() => validateReductionCertificate(inherited));
+  const inherited = structuredClone(s); inherited.definition.original_digest = digest('different-source'); assert.throws(() => validateReductionCertificate(inherited), error => hasCode('invalid_record')(error) && error instanceof Error && error.message === 'Stored trial contract is inconsistent');
 });
 
 test('certificate digest binds full immutable witness content and source identities', () => {
@@ -90,5 +101,5 @@ test('certificate digest binds full immutable witness content and source identit
   changed.observations[0].evidence_ref.content_digest = digest('different immutable result');
   const record = changed.replay_receipts.find(row => row.result.kind === 'record' && row.result.identity === changed.observations[0].observation_id)!;
   record.result.digest = digest(changed.observations[0]); record.result_digest = digest(record.result); readState(changed);
-  assert.throws(() => validateReductionCertificate(changed, original), hasCode('invalid_certificate')); assert.notEqual(validateReductionCertificate(changed).witness_digest, original.witness_digest);
+  assert.throws(() => validateReductionCertificate(changed, original), hasCode('invalid_certificate'), 'proof:witness_binding'); assert.notEqual(validateReductionCertificate(changed).witness_digest, original.witness_digest);
 });

@@ -6,20 +6,21 @@ status: in_progress
 priority: 2
 tags: []
 created_at: "2026-11-06T11:47:06.577Z"
-updated_at: "2026-11-06T13:30:33.613Z"
+updated_at: "2026-11-06T18:31:19.560Z"
 author: codex-agent
 acceptance_criteria: "Monotone, nonmonotone, unresolved and conflicting outcomes preserve exact order and prevent false minimality claims; every deletion has an explicit pass witness."
 parent: reduce-release
-comments[3]{created_at,author,text}:
+comments[4]{created_at,author,text}:
   "2026-11-06T11:52:40.575Z",codex-agent,"Focused kernel tests passed 4 of 4: monotone and nonmonotone predicates, independent deletion checks, unresolved/baseline/empty/flaky controls, frozen contract mismatch, corruption and certificate tamper refusal. Native protocol tests passed 4 of 4 including real no-git tracker replay, links, exact whitespace, budget preflight and optional host verification."
   "2026-11-06T13:14:00.819Z",codex-agent,"Behavioral revert proof passed: eight individually removed safeguards fail in disposable copies (native CAS, durable replay, explicit caller revision, oracle signature, missing-deletion qualification, SDK secret guard, pre-mutation write budget and fatal UTF-8 decoding). The fixed implementation passes 12 restoration tests. The public pure certificate checker validates the complete frozen journal and signatures before reconstructing witnesses. Read validation also binds the stored creation identity to the selected native owner, preventing transplanted cached journals."
   "2026-11-06T13:28:44.551Z",codex-agent,"Certificate integrity review binds witness_digest to owner identity, algorithm version, the full frozen definition, all reservations and every observation field. A schema-valid ledger with unchanged witness IDs but substituted evidence content now invalidates the original certificate. This protects the qualified receipt independently of outer transport revision checks. The matching disposable behavioral revert is included in the release gate."
+  "2026-11-06T17:29:20.575Z",codex-agent,"The build-aware linked command was executed through pm test reduce-kernel --run --progress and passed eight of eight tests. Each mutated journal now asserts its distinguishing refusal detail; the orphan observation fixture preserves the original completed request so the intended orphan invariant is reached. The native test runner reports tracking_disabled under the existing project policy, so this comment records the result without changing that policy."
 files[3]{path,scope}:
   src/kernel.ts,project
   src/schema.ts,project
   test/kernel.test.ts,project
 tests[1]{command,scope,provenance{author,created_at,source_kind,source_ref}}:
-  node --test --test-concurrency=2 test/kernel.test.ts,project,codex-agent,"2026-11-06T12:42:04.504Z",local_mutation,feat/reduce
+  "npm run test:core",project,codex-agent,"2026-11-06T16:48:19.785Z",local_mutation,feat/reduce
 docs[1]{path,scope}:
   ARCHITECTURE.md,project
 body: ""

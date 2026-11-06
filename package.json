@@ -48,7 +48,9 @@
     "test:real-data": "npm run build && node test/real-data.acceptance.ts",
     "test:revert": "npm run build && node test/revert.acceptance.ts",
     "tracker:health": "node scripts/tracker-health.ts",
-    "test:core": "npm run build && node --test --test-concurrency=2 test/kernel.test.ts"
+    "test:core": "npm run build && node --test --test-concurrency=2 test/kernel.test.ts",
+    "test:protocol": "npm run build && node --test --test-concurrency=2 test/api.test.ts test/concurrency.test.ts test/contracts.test.ts test/privacy.test.ts test/capacity.test.ts",
+    "test:proof": "npm run build && node --test --test-concurrency=2 test/corpus-privacy.test.ts test/real-data.test.ts test/workflow.test.ts"
   },
   "peerDependencies": {
     "@unbrained/pm-cli": ">=2026.11.5"

@@ -30,8 +30,8 @@ test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', 
     const journeys: { manager: string; commands: number; runtime: string }[] = [];
     for (const manager of ['npm', 'bun']) {
       const cwd = join(root, manager); mkdirSync(cwd); writeFileSync(join(cwd, 'package.json'), JSON.stringify({ name: 'reduce-consumer', version: '1.0.0', private: true, type: 'module' }));
-      execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit', '--no-fund', archive, '@unbrained/pm-cli@2026.11.5'] : ['add', '--ignore-scripts', archive, '@unbrained/pm-cli@2026.11.5'], cwd, env);
       const safe = { ...env, PM_PATH: join(cwd, '.agents/pm'), PM_AUTHOR: 'consumer', PATH: bin, GIT_CEILING_DIRECTORIES: root, HOME: join(root, 'isolated-home') }; mkdirSync(safe.HOME, { recursive: true });
+execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit', '--no-fund', archive, '@unbrained/pm-cli@2026.11.5'] : ['add', '--ignore-scripts', archive, '@unbrained/pm-cli@2026.11.5'], cwd, safe);
       const runner = manager === 'npm' ? 'npx' : 'bunx'; const prefix = manager === 'npm' ? ['--no-install', 'pm'] : ['--bun', '--no-install', 'pm']; let commands = 0;
       /** Native consumer launcher with a PATH that cannot resolve Git. */
       const run = (args: string[], input?: string, expected = 0) => { commands++; return execute(runner, [...prefix, ...args], cwd, safe, input, expected); };
@@ -80,9 +80,11 @@ test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', 
       const completed=JSON.parse(run(['reduce','record','packed-bounded','--op','observed','--request',requested.data.result.identity,'--revision',requested.revision,'--input','-','--json'],JSON.stringify(outcome(boundedDef,proposed.data.candidate.subset_digest))));
       assert.equal(JSON.parse(run(['reduce','request','packed-bounded','--op','exhausted','--revision',completed.revision,'--proposal','f'.repeat(64),'--json'],undefined,2)).refusal.code,'trial_budget_exhausted'); assert.ok(bounded.ok);
       const installed = join(dirname(dirname(dirname(process.execPath))));
-      for (const version of ['v22.19.0', 'v26.13.0']) {
-        const node = join(installed, version, 'bin/node');
-        if (!existsSync(node)) { assert.ok(process.env.GITHUB_ACTIONS, 'Minimum and current Node runtimes must be present for local acceptance'); continue; }
+      for (const [version, provided] of [['22.19.0', process.env.PM_REDUCE_NODE_22], ['26.13.0', process.env.PM_REDUCE_NODE_26]]) {
+        const candidates = [provided, join(installed, `v${version}`, 'bin/node'), ...(process.env.RUNNER_TOOL_CACHE ? [join(process.env.RUNNER_TOOL_CACHE, 'node', version!, process.arch, 'bin/node')] : [])];
+        const node = candidates.find(candidate => candidate !== undefined && existsSync(candidate));
+        assert.ok(node, `Required Node ${version} runtime is missing; provision both exact acceptance runtimes`);
+        assert.equal(execute(node, ['--version'], cwd, safe).trim(), `v${version}`);
         unlinkSync(join(bin, 'node')); symlinkSync(node, join(bin, 'node'));
         assert.match(execute(node, ['sdk.mjs'], cwd, safe), /SDK OK node/);
         const certificate = JSON.parse(execute('npx', ['--no-install', 'pm', 'reduce', 'certificate', 'packed-repro', '--json'], cwd, safe)); assert.equal(certificate.data.certificate.qualification,'one_minimal_under_recorded_oracle');

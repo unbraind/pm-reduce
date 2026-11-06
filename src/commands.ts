@@ -55,7 +55,10 @@ export async function runCommand(command: string, ctx: CommandHandlerContext): P
     else if (command === 'certificate') data = await reductionCertificate(host, { id, budget });
     else { insist(command === 'packet', 'invalid_input', 'Unknown reduce command'); data = await reductionPacket(host, { id, budget, limit: integer(ctx.global.outputLimit ?? flags.limit, 20), cursor: flags.cursor === undefined ? ctx.global.outputCursor : scalar(flags.cursor) }); }
     return fitEnvelope(host, envelope(data), budget);
-  } catch (error) { return fitEnvelope({ fitOutputEnvelope: ctx.sdk?.fitOutputEnvelope }, refusalEnvelope(refusal(error)), 1600); }
+  } catch (error) {
+    const value = refusalEnvelope(refusal(error));
+    try { return fitEnvelope({ fitOutputEnvelope: ctx.sdk?.fitOutputEnvelope }, value, 1600); } catch { return refusalEnvelope(new ReductionRefusal('outcome_unknown', 'Host refusal fitting failed', 'Reconcile the original operation key on a conforming host')); }
+  }
 }
 /** Contribute schema and command contracts without durable activation side effects. */
 export function register(api: ExtensionApi): void {

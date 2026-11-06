@@ -73,20 +73,26 @@ export function canonical(value: unknown): string {
 /** Compute the canonical SHA-256 content identity. */
 export function digest(value: unknown): string { return createHash('sha256').update(canonical(value)).digest('hex'); }
 /** Shared pre-write privacy validation; legacy state is validated structurally, not reclassified. */
-export function guardSubmitted(value: unknown, seen = new Set<object>(), depth = 0): void {
-  insist(depth <= 16, 'invalid_input', 'Input nesting exceeds sixteen levels');
-  if (typeof value === 'string') {
-    insist(value.length <= 8000 && value.isWellFormed(), 'invalid_input', 'Text is oversized or malformed Unicode');
-    insist(!/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/u.test(value), 'invalid_input', 'Control sequences are forbidden');
-    insist(!/(?:[\\/](?:home|Users)[\\/]|[\\/]root(?:[\\/]|\b))/iu.test(value), 'invalid_input', 'Private home paths are forbidden');
-    insist(scanMutationSecrets(value).length === 0, 'invalid_input', 'SDK privacy guard detected credential-shaped content');
-  } else if (value !== null && typeof value === 'object') {
-    insist(Array.isArray(value) || Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null, 'invalid_input', 'Only plain JSON data is supported');
-    insist(!seen.has(value), 'invalid_input', 'Cyclic input is forbidden'); seen.add(value);
-    for (const name of Reflect.ownKeys(value)) { const descriptor = Object.getOwnPropertyDescriptor(value, name)!; insist(typeof name === 'string' && 'value' in descriptor && (descriptor.enumerable || (Array.isArray(value) && name === 'length')), 'invalid_input', 'Only enumerable JSON data properties are supported'); }
-    for (const [name, child] of Object.entries(value)) { insist(!['__proto__', 'prototype', 'constructor'].includes(name), 'invalid_input', 'Prototype keys are forbidden'); guardSubmitted(child, seen, depth + 1); }
-    seen.delete(value);
+export function guardSubmitted(input: unknown): void {
+  const seen = new Set<object>(); let visits = 0;
+  /** Bound repeated graph visits as well as active-path depth and cycles. */
+  function visit(value: unknown, depth: number): void {
+    insist(++visits <= 32768, 'invalid_input', 'Input traversal exceeds the work limit');
+    insist(depth <= 16, 'invalid_input', 'Input nesting exceeds sixteen levels');
+    if (typeof value === 'string') {
+      insist(value.length <= 8000 && value.isWellFormed(), 'invalid_input', 'Text is oversized or malformed Unicode');
+      insist(!/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/u.test(value), 'invalid_input', 'Control sequences are forbidden');
+      insist(!/(?:^|[\s"'`([{=:,;<>])(?:file:\/\/)?(?:[a-z]:[\\/](?:Users|home)[\\/]|\/(?:home|Users)\/|\/root(?:\/|$))/iu.test(value), 'invalid_input', 'Private home paths are forbidden');
+      insist(scanMutationSecrets(value).length === 0, 'invalid_input', 'SDK privacy guard detected credential-shaped content');
+    } else if (value !== null && typeof value === 'object') {
+      insist(Array.isArray(value) || Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null, 'invalid_input', 'Only plain JSON data is supported');
+      insist(!seen.has(value), 'invalid_input', 'Cyclic input is forbidden'); seen.add(value);
+      for (const name of Reflect.ownKeys(value)) { const descriptor = Object.getOwnPropertyDescriptor(value, name)!; insist(typeof name === 'string' && 'value' in descriptor && (descriptor.enumerable || (Array.isArray(value) && name === 'length')), 'invalid_input', 'Only enumerable JSON data properties are supported'); }
+      for (const [name, child] of Object.entries(value)) { insist(!['__proto__', 'prototype', 'constructor'].includes(name), 'invalid_input', 'Prototype keys are forbidden'); visit(child, depth + 1); }
+      seen.delete(value);
+    }
   }
+  visit(input, 0);
 }
 /** Strict schema parse with bounded diagnostics that never echo submitted text. */
 export function parse<T>(schema: z.ZodType<T>, value: unknown, stored = false): T {

@@ -1,4 +1,4 @@
-import { isItemAlreadyExistsError } from '@unbrained/pm-cli/sdk';
+import { isItemAlreadyExistsError, normalizeItemId } from '@unbrained/pm-cli/sdk';
 import { capable } from './host.ts';
 import type { Host, Snapshot } from './host.ts';
 import { insist, ReductionRefusal, refusal } from './errors.ts';
@@ -50,8 +50,10 @@ async function receipt(host: Host, id: string, operation: ReductionState['replay
 export async function createReduction(host: Host, raw: CreateReductionInput): Promise<MutationReceipt> {
   try {
     const submitted = parse(CreateReductionInputSchema, raw); capable(host);
-    const related = [...new Set(await Promise.all(submitted.related.map(async id => await host.normalizeId?.(id) ?? id)))].sort();
-    const input = parse(CreateReductionInputSchema, { ...submitted, id: await host.normalizeId?.(submitted.id) ?? submitted.id, related });
+    insist(host.normalizeId !== undefined || host.idPrefix !== undefined, 'backend_unsupported', 'Creation requires the native identity policy', 'Supply normalizeId or the native idPrefix before creating an owner');
+    const normalize = host.normalizeId?.bind(host) ?? (async (id: string) => normalizeItemId(id, host.idPrefix!));
+    const related = [...new Set(await Promise.all(submitted.related.map(normalize)))].sort();
+    const input = parse(CreateReductionInputSchema, { ...submitted, id: await normalize(submitted.id), related });
     const state: ReductionState = { version: 1, package: 'pm-reduce', algorithm_version: 'ddmin-1', definition: input.definition, best_failing_subset: null, partition_cursor: '', requests: [], observations: [], trial_budget: { limit: input.definition.max_trials, reserved: 0, completed: 0, pending: 0 }, qualification: '', replay_receipts: [] };
     const operation = remember(state, input.op, requestDigest(input), 'create', input.id, input.definition);
     finish(host, receiptData(input.id, 'f'.repeat(64), operation, false), input.budget);

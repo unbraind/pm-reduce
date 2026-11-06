@@ -18,15 +18,22 @@ function walk(value: unknown, visit: (node: Record<string, unknown>) => void) {
 }
 /** Corpus harness reads only the frozen local provenance file and imports reviewed modules. */
 function confined(source: string) {
-  const tree = parse(source, { sourceType: 'module', plugins: ['typescript'] }); let reads = 0;
+  const tree = parse(source, { sourceType: 'module', plugins: ['typescript'] }); let reads = 0; const readNames = new Set(['readFile', 'readFileSync']);
   const imports = new Set(['zod', 'node:assert/strict', './fixtures/history.ts', 'node:fs/promises', 'node:crypto', '../dist/index.js', '../dist/src/output.js', './helpers.ts']);
   walk(tree, node => {
-    if (node.type === 'ImportDeclaration') assert.ok(imports.has((node.source as { value: string }).value), 'Unreviewed corpus import');
+    if (node.type === 'ImportSpecifier' && ['readFile', 'readFileSync'].includes((node.imported as { name?: string }).name ?? '')) readNames.add((node.local as { name: string }).name);
+    if (node.type === 'VariableDeclarator' && readNames.has((node.init as { name?: string } | null)?.name ?? '')) readNames.add((node.id as { name: string }).name);
+  });
+  walk(tree, node => {
+    if (node.type === 'ImportDeclaration') {
+      const from = (node.source as { value: string }).value; assert.ok(imports.has(from), 'Unreviewed corpus import');
+      if (from === 'node:fs/promises') assert.ok((node.specifiers as { type: string; imported?: { name: string }; local: { name: string } }[]).every(specifier => specifier.type === 'ImportSpecifier' && specifier.imported?.name === 'readFile' && specifier.local.name === 'readFile'), 'Only the reviewed provenance reader may be imported');
+    }
     assert.ok(node.type !== 'ImportExpression', 'Dynamic corpus imports are forbidden');
     if (node.type === 'CallExpression') {
-      const callee = node.callee as { type: string; name?: string };
-      assert.ok(!['fetch', 'eval', 'require', 'execFileSync', 'spawn', 'resolve'].includes(callee.name ?? ''), 'Unreviewed corpus capability');
-      if (callee.type === 'Identifier' && callee.name === 'readFile') { reads++; assert.equal(source.slice(node.start as number, node.end as number), "readFile('test/fixtures/provenance.json', 'utf8')", 'Unreviewed corpus read'); }
+      const callee = node.callee as { type: string; name?: string; property?: { name?: string; value?: string } }; const name = callee.name ?? callee.property?.name ?? callee.property?.value ?? '';
+      assert.ok(!['fetch', 'eval', 'require', 'execFileSync', 'spawn', 'resolve'].includes(name), 'Unreviewed corpus capability');
+      if (readNames.has(name)) { reads++; assert.equal(source.slice(node.start as number, node.end as number), "readFile('test/fixtures/provenance.json', 'utf8')", 'Unreviewed corpus read'); }
     }
   });
   assert.equal(reads, 1);
@@ -35,7 +42,7 @@ test('public corpus guard confines reads and rejects private citations and sourc
   for (const file of ['test/corpus.ts', 'test/fixtures/history.ts', 'test/fixtures/provenance.json', 'docs/real-data-receipt.json']) publicText(readFileSync(file, 'utf8'));
   for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) { assert.throws(() => publicText(`https://github.com/example/${name}`)); publicText(`${name}-tools`); }
   const source = readFileSync('test/corpus.ts', 'utf8'); confined(source);
-  for (const changed of [source.replace('test/fixtures/provenance.json', '../unreviewed/input.json'), source + "\nawait fetch('https://example.invalid');", source + "\nawait import('node:fs');", source.replace("'./fixtures/history.ts'", "'../unreviewed.ts'")]) assert.throws(() => confined(changed));
+  for (const changed of [source.replace('test/fixtures/provenance.json', '../unreviewed/input.json'), source + "\nawait fetch('https://example.invalid');", source + "\nawait import('node:fs');", source.replace("'./fixtures/history.ts'", "'../unreviewed.ts'"), source + "\nimport * as fs from 'node:fs/promises'; await fs.readFile('extra', 'utf8');", source + "\nimport {readFile as load} from 'node:fs/promises'; await load('extra', 'utf8');", source + "\nconst load = readFile; await load('extra', 'utf8');", source + "\nawait globalThis.fetch('https://example.invalid');"]) assert.throws(() => confined(changed));
 });
 test('frozen historical excerpts retain exact source and fixture content identities', () => {
   const fixture = readFileSync('test/fixtures/history.ts', 'utf8');
@@ -54,4 +61,15 @@ test('production has no subprocess, network, payload-file or alternate storage e
     const tree = parse(readFileSync(file, 'utf8'), { sourceType: 'module', plugins: ['typescript'] });
     walk(tree, node => { if (node.type === 'ImportDeclaration') assert.ok(!/node:(?:child_process|fs|http|net)|sqlite|postgres/u.test((node.source as { value: string }).value)); if (node.type === 'CallExpression') assert.ok(!['fetch', 'eval', 'spawn', 'exec', 'execFile'].includes((node.callee as { name?: string }).name ?? '')); });
   }
+});
+
+test('documented public metrics match the preserved published receipt', () => {
+  const receipt = JSON.parse(readFileSync('docs/real-data-receipt.json', 'utf8')) as { receipts: { scenario: string; initial_atoms: number; final_atoms: number; original_bytes: number; reduced_bytes: number; reserved_trials: number; actual_trials: number; outcomes: { target_fail: number; pass: number; unresolved: number }; resumes: number; packet_estimated_tokens: number; raw_estimated_tokens: number; latency_ms: number; packet_bytes: number; manual_log_bytes: number; total_delivered_bytes: number; delivered_results: number; complete_sdk_snapshot_bytes: number; auxiliary_sdk_bytes: number }[] };
+  const document = readFileSync('docs/real-data.md', 'utf8');
+  for (const row of receipt.receipts) {
+    assert.ok(document.includes(`| ${row.scenario} | ${row.initial_atoms} → ${row.final_atoms} | ${row.original_bytes} → ${row.reduced_bytes} | ${row.reserved_trials} / ${row.actual_trials} | ${row.outcomes.target_fail} / ${row.outcomes.pass} / ${row.outcomes.unresolved} | ${row.resumes} | ${row.packet_estimated_tokens} | ${row.raw_estimated_tokens} |`));
+    const paragraph = document.split('\n').find(line => line.startsWith(`- [${row.scenario}]`))!;
+    for (const text of [`${row.packet_bytes} delivered packet bytes`, `${row.manual_log_bytes} bytes for the complete native owner log`, `${row.total_delivered_bytes} bytes across ${row.delivered_results} results`, `${row.complete_sdk_snapshot_bytes} raw SDK snapshot bytes`, `${row.auxiliary_sdk_bytes} auxiliary SDK bytes`, `${row.latency_ms} ms`]) assert.ok(paragraph.includes(text), `Published metric drift: ${row.scenario} ${text}`);
+  }
+  assert.ok(!readFileSync('test/real-data.acceptance.ts', 'utf8').includes("writeFile('docs/real-data-receipt.json'"));
 });

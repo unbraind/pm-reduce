@@ -1,7 +1,7 @@
 import { PmClient, normalizeItemId } from '@unbrained/pm-cli/sdk/core';
 import { readSettings, fitOutputEnvelope } from '@unbrained/pm-cli/sdk';
 import type { ReductionState } from './schema.ts';
-import { insist } from './errors.ts';
+import { insist, ReductionRefusal } from './errors.ts';
 
 /** Host-owned capability evidence; method presence alone is insufficient. */
 export interface Host {
@@ -15,6 +15,8 @@ export interface Host {
   settings?: () => Promise<unknown>;
   /** Normalize native identities using the backend-owned prefix policy. */
   normalizeId?: (id: string) => Promise<string>;
+  /** Native prefix for injected hosts without an asynchronous normalizer. */
+  idPrefix?: string;
   /** Explicit create-time schema provisioning for directory SDK consumers. */
   prepareCreate?: () => Promise<void>;
   /** Optional trusted immutable-result verifier; absence means reported evidence only. */
@@ -63,7 +65,10 @@ function nativeOptions<T extends { field?: string[] }>(options: T | undefined): 
   const { field, ...rest } = options ?? {} as T;
   if (field === undefined) return rest;
   insist(field.length === 1 && field[0].startsWith('reduce_state='), 'invalid_input', 'Directory adapter only accepts its owned custom field');
-  return { ...rest, reduceState: JSON.parse(field[0].slice('reduce_state='.length)) as unknown };
+  let reduceState: unknown;
+  try { reduceState = JSON.parse(field[0].slice('reduce_state='.length)) as unknown; } catch { throw new ReductionRefusal('invalid_input', 'Malformed reduce_state JSON'); }
+  insist(reduceState !== null && typeof reduceState === 'object' && !Array.isArray(reduceState), 'invalid_input', 'reduce_state must be a JSON object');
+  return { ...rest, reduceState };
 }
 
 /** Adapt native project-schema routing while retaining the SDK client revision scope. */

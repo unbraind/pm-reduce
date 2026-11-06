@@ -9,7 +9,7 @@ test('native no-git round trips preserve exact text, links, comments, replay and
   const { host, native, id, pmRoot, birth } = await fixture(t, false, definition(4));
   const related = (await native.create({ id: 'corpus-related', title: 'Investigation', type: 'Task' })).item.id;
   const input = { ...birth, related: [related, related] }; const created = await createReduction(host, input);
-  assert.equal(created.result.kind, 'create'); const count = await historyEvents(pmRoot); const repeated = await createReduction(host, { ...input, id: 'repro', op: ' birth ', budget: 1800 }); assert.equal(repeated.replayed, true); assert.equal(await historyEvents(pmRoot), count);
+  assert.equal(created.result.kind, 'create'); const count = await historyEvents(pmRoot); await assert.doesNotReject(async () => { const repeated = await createReduction(host, { ...input, id: 'repro', op: ' birth ', budget: 1800 }); assert.equal(repeated.replayed, true); assert.equal(await historyEvents(pmRoot), count); }, 'proof:durable_replay');
   await assert.rejects(createReduction(host, { ...input, title: 'Changed' }), hasCode('operation_conflict'));
   const got = await native.get(id, { outputInclude: 'full', outputBudget: 'unbounded' }); assert.ok('item' in got); assert.ok(got.item.dependencies?.some(row => row.id === related)); assert.equal((await readReduction(host, id)).state.definition.atoms[0].label, '  atom 0\n ');
   let index = 0;
@@ -25,13 +25,13 @@ test('native no-git round trips preserve exact text, links, comments, replay and
 test('typed guards and output budget refuse before native side effects', async t => {
   const { host, native, id, pmRoot, birth } = await fixture(t); const before = await historyEvents(pmRoot); const next = await nextReductionTrial(host, { id });
   await assert.rejects(requestReductionTrial(host, { id, op: 'bad', revision: next.revision, proposal: digest('wrong') }), hasCode('stale_proposal'));
-  await assert.rejects(requestReductionTrial(host, { id, op: 'bad', revision: digest('stale'), proposal: next.proposal_digest! }), hasCode('revision_conflict'));
-  await assert.rejects(requestReductionTrial(host, { id, op: 'bad', revision: next.revision, proposal: next.proposal_digest!, budget: 1 }), hasCode('output_budget')); assert.equal(await historyEvents(pmRoot), before);
-  await assert.rejects(createReduction(host, { ...birth, id: 'corpus-small', budget: 1 }), hasCode('output_budget')); await assert.rejects(native.get('corpus-small'));
+  await assert.rejects(requestReductionTrial(host, { id, op: 'bad', revision: digest('stale'), proposal: next.proposal_digest! }), hasCode('revision_conflict'), 'proof:caller_revision');
+  await assert.rejects(requestReductionTrial(host, { id, op: 'bad', revision: next.revision, proposal: next.proposal_digest!, budget: 1 }), hasCode('output_budget'), 'proof:write_budget'); assert.equal(await historyEvents(pmRoot), before, 'proof:write_budget');
+  await assert.rejects(createReduction(host, { ...birth, id: 'corpus-small', budget: 1 }), hasCode('output_budget')); await assert.rejects(native.get('corpus-small'), hasCode('item_not_found'));
   const reservation = await reserve(host); const snapshot = await readReduction(host, id); const record = { id, op: 'result', revision: snapshot.revision, request: reservation.receipt.result.identity, outcome: outcome(birth.definition, reservation.candidate.subset_digest) };
   await assert.rejects(requestReductionTrial(host, { id, op: 'duplicate', revision: snapshot.revision, proposal: next.proposal_digest! }), hasCode('pending_trial'));
   assert.equal((await nextReductionTrial(host, { id })).status, 'pending_trial');
-  for (const patch of [{ subset_digest: digest('wrong') }, { environment_digest: digest('wrong') }, { actual_signature: 'other' }]) await assert.rejects(recordReductionOutcome(host, { ...record, outcome: { ...record.outcome, ...patch } }));
+  for (const [patch, code] of [[{ subset_digest: digest('wrong') }, 'subset_mismatch'], [{ environment_digest: digest('wrong') }, 'oracle_mismatch'], [{ actual_signature: 'other' }, 'invalid_signature']] as const) await assert.rejects(recordReductionOutcome(host, { ...record, outcome: { ...record.outcome, ...patch } }), hasCode(code));
   await assert.rejects(recordReductionOutcome(host, { ...record, request: 'missing' }), hasCode('invalid_input'));
   await recordReductionOutcome(host, record);
   await assert.rejects(recordReductionOutcome(host, { ...record, outcome: { ...record.outcome, reason: 'different' } }), hasCode('operation_conflict'));

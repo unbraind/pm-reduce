@@ -4,7 +4,7 @@ import { createExtensionTestHarness, decodeToon } from '@unbrained/pm-cli/sdk/te
 import { fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError } from '@unbrained/pm-cli/sdk';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
 import extension, { createReduction, readReduction, reductionPacket, envelope, fitEnvelope, ReductionRefusal, digest, exitCode } from '../dist/index.js';
-import type { ReductionResult } from '../dist/index.js';
+import type { ReductionResult, Host } from '../dist/index.js';
 import { runCommand, inputJson } from '../dist/src/commands.js';
 import { persistedSchemaPort } from '../dist/src/host.js';
 import { refusal, insist } from '../dist/src/errors.js';
@@ -42,16 +42,16 @@ test('structured input rejects malformed UTF-8, scalar JSON, oversized and ambig
   async function* stream(data: Uint8Array) { yield data; }
   assert.deepEqual(await inputJson('-', stream(Buffer.from('{"safe":"é"}'))), { safe: 'é' });
   for (const text of ['{', 'null', '[]', '"scalar"', 'x'.repeat(262145)]) await assert.rejects(inputJson(text), hasCode('invalid_input'));
-  await assert.rejects(inputJson('-', stream(Buffer.from([255]))), hasCode('invalid_input'));
-  await assert.rejects(inputJson('-', stream(Buffer.concat([Buffer.from('{"safe":"'), Buffer.from([255]), Buffer.from('"}')]))), hasCode('invalid_input')); await assert.rejects(inputJson('-', stream(Buffer.alloc(262145))), hasCode('invalid_input'));
+  await assert.rejects(inputJson('-', stream(Buffer.from([255]))), hasCode('invalid_input'), 'proof:fatal_utf8');
+  await assert.rejects(inputJson('-', stream(Buffer.concat([Buffer.from('{"safe":"'), Buffer.from([255]), Buffer.from('"}')]))), hasCode('invalid_input'), 'proof:fatal_utf8'); await assert.rejects(inputJson('-', stream(Buffer.alloc(262145))), hasCode('invalid_input'));
 });
 test('schema ownership, directory routing and native field preservation are explicit', async t => {
   const { native, host, id, birth, pmRoot } = await fixture(t); const port = persistedSchemaPort(native);
   await port.update(id, { description: 'Peer context stays intact' });
-  for (const fields of [[], ['other=x']]) await assert.rejects(port.update(id, { field: fields }), hasCode('invalid_input'));
+  for (const fields of [[], ['other=x'], ['reduce_state={'], ['reduce_state=null'], ['reduce_state=[]'], ['reduce_state=1'], ['reduce_state=true'], ['reduce_state="scalar"']]) await assert.rejects(port.update(id, { field: fields }), hasCode('invalid_input'), 'proof:adapter_json');
   await assert.rejects(port.create()); await native.create({ id: 'corpus-peer', title: 'Peer', type: 'Task' }); await assert.rejects(readReduction(host, 'corpus-peer'), hasCode('invalid_record'));
   await assert.rejects(createReduction(host, { ...birth, id: 'corpus-peer' }), hasCode('invalid_record'));
-  const bare = { ...host, normalizeId: undefined, prepareCreate: undefined, fitOutputEnvelope: undefined }; await createReduction(bare, { ...birth, id: 'corpus-bare', related: ['corpus-peer'] });
+  const bare = { ...host, normalizeId: undefined, idPrefix: 'corpus', prepareCreate: undefined, fitOutputEnvelope: undefined }; await createReduction(bare, { ...birth, id: 'corpus-bare', related: ['corpus-peer'] });
   await assert.rejects(createReduction(host, { ...birth, id: 'corpus-missing-link', related: ['corpus-missing'] }));
   await native.schemaRemoveType('Reduction'); await native.schemaAddType('Reduction', { folder: 'peer', description: 'Peer type' }); await assert.rejects(createReduction(host, { ...birth, id: 'corpus-collision' }), hasCode('invalid_record'));
   const fresh = await fixture(t, false); const dynamic = persistedSchemaPort(fresh.native, true); const created = await dynamic.create({ id: 'corpus-route', title: 'Native', type: 'Task' }); await dynamic.update(created.item.id, { description: 'Native route' });
@@ -83,6 +83,7 @@ test('exact fitting provides usable minimums, hard ceilings and fail-closed host
 });
 test('refusal mapping and rendering never emit raw exceptions or active control sequences', () => {
   for (const [code, expected] of [['not_found', 3], ['revision_conflict', 4], ['operation_conflict', 4], ['stale_cursor', 4], ['stale_proposal', 4], ['backend_unsupported', 5], ['permission_denied', 5], ['incomplete_read', 5], ['outcome_unknown', 5], ['invalid_input', 2]] as const) assert.equal(exitCode(code), expected);
+  assert.equal(exitCode('stale_revision', 4), 4);
   assert.equal(refusal(new Error('untrusted sensitive content')).code, 'outcome_unknown');
   const expected = createPmCliExpectedError('not reflected', { exitCode: 4, context: { code: 'item_revision_conflict', required: 'Reread' } }); assert.equal(refusal(expected).code, 'revision_conflict'); assert.match(refusal(expected).remedy, /original operation key/); Object.assign(expected, { remedy: '/' + ['home','example','private'].join('/') }); assert.match(refusal(expected).remedy, /original operation key/); assert.ok(!refusal(expected).remedy.includes('private'));
   assert.equal(refusal(createPmCliExpectedError('safe', { context: { code: 'permission_denied' } })).code, 'permission_denied');
@@ -90,5 +91,22 @@ test('refusal mapping and rendering never emit raw exceptions or active control 
   for (const value of [null, 'data', {}, { read_output: {} }]) assert.ok(renderOutput(value, 'json').endsWith('\n'));
   for (const value of [{ output_budget_exceeded: {} }, { read_output: { strings_compacted: true } }, { read_output: { rows_compacted: true } }, { read_output: { result_omitted: true } }]) assert.equal(JSON.parse(renderOutput(value, 'json')).refusal.code, 'output_budget');
   assert.equal(JSON.parse(renderOutput({ huge: 'x'.repeat(40000) }, 'json')).refusal.code, 'output_budget');
-  for (const format of ['json', 'toon'] as const) assert.ok(!wire({ text: '\u001b[31m\u202e' }, format).includes('\u001b'));
+  for (const format of ['json', 'toon'] as const) { const value = { text: '\u001b[31m\u0085\u202e', rows: ['\u0085', '\u202e'] }; const rendered = wire(value, format); assert.ok(!/[\u001b\u0085\u202e]/u.test(rendered), 'proof:inert_roundtrip'); assert.deepEqual(format === 'json' ? JSON.parse(rendered) : decodeToon(rendered), value, 'proof:inert_roundtrip'); }
+});
+
+test('creation identity policy and failing fitter refuse safely before effects', async t => {
+  const { host, native, birth, pmRoot } = await fixture(t);
+  const bare = { ...host, normalizeId: undefined };
+  await assert.rejects(createReduction(bare, { ...birth, id: 'unprefixed' }), hasCode('backend_unsupported'), 'proof:identity_policy');
+  const explicit = { ...bare, idPrefix: 'corpus' };
+  const created = await createReduction(explicit, { ...birth, id: 'canonical' });
+  assert.equal((await readReduction(explicit, created.owner_id)).id, 'corpus-canonical', 'proof:identity_policy');
+  const methodHost: Host = { ...host, normalizeId: async function (id: string) { assert.ok(this === methodHost); return host.normalizeId!(id); } };
+  await assert.doesNotReject(() => createReduction(methodHost, { ...birth, id: 'method-owner' }), 'proof:normalizer_binding');
+  const canonical = await createReduction(explicit, { ...birth, id: 'corpus-already' }); assert.equal((await readReduction(explicit, canonical.owner_id)).id, 'corpus-already');
+  const context = { command: 'reduce packet', args: [birth.id], options: {}, global: {}, pm_root: pmRoot, sdk: { client: native, readSettingsSection: async () => ({ value: undefined }), fitOutputEnvelope: () => { throw new Error('fitter unavailable'); } } } as unknown as CommandHandlerContext;
+  let result!: ReductionResult; await assert.doesNotReject(async () => { result = await runCommand('packet', context) as ReductionResult; }, 'proof:fitter_fallback');
+  assert.equal(result.ok, false, 'proof:fitter_fallback'); assert.equal(result.refusal?.code, 'outcome_unknown'); assert.ok(Buffer.byteLength(wire(result, 'json')) < 6400);
+  context.sdk!.fitOutputEnvelope = () => { throw new ReductionRefusal('permission_denied', 'x'.repeat(40000)); }; const bounded = await runCommand('packet', context) as ReductionResult; assert.equal(bounded.refusal?.code, 'outcome_unknown'); assert.ok(Buffer.byteLength(wire(bounded, 'json')) < 6400);
+  const stale = refusal(createPmCliExpectedError('safe', { exitCode: 4, context: { code: 'stale_revision' } })); assert.equal(refusalEnvelope(stale).exit_code, 4, 'proof:native_exit'); assert.equal(stale.retryable, true);
 });

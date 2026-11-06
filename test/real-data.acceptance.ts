@@ -10,6 +10,6 @@ try {
   const receipts = [];
   const pmRoot = join(root, 'tracker'); const native = new PmClient({ pmRoot, cwd: root, author: 'public-proof', noExtensions: true }); await native.init('public', { defaults: true, agentGuidance: 'skip', mergeFence: false });
   for (const name of scenarios) receipts.push(await reproduce(createDirectoryHost(pmRoot, 'public-proof'), `public-${name}`, name));
-  await writeFile('docs/real-data-receipt.json', JSON.stringify({ schema_version: 1, evidence: 'reported_oracle', receipts }, null, 2) + '\n');
+  await writeFile('real-data-receipt.local.json', JSON.stringify({ schema_version: 1, evidence: 'reported_oracle', receipts }, null, 2) + '\n');
   console.log(JSON.stringify(receipts.map(({ journal, oracle_evidence, reduction_snapshot, certificate, ...summary }) => { void journal; void oracle_evidence; void reduction_snapshot; void certificate; return summary; }), null, 2));
 } finally { await rm(root, { recursive: true, force: true }); }

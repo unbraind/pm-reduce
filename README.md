@@ -112,7 +112,7 @@ const complete = await readReduction(host, 'repro');
 
 `readReduction` is an authorized unbounded selected-owner SDK read for integrators. The six domain commands apply the budget contract. `advanceReduction(state)`, `canonicalSubsetDigest(definition,ids)` and `validateReductionCertificate(state,claimed?)` are pure APIs. The certificate checker reconstructs the witness set and refuses a mismatched supplied certificate. `readState` validates storage and its journal projections. `canonical` and `digest` hash canonical JSON while preserving array order and exact string whitespace; artifact byte hashes are the caller's responsibility.
 
-An injected `Host` supplies an already authorized native client, certified `native_item_cas` and `create_if_absent` capabilities, and optionally the native whole-envelope fitter, read-only settings, ID normalizer, create-time schema provisioning and trusted immutable-result verification. Method presence alone is not capability evidence. Missing guarantees refuse before writes. The directory adapter and an independently injected client contract are tested; database and MCP implementations are not claimed certified.
+An injected `Host` supplies an already authorized native client, certified `native_item_cas` and `create_if_absent` capabilities, and optionally the native whole-envelope fitter, read-only settings, ID normalizer (or explicit native `idPrefix`), create-time schema provisioning and trusted immutable-result verification. Method presence alone is not capability evidence. Creation requires one of these native identity policies; missing guarantees refuse before writes. The directory adapter and an independently injected client contract are tested; database and MCP implementations are not claimed certified.
 
 Observations are `reported_oracle` unless `verifyOutcome` returns a trusted immutable-result SHA-256 attestation. Attribution labels and `PM_AUTHOR` are not authentication. Referenced source freshness remains unknown without a separately authorized evidence adapter. pm-hypothesis can link explanations to the owner; pm-rl and debugging loops can drive the SDK. No task status or assurance verdict is changed by domain commands.
 
@@ -155,6 +155,8 @@ A certificate says `one_minimal_under_recorded_oracle` only when a witnessed fai
 | 3 | Selected authorized owner absent |
 | 4 | Revision, operation, proposal or cursor conflict |
 | 5 | Unsupported backend, permission, incomplete read, I/O or unknown write outcome |
+
+Native expected host errors retain their native exit code; the table maps package-generated refusals.
 
 After an ambiguous I/O failure, read the owner and reconcile the original operation key. Never infer non-commit from a missing response. Replaying the identical original request either finds its committed receipt or attempts the original guarded operation; a changed payload refuses `operation_conflict`.
 

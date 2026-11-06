@@ -20,7 +20,7 @@ The Beads trigger is the public beyond-2^53 numeric lexeme from the repair preci
 
 These are three reproductions across two public packages. They do not claim three independent repositories, a workload survey or authenticated external testimony. Five pending-result handoffs are exercised per reproduction. Separate OS-process tests crash before and after native guard/update and receipt boundaries, including external completion before record. Synthetic baseline-pass, unresolved/unreachable-artifact, wrong-signature, nonmonotone, conflicting and empty-failure controls are reported only in tests and never counted as public reproductions.
 
-Reproduce offline from the frozen excerpts with `npm run test:real-data`. Full source provenance, input digests, witness digests, observed outcomes, trial identities, exact denominators and timing are in `docs/real-data-receipt.json`. The package never launches this harness itself.
+Reproduce offline from the frozen excerpts with `npm run test:real-data`; each rerun writes `real-data-receipt.local.json`, preserving the published receipt and its matching documented metrics. Full source provenance, input digests, witness digests, observed outcomes, trial identities, exact denominators and timing are in `docs/real-data-receipt.json`. The package never launches this harness itself.
 
 Packed acceptance captures one archive, checks its digest and allowlisted contents, and installs those bytes into fresh npm and Bun projects. Each project runs npx or native Bun bunx with Git absent plus SDK imports. Archive substitution and ignored-distribution mutation are tested against the fleet release handoff. The actual candidate archive is local ignored data; only text evidence belongs in Git.
 

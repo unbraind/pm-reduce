@@ -7,4 +7,4 @@ try {
   const input = JSON.parse(serialized) as unknown;
   const receipt = mode === 'create' ? await createReduction(host, input as CreateReductionInput) : mode === 'record' ? await recordReductionOutcome(host, input as RecordOutcomeInput) : await requestReductionTrial(host, input as RequestTrialInput);
   console.log(JSON.stringify({ ok: true, receipt }));
-} catch (error) { console.log(JSON.stringify({ ok: false, code: (error as { code: string }).code })); }
+} catch (error) { const code = error !== null && typeof error === 'object' && 'code' in error ? error.code : undefined; console.log(JSON.stringify({ ok: false, code, ...(code === undefined ? { name: error instanceof Error ? error.name : 'ThrownValue', message: error instanceof Error ? error.message : String(error) } : {}) })); }
