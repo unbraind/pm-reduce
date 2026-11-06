@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
-import { assertIntendedFailure } from './revert-tools.ts';
+import { assertIntendedFailure, assertRestoredTests } from './revert-tools.ts';
 import { npmEnvironment, testEnvironment } from '../scripts/environment.ts';
 const changes = [
   { name: 'complete witness content binding removed', file: 'kernel', pattern: /witness_digest: digest\(\{ certificate: content, owner_identity: state.replay_receipts\[0\].result.identity, algorithm_version: state.algorithm_version, definition: state.definition, requests: state.requests, observations: state.observations \}\)/, replacement: 'witness_digest: digest(content)', test: 'kernel', filter: 'certificate digest binds full', proof: 'proof:witness_binding' },
@@ -31,15 +31,22 @@ const changes = [
 
   { name: 'compiler flag home-path admission restored', file: 'schema', pattern: /\(\?:-\[a-z\]\[a-z0-9_-\]\*\)\?/, replacement: '', test: 'privacy', filter: 'compiler flags cannot', proof: 'proof:compiler_home' },
 
+  { name: 'production member-call inspection removed', file: 'test/corpus-privacy.test.ts', pattern: /return callee.name \?\? callee.property\?\.name \?\? callee.property\?\.value \?\? '';/, replacement: "return callee.name ?? '';", test: 'corpus-privacy', filter: 'production has no', proof: 'proof:production_guard' },
+  { name: 'production dynamic-import inspection removed', file: 'test/corpus-privacy.test.ts', pattern: /assert.ok\(node.type !== 'ImportExpression', 'Dynamic production imports are forbidden'\);/, replacement: '', test: 'corpus-privacy', filter: 'production has no', proof: 'proof:production_guard' },
+  { name: 'bare production import inspection removed', file: 'test/corpus-privacy.test.ts', pattern: /\^\(\?:node:\)\?/, replacement: 'node:', test: 'corpus-privacy', filter: 'production has no', proof: 'proof:production_import' },
+  { name: 'package budget accepts native errors again', file: 'test/install-tools.ts', pattern: /if \(flag === '--budget'\) assert.equal\(result.refusal\?\.code, 'output_budget', 'proof:package_budget'\);/, replacement: "if (flag === '--budget') assert.ok(result.refusal?.code === 'output_budget' || typeof result.code === 'string');", test: 'install-tools', filter: 'package budget admission', proof: 'proof:budget_specificity' },
+  { name: 'release exact runtime provisioning removed', file: '.github/workflows/release.yml', pattern: /      - name: Setup minimum acceptance Node[\s\S]*?(?=      - name: Setup Node.js)/, replacement: '', test: 'workflow', filter: 'CI and release provision', proof: 'proof:release_runtimes' },
+  { name: 'seeded certificate nonvacuity removed', file: 'test/kernel.test.ts', pattern: /assert.ok\(certifiedScenarios > 0, 'proof:seeded_certificates'\);/, replacement: '', test: 'kernel', filter: 'seeded arbitrary', proof: 'proof:seeded_nonvacuity' },
+  { name: 'restored suite coverage hardcoded again', file: 'test/revert-tools.ts', pattern: /const files = \[\.\.\.new Set\(changes.map\(change => `test\/\$\{change.test\}.test.ts`\)\)\];/, replacement: "const files = ['test/api.test.ts', 'test/kernel.test.ts', 'test/privacy.test.ts'];", test: 'revert-tools', filter: 'restored baseline includes', proof: 'proof:restored_suites' },
+
 ];
 for (const change of changes) {
   const root = mkdtempSync(join(tmpdir(), 'reduce-revert-'));
   try {
-    for (const file of ['dist', 'test', 'scripts', 'docs', '.github', 'package.json', 'manifest.json']) cpSync(file, join(root, file), { recursive: true }); symlinkSync(join(process.cwd(), 'node_modules'), join(root, 'node_modules'), 'dir');
-    const file = join(root, `dist/src/${change.file}.js`); const source = readFileSync(file, 'utf8'); assert.match(source, change.pattern, `Mutation did not match ${change.name}`); writeFileSync(file, source.replace(change.pattern, change.replacement));
+    for (const file of ['dist', 'src', 'index.ts', 'test', 'scripts', 'docs', '.github', 'package.json', 'manifest.json']) cpSync(file, join(root, file), { recursive: true }); symlinkSync(join(process.cwd(), 'node_modules'), join(root, 'node_modules'), 'dir');
+    const file = join(root, change.file.includes('/') ? change.file : `dist/src/${change.file}.js`); const source = readFileSync(file, 'utf8'); assert.match(source, change.pattern, `Mutation did not match ${change.name}`); writeFileSync(file, source.replace(change.pattern, change.replacement));
     const result = spawnSync(process.execPath, ['--test', '--test-reporter=spec', '--test-concurrency=2', `--test-name-pattern=${change.filter}`, `test/${change.test}.test.ts`], { cwd: root, env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: 120000 });
     assertIntendedFailure(result, change.proof); console.log(`EXPECTED FAIL: ${change.name}`);
   } finally { rmSync(root, { recursive: true, force: true }); }
 }
-const restored = spawnSync(process.execPath, ['--test', '--test-concurrency=2', 'test/api.test.ts', 'test/kernel.test.ts', 'test/privacy.test.ts'], { env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: 180000 });
-assert.equal(restored.status, 0, restored.stdout + restored.stderr); const count = restored.stdout.match(/tests (\d+)/); assert.ok(count && Number(count[1]) > 0); console.log(`revert-gate: ${changes.length} behavioral failures; ${count[1]} fixed tests pass`);
+const count = assertRestoredTests(changes); console.log(`revert-gate: ${changes.length} behavioral failures; ${count} fixed tests pass`);

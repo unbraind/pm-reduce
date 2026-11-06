@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { parse } from '@babel/parser';
 import { digest, validateReductionCertificate } from '../dist/index.js';
+import { runtimeSources } from '../scripts/inventory.ts';
 /** Bound public citations by repository identity, without accessing a named repository. */
 function publicText(text: string) {
   for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) assert.ok(!new RegExp(`(?<![\\w-])${name}(?![\\w-])`, 'i').test(text), 'Corpus contains a private repository reference');
@@ -15,6 +16,11 @@ function walk(value: unknown, visit: (node: Record<string, unknown>) => void) {
   if (value === null || typeof value !== 'object') return; const node = value as Record<string, unknown>;
   if (typeof node.type === 'string') visit(node);
   for (const [key, child] of Object.entries(node)) if (!['loc', 'start', 'end', 'extra'].includes(key)) walk(child, visit);
+}
+/** Recognize direct, computed and optional member capabilities in both guards. */
+function calledName(node: Record<string, unknown>): string {
+  const callee = node.callee as { name?: string; property?: { name?: string; value?: string } };
+  return callee.name ?? callee.property?.name ?? callee.property?.value ?? '';
 }
 /** Corpus harness reads only the frozen local provenance file and imports reviewed modules. */
 function confined(source: string) {
@@ -30,9 +36,9 @@ function confined(source: string) {
       if (from === 'node:fs/promises') assert.ok((node.specifiers as { type: string; imported?: { name: string }; local: { name: string } }[]).every(specifier => specifier.type === 'ImportSpecifier' && specifier.imported?.name === 'readFile' && specifier.local.name === 'readFile'), 'Only the reviewed provenance reader may be imported');
     }
     assert.ok(node.type !== 'ImportExpression', 'Dynamic corpus imports are forbidden');
-    if (node.type === 'CallExpression') {
-      const callee = node.callee as { type: string; name?: string; property?: { name?: string; value?: string } }; const name = callee.name ?? callee.property?.name ?? callee.property?.value ?? '';
-      assert.ok(!['fetch', 'eval', 'require', 'execFileSync', 'spawn', 'resolve'].includes(name), 'Unreviewed corpus capability');
+    if (node.type === 'CallExpression' || node.type === 'OptionalCallExpression') {
+      const name = calledName(node);
+      assert.ok(!['fetch', 'eval', 'require', 'execFile', 'execFileSync', 'exec', 'execSync', 'spawn', 'spawnSync', 'fork', 'resolve'].includes(name), 'Unreviewed corpus capability');
       if (readNames.has(name)) { reads++; assert.equal(source.slice(node.start as number, node.end as number), "readFile('test/fixtures/provenance.json', 'utf8')", 'Unreviewed corpus read'); }
     }
   });
@@ -42,7 +48,7 @@ test('public corpus guard confines reads and rejects private citations and sourc
   for (const file of ['test/corpus.ts', 'test/fixtures/history.ts', 'test/fixtures/provenance.json', 'docs/real-data-receipt.json']) publicText(readFileSync(file, 'utf8'));
   for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) { assert.throws(() => publicText(`https://github.com/example/${name}`)); publicText(`${name}-tools`); }
   const source = readFileSync('test/corpus.ts', 'utf8'); confined(source);
-  for (const changed of [source.replace('test/fixtures/provenance.json', '../unreviewed/input.json'), source + "\nawait fetch('https://example.invalid');", source + "\nawait import('node:fs');", source.replace("'./fixtures/history.ts'", "'../unreviewed.ts'"), source + "\nimport * as fs from 'node:fs/promises'; await fs.readFile('extra', 'utf8');", source + "\nimport {readFile as load} from 'node:fs/promises'; await load('extra', 'utf8');", source + "\nconst load = readFile; await load('extra', 'utf8');", source + "\nawait globalThis.fetch('https://example.invalid');"]) assert.throws(() => confined(changed));
+  for (const changed of [source.replace('test/fixtures/provenance.json', '../unreviewed/input.json'), source + "\nawait fetch('https://example.invalid');", source + "\nawait import('node:fs');", source.replace("'./fixtures/history.ts'", "'../unreviewed.ts'"), source + "\nimport * as fs from 'node:fs/promises'; await fs.readFile('extra', 'utf8');", source + "\nimport {readFile as load} from 'node:fs/promises'; await load('extra', 'utf8');", source + "\nconst load = readFile; await load('extra', 'utf8');", source + "\nawait globalThis.fetch('https://example.invalid');", source + "\nawait globalThis?.fetch?.('https://example.invalid');"]) assert.throws(() => confined(changed));
 });
 test('frozen historical excerpts retain exact source and fixture content identities', () => {
   const fixture = readFileSync('test/fixtures/history.ts', 'utf8');
@@ -56,11 +62,24 @@ test('frozen historical excerpts retain exact source and fixture content identit
     for (const excerpt of source.excerpts) { const node = tree.program.body.find(row => row.type === 'FunctionDeclaration' && row.id?.name === excerpt.name); assert.ok(node); assert.equal(createHash('sha256').update(fixture.slice(node.start!, node.end!)).digest('hex'), excerpt.sha256); }
   }
 });
+/** Inspect production syntax without executing submitted module text. */
+function production(source: string) {
+  const tree = parse(source, { sourceType: 'module', plugins: ['typescript'] });
+  walk(tree, node => {
+    if (['ImportDeclaration', 'ExportNamedDeclaration', 'ExportAllDeclaration'].includes(String(node.type)) && node.source) assert.ok(!/^(?:node:)?(?:child_process|fs|https?|http2|net|tls|dgram)(?:\/|$)|sqlite|postgres/u.test((node.source as { value: string }).value), 'Production import is forbidden');
+    assert.ok(node.type !== 'ImportExpression', 'Dynamic production imports are forbidden');
+    if (node.type === 'CallExpression' || node.type === 'OptionalCallExpression') {
+      const name = calledName(node);
+      assert.ok(!['fetch', 'eval', 'require', 'spawn', 'spawnSync', 'exec', 'execSync', 'execFile', 'execFileSync', 'fork'].includes(name), 'Production capability is forbidden');
+    }
+  });
+}
 test('production has no subprocess, network, payload-file or alternate storage entry points', () => {
-  for (const file of ['index.ts', 'src/api.ts', 'src/commands.ts', 'src/errors.ts', 'src/host.ts', 'src/kernel.ts', 'src/output.ts', 'src/schema.ts']) {
-    const tree = parse(readFileSync(file, 'utf8'), { sourceType: 'module', plugins: ['typescript'] });
-    walk(tree, node => { if (node.type === 'ImportDeclaration') assert.ok(!/node:(?:child_process|fs|http|net)|sqlite|postgres/u.test((node.source as { value: string }).value)); if (node.type === 'CallExpression') assert.ok(!['fetch', 'eval', 'spawn', 'exec', 'execFile'].includes((node.callee as { name?: string }).name ?? '')); });
-  }
+  for (const file of runtimeSources()) production(readFileSync(file, 'utf8'));
+  for (const source of ["globalThis.fetch('https://example.invalid')", "globalThis['fetch']('https://example.invalid')", "globalThis?.fetch?.('https://example.invalid')", "processModule.spawn('unused')", "processModule.execSync('unused')", "processModule['fork']?.('unused')"]) assert.throws(() => production(source), /Production capability is forbidden/, 'proof:production_guard');
+  for (const source of ["await import('node:child_process')", "const cp = await import('node:child_process'); cp.spawn('unused')", "(await import('node:child_process')).exec('unused')"]) assert.throws(() => production(source), /Dynamic production imports are forbidden|Production capability is forbidden/, 'proof:production_guard');
+  for (const source of ["import fs from 'fs'", "import fs from 'node:fs/promises'", "import https from 'https'", "export * from 'node:child_process'", "export { readFile } from 'fs/promises'"]) assert.throws(() => production(source), /Production import is forbidden/, 'proof:production_import');
+  for (const source of ["import {createHash} from 'node:crypto'", "import {parse} from './schema.ts'", "const value = object.read();", "export { value } from './local.ts'"]) assert.doesNotThrow(() => production(source));
 });
 
 test('documented public metrics match the preserved published receipt', () => {

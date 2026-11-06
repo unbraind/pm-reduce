@@ -8,6 +8,18 @@ import { verify } from 'pm-ops/attestation';
 import { fixture } from './helpers.ts';
 import { npmEnvironment } from '../scripts/environment.ts';
 
+test('CI and release provision both exact acceptance runtimes before their gates', () => {
+  for (const file of ['ci.yml', 'release.yml']) {
+    const workflow = readFileSync(`.github/workflows/${file}`, 'utf8');
+    const gate = workflow.indexOf(file === 'ci.yml' ? 'run: npm run test:install' : 'run: npm run release:check');
+    for (const [major, version] of [['22', '22.19.0'], ['26', '26.13.0']]) {
+      const setup = workflow.indexOf(`node-version: ${version}\n`);
+      const capture = workflow.indexOf(`run: echo "PM_REDUCE_NODE_${major}=$(command -v node)" >> "$GITHUB_ENV"`);
+      assert.ok(setup >= 0 && capture > setup && gate > capture, 'proof:release_runtimes');
+    }
+  }
+});
+
 test('CI health accepts a plain tracker but rejects corrupt native history',async t=>{
   const {root,pmRoot,id}=await fixture(t);const script=resolve('scripts/tracker-health.ts');
   const env={...npmEnvironment(process.env),PM_PATH:pmRoot,PM_AUTHOR:'fixture',HOME:root,GIT_CEILING_DIRECTORIES:root};

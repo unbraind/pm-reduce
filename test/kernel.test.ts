@@ -74,19 +74,26 @@ test('flaky observations suspend reuse while retaining smallest recorded failure
   appendOperation(s, 'record', 'conflicting-baseline', s.observations.at(-1)); projectState(s);
   const advanced = advanceReduction(s); assert.equal(advanced.status, 'flaky_oracle'); assert.deepEqual(advanced.best, ['a0']); assert.equal(validateReductionCertificate(s).qualification, 'flaky_oracle');
 });
-test('seeded arbitrary nonmonotone truth tables with unresolved probes never yield false certificates', () => {
-  let seed = 6536;
+/** Exercise arbitrary truth tables and refuse an oracle that never reaches certification. */
+function checkSeededCertificates(certify: (s: ReductionState) => ReturnType<typeof validateReductionCertificate> = validateReductionCertificate): void {
+  let seed = 6536; let certifiedScenarios = 0;
   const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed; };
   for (let scenario = 0; scenario < 100; scenario++) {
     const truth = Array.from({ length: 16 }, () => random() % 7 === 0 ? 'unresolved' as const : random() % 3 === 0 ? 'target_fail' as const : 'pass' as const); truth[15] = 'target_fail';
     const s = state(4); s.definition.max_trials = 2 + random() % 32; s.replay_receipts[0].result.digest = digest(s.definition); s.replay_receipts[0].result_digest = digest(s.replay_receipts[0].result); projectState(s);
     while (advanceReduction(s).candidate) { const ids = advanceReduction(s).candidate!.subset_ids; const mask = ids.reduce((bits, id) => bits | 1 << Number(id.slice(1)), 0); observe(s, truth[mask]); }
-    const certificate = validateReductionCertificate(s);
+    const certificate = certify(s);
     if (certificate.qualification === 'one_minimal_under_recorded_oracle') {
+      certifiedScenarios++;
       const mask = certificate.best_subset!.reduce((bits, id) => bits | 1 << Number(id.slice(1)), 0); assert.equal(truth[mask], 'target_fail');
       for (const id of certificate.best_subset!) assert.equal(truth[mask & ~(1 << Number(id.slice(1)))], 'pass');
     }
   }
+  assert.ok(certifiedScenarios > 0, 'proof:seeded_certificates');
+}
+test('seeded arbitrary nonmonotone truth tables with unresolved probes never yield false certificates', () => {
+  checkSeededCertificates();
+  assert.throws(() => checkSeededCertificates(s => ({ ...validateReductionCertificate(s), qualification: 'minimality_unproven' })), /proof:seeded_certificates/, 'proof:seeded_nonvacuity');
 });
 
 test('pure certificate API validates signatures and frozen journals rather than trusting a typed object', () => {

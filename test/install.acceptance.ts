@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { npmEnvironment } from '../scripts/environment.ts';
 import { definition, outcome } from './helpers.ts';
-import { packedRequirement } from './install-tools.ts';
+import { packedRequirement, assertBudgetRefusal } from './install-tools.ts';
 /** Run a credential-free consumer command and preserve only bounded diagnostics. */
 function execute(executable: string, args: string[], cwd: string, env: NodeJS.ProcessEnv, input?: string, expected = 0): string {
   const result = spawnSync(executable, args, { cwd, env, input, encoding: 'utf8', timeout: 180000, maxBuffer: 4 * 1024 * 1024 });
@@ -42,7 +42,7 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       assert.equal(JSON.parse(run(['reduce','create','--id','packed-repro','--op','birth','--input','-','--json'],birthInput)).replayed,true);
       let next = JSON.parse(run(['reduce','next','packed-repro','--json'])); assert.equal(next.data.candidate.purpose,'baseline');
       assert.equal(JSON.parse(run(['reduce','create','--id','packed-repro','--op','birth','--input','-','--json'],JSON.stringify({title:'Different',definition:def}),4)).refusal.code,'operation_conflict');
-      for(const flag of ['--budget','--output-budget']) { const tiny=JSON.parse(run(['reduce','create','--id','packed-tiny','--op','tiny','--input','-',flag,'1','--json'],birthInput,2)); assert.ok(tiny.refusal?.code==='output_budget'||typeof tiny.code==='string'); assert.equal(JSON.parse(run(['reduce','next','packed-tiny','--json'],undefined,3)).refusal.code,'not_found'); }
+      for(const flag of ['--budget','--output-budget']) { const tiny=JSON.parse(run(['reduce','create','--id','packed-tiny','--op','tiny','--input','-',flag,'1','--json'],birthInput,2)); assertBudgetRefusal(flag, tiny); assert.equal(JSON.parse(run(['reduce','next','packed-tiny','--json'],undefined,3)).refusal.code,'not_found'); }
       assert.equal(JSON.parse(run(['reduce','request','packed-repro','--op','wrong-proposal','--proposal','f'.repeat(64),'--revision',next.revision,'--json'],undefined,4)).refusal.code,'stale_proposal');
 
       const staleRevision = next.revision;
