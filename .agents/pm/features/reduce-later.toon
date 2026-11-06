@@ -1,0 +1,13 @@
+id: reduce-later
+title: "Later scope: adapters and grammar-aware or stochastic reduction"
+description: "Deferred by specification: automatic execution, AST rewriting, grammar repair, statistical flaky-test reduction, provider adapters beyond certified directory and injected native contract. Any future work requires separately approved scope."
+type: Feature
+status: open
+priority: 2
+tags: []
+created_at: "2026-11-06T11:47:23.084Z"
+updated_at: "2026-11-06T11:47:23.084Z"
+author: codex-agent
+acceptance_criteria: "Future design retains caller authorization, exact frozen oracle identities and honest qualified evidence."
+parent: reduce-release
+body: ""

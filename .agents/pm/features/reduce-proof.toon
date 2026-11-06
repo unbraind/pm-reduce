@@ -1,0 +1,13 @@
+id: reduce-proof
+title: Public reproduction evidence and first release certification
+description: ""
+type: Feature
+status: open
+priority: 2
+tags: []
+created_at: "2026-11-06T11:47:18.375Z"
+updated_at: "2026-11-06T11:47:18.375Z"
+author: codex-agent
+acceptance_criteria: "Three real public failures from at least sixteen atoms; exact provenance, resumes and packed consumers; full source coverage and npm plus Bun release gates."
+parent: reduce-release
+body: ""

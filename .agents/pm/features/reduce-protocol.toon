@@ -1,0 +1,13 @@
+id: reduce-protocol
+title: Durable native reduction protocol and bounded CLI SDK
+description: ""
+type: Feature
+status: open
+priority: 2
+tags: []
+created_at: "2026-11-06T11:47:12.183Z"
+updated_at: "2026-11-06T11:47:12.183Z"
+author: codex-agent
+acceptance_criteria: "Create next request record certificate packet share contracts; guarded reservations, privacy, budgets, no-git, replay and concurrency survive interruptions."
+parent: reduce-release
+body: ""

@@ -1,0 +1,14 @@
+{
+  "name": "pm-reduce",
+  "version": "2026.11.6",
+  "description": "Durable failure-input reduction and qualified minimality receipts",
+  "author": "@unbraind",
+  "entry": "./dist/index.js",
+  "pm_min_version": "2026.11.5",
+  "priority": 90,
+  "capabilities": [
+    "commands",
+    "schema",
+    "renderers"
+  ]
+}
