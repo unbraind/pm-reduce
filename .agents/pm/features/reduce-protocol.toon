@@ -2,12 +2,31 @@ id: reduce-protocol
 title: Durable native reduction protocol and bounded CLI SDK
 description: ""
 type: Feature
-status: open
+status: in_progress
 priority: 2
 tags: []
 created_at: "2026-11-06T11:47:12.183Z"
-updated_at: "2026-11-06T11:47:12.183Z"
+updated_at: "2026-11-06T12:19:05.955Z"
+assignee: codex-agent
+claim_principal: codex-agent
 author: codex-agent
 acceptance_criteria: "Create next request record certificate packet share contracts; guarded reservations, privacy, budgets, no-git, replay and concurrency survive interruptions."
 parent: reduce-release
+comments[1]{created_at,author,text}:
+  "2026-11-06T12:14:23.415Z",codex-agent,"Native real-tracker tests passed: every request/record boundary has an interleaved competing write; process interruption before and after guard/update/receipt converges under the original operation key. Two OS reservation writers admit exactly one reservation, rejecting the stale writer with zero history effect. Additional two-OS outcome and create-boundary checks are included for the final full gate. Privacy and byte capacity refuse before writes. The 500 seeded random operation sequences passed against independent journal state and SDK read-back."
+files[12]{path,scope}:
+  index.ts,project
+  src/api.ts,project
+  src/commands.ts,project
+  src/errors.ts,project
+  src/host.ts,project
+  src/output.ts,project
+  test/api.test.ts,project
+  test/capacity.test.ts,project
+  test/concurrency.test.ts,project
+  test/contracts.test.ts,project
+  test/model.test.ts,project
+  test/privacy.test.ts,project
+docs[1]{path,scope}:
+  README.md,project
 body: ""

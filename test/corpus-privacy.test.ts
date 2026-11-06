@@ -1,0 +1,57 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { parse } from '@babel/parser';
+import { digest, validateReductionCertificate } from '../dist/index.js';
+/** Bound public citations by repository identity, without accessing a named repository. */
+function publicText(text: string) {
+  for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) assert.ok(!new RegExp(`(?<![\\w-])${name}(?![\\w-])`, 'i').test(text), 'Corpus contains a private repository reference');
+  assert.ok(!/(?:[\\/](?:home|Users)[\\/]|[\\/]root[\\/])/u.test(text), 'Corpus contains an absolute home path');
+}
+/** Traverse syntax as data; never execute a harvested source during privacy inspection. */
+function walk(value: unknown, visit: (node: Record<string, unknown>) => void) {
+  if (Array.isArray(value)) { for (const row of value) walk(row, visit); return; }
+  if (value === null || typeof value !== 'object') return; const node = value as Record<string, unknown>;
+  if (typeof node.type === 'string') visit(node);
+  for (const [key, child] of Object.entries(node)) if (!['loc', 'start', 'end', 'extra'].includes(key)) walk(child, visit);
+}
+/** Corpus harness reads only the frozen local provenance file and imports reviewed modules. */
+function confined(source: string) {
+  const tree = parse(source, { sourceType: 'module', plugins: ['typescript'] }); let reads = 0;
+  const imports = new Set(['zod', 'node:assert/strict', './fixtures/history.ts', 'node:fs/promises', 'node:crypto', '../dist/index.js', '../dist/src/output.js', './helpers.ts']);
+  walk(tree, node => {
+    if (node.type === 'ImportDeclaration') assert.ok(imports.has((node.source as { value: string }).value), 'Unreviewed corpus import');
+    assert.ok(node.type !== 'ImportExpression', 'Dynamic corpus imports are forbidden');
+    if (node.type === 'CallExpression') {
+      const callee = node.callee as { type: string; name?: string };
+      assert.ok(!['fetch', 'eval', 'require', 'execFileSync', 'spawn', 'resolve'].includes(callee.name ?? ''), 'Unreviewed corpus capability');
+      if (callee.type === 'Identifier' && callee.name === 'readFile') { reads++; assert.equal(source.slice(node.start as number, node.end as number), "readFile('test/fixtures/provenance.json', 'utf8')", 'Unreviewed corpus read'); }
+    }
+  });
+  assert.equal(reads, 1);
+}
+test('public corpus guard confines reads and rejects private citations and source-root mutations', () => {
+  for (const file of ['test/corpus.ts', 'test/fixtures/history.ts', 'test/fixtures/provenance.json', 'docs/real-data-receipt.json']) publicText(readFileSync(file, 'utf8'));
+  for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) { assert.throws(() => publicText(`https://github.com/example/${name}`)); publicText(`${name}-tools`); }
+  const source = readFileSync('test/corpus.ts', 'utf8'); confined(source);
+  for (const changed of [source.replace('test/fixtures/provenance.json', '../unreviewed/input.json'), source + "\nawait fetch('https://example.invalid');", source + "\nawait import('node:fs');", source.replace("'./fixtures/history.ts'", "'../unreviewed.ts'")]) assert.throws(() => confined(changed));
+});
+test('frozen historical excerpts retain exact source and fixture content identities', () => {
+  const fixture = readFileSync('test/fixtures/history.ts', 'utf8');
+  const provenance = JSON.parse(readFileSync('test/fixtures/provenance.json', 'utf8')) as { fixture_sha256: string; sources: { repository: string; revision: string; license: string; excerpts: { name: string; sha256: string }[]; native_anchor: { item_id: string; item_hash: string; field_pointer: string; description: string; content_digest: string } }[] };
+  assert.equal(createHash('sha256').update(fixture).digest('hex'), provenance.fixture_sha256);
+  const tree = parse(fixture, { sourceType: 'module', plugins: ['typescript'] });
+  const receipts = JSON.parse(readFileSync('docs/real-data-receipt.json', 'utf8')) as { receipts: { reduction_snapshot: Parameters<typeof validateReductionCertificate>[0]; certificate: ReturnType<typeof validateReductionCertificate>; oracle_evidence: {source_ref:{content_digest:string};description:string}[] }[] };
+  for (const row of receipts.receipts) { validateReductionCertificate(row.reduction_snapshot, row.certificate); for (const evidence of row.oracle_evidence) assert.equal(evidence.source_ref.content_digest, digest(evidence.description)); }
+
+  for (const source of provenance.sources) { assert.match(source.repository, /^https:\/\/github\.com\/unbraind\/(pm-jev|pm-beads)$/); assert.match(source.revision, /^[a-f0-9]{40}$/); assert.equal(source.license, 'MIT'); assert.match(source.native_anchor.item_hash, /^[a-f0-9]{64}$/); assert.equal(source.native_anchor.field_pointer, '/description'); assert.equal(source.native_anchor.content_digest, digest(source.native_anchor.description));
+    for (const excerpt of source.excerpts) { const node = tree.program.body.find(row => row.type === 'FunctionDeclaration' && row.id?.name === excerpt.name); assert.ok(node); assert.equal(createHash('sha256').update(fixture.slice(node.start!, node.end!)).digest('hex'), excerpt.sha256); }
+  }
+});
+test('production has no subprocess, network, payload-file or alternate storage entry points', () => {
+  for (const file of ['index.ts', 'src/api.ts', 'src/commands.ts', 'src/errors.ts', 'src/host.ts', 'src/kernel.ts', 'src/output.ts', 'src/schema.ts']) {
+    const tree = parse(readFileSync(file, 'utf8'), { sourceType: 'module', plugins: ['typescript'] });
+    walk(tree, node => { if (node.type === 'ImportDeclaration') assert.ok(!/node:(?:child_process|fs|http|net)|sqlite|postgres/u.test((node.source as { value: string }).value)); if (node.type === 'CallExpression') assert.ok(!['fetch', 'eval', 'spawn', 'exec', 'execFile'].includes((node.callee as { name?: string }).name ?? '')); });
+  }
+});

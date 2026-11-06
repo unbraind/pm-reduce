@@ -1,0 +1,13 @@
+id: reduce-sdk-transport
+title: Upstream producer cursor and mutation output transport integration
+description: "Pinned SDK ExtensionCommandReadOutput exports only row_keys; it has no producer-cursor binding or singleton-mutation envelope preservation callback. Packed consumers reject the package cursor through native --output-cursor with read_output_cursor_invalid. Package --cursor, --limit and --budget are the certified fallback; no acceptance criterion is deferred. Public upstream searches for extension producer cursor, extension cursor and producer budget found no matching open implementation issue. Revisit when a producer binding is exported."
+type: Feature
+status: open
+priority: 2
+tags[1]: sdk-gap
+created_at: "2026-11-06T12:14:18.504Z"
+updated_at: "2026-11-06T12:14:18.504Z"
+author: codex-agent
+acceptance_criteria: A future SDK declares producer continuation and preserves complete mutation receipts through native transport; packed npm and Bun prove it without package fallback flags.
+parent: reduce-release
+body: ""

@@ -1,0 +1,2948 @@
+{
+  "schema_version": 1,
+  "evidence": "reported_oracle",
+  "receipts": [
+    {
+      "scenario": "beads-precision",
+      "owner_id": "public-beads-precision",
+      "revision": "24fab0a5df0fd75340e0af557b5eee3af0ec3538af2b58505ab85d07c2bb13e3",
+      "reduction_snapshot": {
+        "version": 1,
+        "package": "pm-reduce",
+        "algorithm_version": "ddmin-1",
+        "definition": {
+          "atoms": [
+            {
+              "atom_id": "a0",
+              "payload_digest": "61bd10bdb958d588170ee4f8490b31ff14ddf1fc2f79bb97899e181a0b51ad83",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a1",
+              "payload_digest": "deac7511e0d7ab92ee9def4c584a8ea66d5bfd39bf10e84f2c99fce41b24c76f",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a2",
+              "payload_digest": "0818c3102bcd64748f53317e62a673de57ccc8e4893432bed2fee8c2dabafd1f",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a3",
+              "payload_digest": "b104fecd16d1c40edb000f8d8c9fbd0d776d49d939df36555242cbdcc5f6926a",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a4",
+              "payload_digest": "5b4361a122452f58466eb62ff22d333ed96c1cdb01ff59f7b316a3bc86656704",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a5",
+              "payload_digest": "ce34df58cc5a256b442e10ef1e21f9b3b49b83afeace4f0c18c272b1df2c0511",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a6",
+              "payload_digest": "b1b9f6987127c5a3e3acf4ec367a3b95978f9695a3e762e203d7a2733afa43ab",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a7",
+              "payload_digest": "f756bc045e9f729509771eda4c5e196c67dfc94e73ac088ab04e19d74c30963e",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a8",
+              "payload_digest": "2f19d5d0f1b6fe2d9590962dd5299f58d1508058681449e29d648ef4cfe2fb02",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a9",
+              "payload_digest": "1277aca3a29161e814f91fceb84ebae3cbd3d781becc8cebb6f217c5376bc5dd",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a10",
+              "payload_digest": "8cfbc480fb50ad5bee82064720371d65e110a1e91930150fbe05333d7b796fd3",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a11",
+              "payload_digest": "7063aacf5e2b8e434b993f9119f4e479fcfc1d670f32882c89d3c9efedc303da",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a12",
+              "payload_digest": "d9a61e74f7d31e190c83203999b9b974b5f201aca757e4970687483fad51bd8a",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a13",
+              "payload_digest": "f5b8358244b4657ef7c6af23c1bce539ae5218ffb494da6285f4f5bfdec66240",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a14",
+              "payload_digest": "d02f341632519765fd8a75baf6aa5480e641a7d1f5e6436e941e7d4fa728a57a",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            },
+            {
+              "atom_id": "a15",
+              "payload_digest": "d999f7f8b3e69591b6c93e1064312328b2fb681e8ffab6ea84b33c602c31347d",
+              "source_ref": {
+                "item_id": "pm-beads-y6cp",
+                "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+                "field_pointer": "/description",
+                "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+                "citation_id": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d"
+              }
+            }
+          ],
+          "composition": "ordered_subset",
+          "original_digest": "54a9451923ebe340102e6eaaa3926ca95ccdeae02aabef176c050ae091ce157d",
+          "oracle": {
+            "oracle_key": "beads-precision",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "target_failure_signature": "beads-precision",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "deterministic_declared": true
+          },
+          "max_trials": 256
+        },
+        "best_failing_subset": [
+          "a9"
+        ],
+        "partition_cursor": "search_complete",
+        "requests": [
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3",
+              "a4",
+              "a5",
+              "a6",
+              "a7",
+              "a8",
+              "a9",
+              "a10",
+              "a11",
+              "a12",
+              "a13",
+              "a14",
+              "a15"
+            ],
+            "subset_digest": "019bf9e2d1038d92befaad088fae02a99acc386cd2abbcc243f8678e315a2087",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "baseline",
+            "partition_cursor": "baseline",
+            "request_id": "trial-1",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3",
+              "a4",
+              "a5",
+              "a6",
+              "a7"
+            ],
+            "subset_digest": "64d170303567c9a7f5b8bfa6de6048d4482616ab972c0953097de02184fabbcf",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "subset",
+            "partition_cursor": "16:2:subset:0",
+            "request_id": "trial-2",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8",
+              "a9",
+              "a10",
+              "a11",
+              "a12",
+              "a13",
+              "a14",
+              "a15"
+            ],
+            "subset_digest": "6dd47b0a01acb5b950ca5d4f3342520a9d7c8168e913781e294dd21bae20ea25",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "subset",
+            "partition_cursor": "16:2:subset:1",
+            "request_id": "trial-3",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8",
+              "a9",
+              "a10",
+              "a11"
+            ],
+            "subset_digest": "098b2932bd0d713d6daed4cf03c7f595aecabe7a9cd951d50a8b2c7930db1337",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "subset",
+            "partition_cursor": "8:2:subset:0",
+            "request_id": "trial-4",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8",
+              "a9"
+            ],
+            "subset_digest": "e528ed9e1a9cb208dd8ff303abfa5b80a4a5c8d04630a79ccfa07b8baee9a234",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "subset",
+            "partition_cursor": "4:2:subset:0",
+            "request_id": "trial-5",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8"
+            ],
+            "subset_digest": "f1bf762a16a2bd56532acddfdd2eebeec8caf5711bdfff130b7e6e80798aa366",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "subset",
+            "partition_cursor": "2:2:subset:0",
+            "request_id": "trial-6",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a9"
+            ],
+            "subset_digest": "e1246b0be402eb0f1dcaa8f4371d232d34f21b6dc32c70cac7f2f42b22198da9",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "subset",
+            "partition_cursor": "2:2:subset:1",
+            "request_id": "trial-7",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [],
+            "subset_digest": "149e534fdbb5ec9af3fa5e9e6cf438b585b07f06f424abd5ef5b4396ed6bfe3b",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "purpose": "deletion",
+            "partition_cursor": "deletion:0",
+            "request_id": "trial-8",
+            "state": "completed"
+          }
+        ],
+        "observations": [
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "beads-precision",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-1",
+              "item_hash": "5c6a90f23a59a1171cebf8017b071b36e3fc111be87467b7dd0c46b20a50e690",
+              "field_pointer": "/description",
+              "content_digest": "686c6af9233c9199c283e6e3d11a624a37a47f4b19bcd79f4e732f844a6be66b"
+            },
+            "observed_at": "2026-11-06T12:33:25.133Z",
+            "recorder": "fixture",
+            "subset_digest": "019bf9e2d1038d92befaad088fae02a99acc386cd2abbcc243f8678e315a2087",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-1",
+            "request_id": "trial-1",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-2",
+              "item_hash": "7971591c4f3ac1abeb8dfa45084b615e9e0d65e86cd23a157c49b1da9eae8c2d",
+              "field_pointer": "/description",
+              "content_digest": "5d6a08badaa7289d387c12fd903d9f53b7ef9199a87fca38591d24aaf013d043"
+            },
+            "observed_at": "2026-11-06T12:33:27.195Z",
+            "recorder": "fixture",
+            "subset_digest": "64d170303567c9a7f5b8bfa6de6048d4482616ab972c0953097de02184fabbcf",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-2",
+            "request_id": "trial-2",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "beads-precision",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-3",
+              "item_hash": "4fdc038c1c638f297549f0dcf75cf44276de45fc9f5fae719de154c5437921a5",
+              "field_pointer": "/description",
+              "content_digest": "aca28c6ae315add57a034d0644edf96fc6c442da9a7df8af80218761e26fc823"
+            },
+            "observed_at": "2026-11-06T12:33:29.578Z",
+            "recorder": "fixture",
+            "subset_digest": "6dd47b0a01acb5b950ca5d4f3342520a9d7c8168e913781e294dd21bae20ea25",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-3",
+            "request_id": "trial-3",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "beads-precision",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-4",
+              "item_hash": "3130a24840998b12dc61b063fe421bed20dea5b0e63b284bdc92e3a8e1d4d5cc",
+              "field_pointer": "/description",
+              "content_digest": "c1cbc04bf171342026e66ddee095cea25853470657ef8caf03708ed929e2d861"
+            },
+            "observed_at": "2026-11-06T12:33:31.752Z",
+            "recorder": "fixture",
+            "subset_digest": "098b2932bd0d713d6daed4cf03c7f595aecabe7a9cd951d50a8b2c7930db1337",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-4",
+            "request_id": "trial-4",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "beads-precision",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-5",
+              "item_hash": "fd65a3792d23dcd09a8a0f9b03a48424d136fed710a7d1d15ee05e1672b816df",
+              "field_pointer": "/description",
+              "content_digest": "f55a066906de43e2c4d51e2b0e54fad89faa62c348a2f3691ddabba25eba95b2"
+            },
+            "observed_at": "2026-11-06T12:33:33.580Z",
+            "recorder": "fixture",
+            "subset_digest": "e528ed9e1a9cb208dd8ff303abfa5b80a4a5c8d04630a79ccfa07b8baee9a234",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-5",
+            "request_id": "trial-5",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-6",
+              "item_hash": "0d83acd505289fc1a89960c85c37d1f3c90c9161bcf4494cd0496e7ae100dc33",
+              "field_pointer": "/description",
+              "content_digest": "f5d47e62f8f0960fabe1a7cae816e9377bb4928acae7392227c6ab71ab7c2826"
+            },
+            "observed_at": "2026-11-06T12:33:35.547Z",
+            "recorder": "fixture",
+            "subset_digest": "f1bf762a16a2bd56532acddfdd2eebeec8caf5711bdfff130b7e6e80798aa366",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-6",
+            "request_id": "trial-6",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "beads-precision",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-7",
+              "item_hash": "9477a8342f0776cbd9d1aad49a00ad42375d12c5d5fe93db3dd493afc4dc0fe2",
+              "field_pointer": "/description",
+              "content_digest": "1fd6dbff3712f38b544ab97c4c2dacff127001017c43750fa54d60afba79b5a3"
+            },
+            "observed_at": "2026-11-06T12:33:36.321Z",
+            "recorder": "fixture",
+            "subset_digest": "e1246b0be402eb0f1dcaa8f4371d232d34f21b6dc32c70cac7f2f42b22198da9",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-7",
+            "request_id": "trial-7",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-8",
+              "item_hash": "047acf9b01eeb30ee9965963cf42dce8c56fb8495bfd846764aa7966ee086e97",
+              "field_pointer": "/description",
+              "content_digest": "ef72e686a730b11592d60ff00f23a906e25af8a640416141b99090de523802e7"
+            },
+            "observed_at": "2026-11-06T12:33:36.947Z",
+            "recorder": "fixture",
+            "subset_digest": "149e534fdbb5ec9af3fa5e9e6cf438b585b07f06f424abd5ef5b4396ed6bfe3b",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-8",
+            "request_id": "trial-8",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "beads-precision",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-9",
+              "item_hash": "d8792e86c96daddd4fa534690a206e74dbcf39d88d2ab1ce4a89d936631d1865",
+              "field_pointer": "/description",
+              "content_digest": "ef767db83b6234047df4bf3a6d42872a8f469811319a87813f308037676542ab"
+            },
+            "observed_at": "2026-11-06T12:33:37.589Z",
+            "recorder": "fixture",
+            "subset_digest": "e1246b0be402eb0f1dcaa8f4371d232d34f21b6dc32c70cac7f2f42b22198da9",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-9",
+            "request_id": "trial-7",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-beads-precision-evidence-10",
+              "item_hash": "42b99080ca28a7aa259a0ff0be9654db2e2973c87eee6b019874bc5bb6bd8363",
+              "field_pointer": "/description",
+              "content_digest": "d6138a792735c849f44f251186a4b222c98b49f75e86dcf12c45c4f45f608c22"
+            },
+            "observed_at": "2026-11-06T12:33:38.413Z",
+            "recorder": "fixture",
+            "subset_digest": "149e534fdbb5ec9af3fa5e9e6cf438b585b07f06f424abd5ef5b4396ed6bfe3b",
+            "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+            "recipe_digest": "f2e7f990c480451a3547ac80a00420e30f3f8ad8a505dbeeb5fd052e3bf9e310",
+            "subject_digest": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-10",
+            "request_id": "trial-8",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          }
+        ],
+        "trial_budget": {
+          "limit": 256,
+          "reserved": 8,
+          "completed": 8,
+          "pending": 0
+        },
+        "qualification": "one_minimal_under_recorded_oracle",
+        "replay_receipts": [
+          {
+            "operation_id": "birth",
+            "request_digest": "1e0c00a292400998a703d53b71855154be012ba6fd768ac22712f49977d66999",
+            "result": {
+              "kind": "create",
+              "identity": "public-beads-precision",
+              "sequence": 1,
+              "digest": "7fd30819a87a4ad3c0aa4bafd18b1f4cf0b9b98bc954793a0087e94781a40e63"
+            },
+            "result_digest": "8ef74f482a640b05b41946bd1ec14a4b0582d69a746c4ed6c6019ada8d2ccfe9"
+          },
+          {
+            "operation_id": "reserve-0",
+            "request_digest": "8f7d27f858ad235e1338fdd3f10f879a3098ce030bc18d6b566eb915d408f7e4",
+            "result": {
+              "kind": "request",
+              "identity": "trial-1",
+              "sequence": 2,
+              "digest": "8d80a9404016485f246ac13eccf25397d80f8c56720ddd0ea4aedca3560cd82a"
+            },
+            "result_digest": "babf191116829276f1eae0896d2aa1c20a0d473a29f508df5568764e130c538d"
+          },
+          {
+            "operation_id": "record-1",
+            "request_digest": "b02dc1bce58fde2ccc6d62fb6b0d6751cf45ce711a2affe838f29712363a0655",
+            "result": {
+              "kind": "record",
+              "identity": "observation-1",
+              "sequence": 3,
+              "digest": "704347ea931908fe6ccfde5749095c002ce8cc1ea8e17d53a71be8e79723b881"
+            },
+            "result_digest": "21a7531e5230e2699c3502531c04d2f75a1033e9cf0a83bf071a20f248d1a871"
+          },
+          {
+            "operation_id": "reserve-1",
+            "request_digest": "c80a91c4dce040d8d8562c329ab559192d18bae1106e66dcc53636e8f664d1e9",
+            "result": {
+              "kind": "request",
+              "identity": "trial-2",
+              "sequence": 4,
+              "digest": "09b550ed6256e6d617f2cbc0ffb7ef7287410a84f116006f90beea0f9692470f"
+            },
+            "result_digest": "df651be4c650d4bd036455691ce015aae3059aa813276f7c6c2b0778ae6165a0"
+          },
+          {
+            "operation_id": "record-2",
+            "request_digest": "df6f4681561d67764c456772513dbb755a8350fd8d79f574c935023e702538d0",
+            "result": {
+              "kind": "record",
+              "identity": "observation-2",
+              "sequence": 5,
+              "digest": "05b97fa80a85e0fca5bf32aeec82440d3f8d4c6594ad80fccfa2ea620a8cfefe"
+            },
+            "result_digest": "0b20f8111ca80b9143ef04e129ec14359f0353736848d4b6b844e356d3417943"
+          },
+          {
+            "operation_id": "reserve-2",
+            "request_digest": "72f2eee583837d441b00e63fffc34a38e0eb445d2f939edc95ee7a4873217c4c",
+            "result": {
+              "kind": "request",
+              "identity": "trial-3",
+              "sequence": 6,
+              "digest": "972ecacb39a1c267b420362303a3b8c59cfbc8de57a500955363421ef264fd10"
+            },
+            "result_digest": "c2ac84242c31840e6f06574dba82747dd23a74e2a3def4716d569da5db48c9a2"
+          },
+          {
+            "operation_id": "record-3",
+            "request_digest": "e96c38b7b8c2b4385e16cbaa9362c7ec3173ba2d9e09d12304362eb4927f92dc",
+            "result": {
+              "kind": "record",
+              "identity": "observation-3",
+              "sequence": 7,
+              "digest": "c7001e4a635816232c5b464afe9a0eff7addaf52eec00aef2fbe972b2711a1b8"
+            },
+            "result_digest": "41d85d448b63837eb03f573f54f6dcac43c8baa70bc7e3d8e3eac6240523345b"
+          },
+          {
+            "operation_id": "reserve-3",
+            "request_digest": "da48a36c62c243f8054babb4e1fa0228822e2735eeeb13fe8372bfa3706d94cb",
+            "result": {
+              "kind": "request",
+              "identity": "trial-4",
+              "sequence": 8,
+              "digest": "7039ba2470d3d146b52263d6c44499ddbd848bf48e6937a8455444c794f85a82"
+            },
+            "result_digest": "95363731f67bdf36976dc3c0868ceb9478199529fa79d32f654adc8f709a9ba7"
+          },
+          {
+            "operation_id": "record-4",
+            "request_digest": "3d3801b731b466c1bd91d6eec08e46beee0f76b347d8b9a788a82e2134460087",
+            "result": {
+              "kind": "record",
+              "identity": "observation-4",
+              "sequence": 9,
+              "digest": "dc7b07ca0871111ca5f2ebc1a99d0ec8811ad342570abfe965f3632217fe3fce"
+            },
+            "result_digest": "636b54e2dffd34a9ef7362f130b30fa73a162cd7e43b34ee7f4623161f7384d0"
+          },
+          {
+            "operation_id": "reserve-4",
+            "request_digest": "036f33ba9eff466ad83879ef9d2fd55c67a9ad0d058bc3221bfcec1198c2152e",
+            "result": {
+              "kind": "request",
+              "identity": "trial-5",
+              "sequence": 10,
+              "digest": "7da9d0b371be3ca0f0888811b6578100851b6394d9951dd56e94b4a646f41411"
+            },
+            "result_digest": "a4d6c6fa08ff4dcc2d8102babe83d3ab9dc52911711173085b6b1138eadfb1a2"
+          },
+          {
+            "operation_id": "record-5",
+            "request_digest": "df0f5d29848b51d261527ed9e4d81615643908d6d5cfce3ee7135253b4ea2044",
+            "result": {
+              "kind": "record",
+              "identity": "observation-5",
+              "sequence": 11,
+              "digest": "e16e2a94aa70ba6629dc34a89b77c5a592b964f1191ee38a7ba2c950545741b3"
+            },
+            "result_digest": "e84c870ce4872010ba809f6ba458cede67fdf3b81ed6c84f95ddb2352dfbe183"
+          },
+          {
+            "operation_id": "reserve-5",
+            "request_digest": "9f5a24727d29da18ac45439f1b6246b30b3299756108f510abddbaf409b008da",
+            "result": {
+              "kind": "request",
+              "identity": "trial-6",
+              "sequence": 12,
+              "digest": "781909991431fa34f72c9ac766f4419643cf496ec1db63996ee79d93955a3a64"
+            },
+            "result_digest": "a1c7a55a4edd5ea7d45e6f44939d6ffcbdd71bd4e8e401e15c2f02cb5466a9ec"
+          },
+          {
+            "operation_id": "record-6",
+            "request_digest": "35a685ce850b9d860a2d04303fd58143cb33ba7d09ce7814a461ae7b86191707",
+            "result": {
+              "kind": "record",
+              "identity": "observation-6",
+              "sequence": 13,
+              "digest": "ee021a127ee95dadfc652269defb41b401c1d4f6c86ca8dd438dcb5e5e5c7c7d"
+            },
+            "result_digest": "cd43d23264b7a58bce86d9a79eb76915d6dcd7d27def9ff3160b2364dc2cfa84"
+          },
+          {
+            "operation_id": "reserve-6",
+            "request_digest": "d759fd14a380a3e062e489d7796832515c021ffc33311ce915aa79e77f519a0e",
+            "result": {
+              "kind": "request",
+              "identity": "trial-7",
+              "sequence": 14,
+              "digest": "649a95bb413fe0687bbec3ce1c70e8c7dd3a2e0f20d278a76ddc4b68515018a0"
+            },
+            "result_digest": "6b7d8fd7be13fbf603e7393d952671476385f3d8077da137e6bb370bfb3958a6"
+          },
+          {
+            "operation_id": "record-7",
+            "request_digest": "4c7f4d98159e22fc3c240e9f89c7146bddf3ddf123d3895a2ca0827bb7c6fd13",
+            "result": {
+              "kind": "record",
+              "identity": "observation-7",
+              "sequence": 15,
+              "digest": "6ee1e2262d5edfe1a05057c93a631da929d7af786178e06e75b0589540d4178c"
+            },
+            "result_digest": "2e12ebeb3e0af2c5ee04a533af234373770438e55257d76ec220307b70ada010"
+          },
+          {
+            "operation_id": "reserve-7",
+            "request_digest": "bcbc2b18214a5986deaf79963a31ca35ffa552a134eb65b256465b857245cef7",
+            "result": {
+              "kind": "request",
+              "identity": "trial-8",
+              "sequence": 16,
+              "digest": "85fdf6871e061c3ccc61b5005984e8e6056cc3744c1b1f2729c71ff08d0af154"
+            },
+            "result_digest": "a43dc5bc3de3773c6477eb0d196918b661d091e83003bc83db1a31621fc5ff51"
+          },
+          {
+            "operation_id": "record-8",
+            "request_digest": "3878121c14dd7f59064471d44855898524ba53fba0ba0147ed18f8b517db8519",
+            "result": {
+              "kind": "record",
+              "identity": "observation-8",
+              "sequence": 17,
+              "digest": "9f3b337e064ad85e114e0811e31822875d1ed20770bcd0b96b623f31aa107c84"
+            },
+            "result_digest": "a41880e0b821abe0a190e9de1becb2ec83215fc20ded190d44e197a255aafe63"
+          },
+          {
+            "operation_id": "independent-0",
+            "request_digest": "2f1fe210c1a2b3dc71ce9f012eb131adbc24b72f353730543847ae3733fcfafe",
+            "result": {
+              "kind": "record",
+              "identity": "observation-9",
+              "sequence": 18,
+              "digest": "0d0d6ed7528cbc23e4f02512ebf74898973ef0e7fc35eaee51ef41ef2a1e1fe9"
+            },
+            "result_digest": "177e693c335ff89d4cb64f68b825cb494452f077b4775ad479a37430a2647c6a"
+          },
+          {
+            "operation_id": "independent-1",
+            "request_digest": "3df3ea9145a56a3515cd39c513e8641d22f729f5ae98cfab65d154ab9e7f6dee",
+            "result": {
+              "kind": "record",
+              "identity": "observation-10",
+              "sequence": 19,
+              "digest": "15edbf5b687170a0e61047010fec63e8089a8ed5513d884e3e2a6f29b2814a73"
+            },
+            "result_digest": "fcc17704fcef381978ee36f1760f4fb984ffa466985b39d21e609ad5806e772b"
+          }
+        ]
+      },
+      "certificate": {
+        "qualification": "one_minimal_under_recorded_oracle",
+        "best_subset": [
+          "a9"
+        ],
+        "oracle_digest": "4814fcf1fe11ccba2205c9dfe53a831b592cc471bef822573440d1c1acb97137",
+        "failing_witnesses": [
+          "observation-7",
+          "observation-9"
+        ],
+        "deletion_witnesses": [
+          {
+            "removed_atom": "a9",
+            "subset_digest": "149e534fdbb5ec9af3fa5e9e6cf438b585b07f06f424abd5ef5b4396ed6bfe3b",
+            "pass_witnesses": [
+              "observation-8",
+              "observation-10"
+            ],
+            "status": "pass"
+          }
+        ],
+        "missing_deletions": [],
+        "evidence": "recorded_oracle",
+        "limitations": [
+          "Relative to declared ordered atoms and recorded oracle only.",
+          "Not globally smallest, a proven cause, authenticated testimony or a future reproducibility guarantee."
+        ],
+        "witness_digest": "56508c0448d744f4d9ffd2f6f714dc510dc26d4153335638f680ae823326bfb1"
+      },
+      "total_delivered_bytes": 285590,
+      "complete_sdk_snapshot_bytes": 198480,
+      "auxiliary_sdk_bytes": 8048,
+      "oracle_evidence": [
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-1",
+            "item_hash": "5c6a90f23a59a1171cebf8017b071b36e3fc111be87467b7dd0c46b20a50e690",
+            "field_pointer": "/description",
+            "content_digest": "686c6af9233c9199c283e6e3d11a624a37a47f4b19bcd79f4e732f844a6be66b"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:25.133Z\",\"result\":\"target_fail\",\"scenario\":\"beads-precision\",\"signature\":\"beads-precision\",\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\",\"a4\",\"a5\",\"a6\",\"a7\",\"a8\",\"a9\",\"a10\",\"a11\",\"a12\",\"a13\",\"a14\",\"a15\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-2",
+            "item_hash": "7971591c4f3ac1abeb8dfa45084b615e9e0d65e86cd23a157c49b1da9eae8c2d",
+            "field_pointer": "/description",
+            "content_digest": "5d6a08badaa7289d387c12fd903d9f53b7ef9199a87fca38591d24aaf013d043"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:27.195Z\",\"result\":\"pass\",\"scenario\":\"beads-precision\",\"signature\":null,\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\",\"a4\",\"a5\",\"a6\",\"a7\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-3",
+            "item_hash": "4fdc038c1c638f297549f0dcf75cf44276de45fc9f5fae719de154c5437921a5",
+            "field_pointer": "/description",
+            "content_digest": "aca28c6ae315add57a034d0644edf96fc6c442da9a7df8af80218761e26fc823"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:29.578Z\",\"result\":\"target_fail\",\"scenario\":\"beads-precision\",\"signature\":\"beads-precision\",\"subset_ids\":[\"a8\",\"a9\",\"a10\",\"a11\",\"a12\",\"a13\",\"a14\",\"a15\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-4",
+            "item_hash": "3130a24840998b12dc61b063fe421bed20dea5b0e63b284bdc92e3a8e1d4d5cc",
+            "field_pointer": "/description",
+            "content_digest": "c1cbc04bf171342026e66ddee095cea25853470657ef8caf03708ed929e2d861"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:31.752Z\",\"result\":\"target_fail\",\"scenario\":\"beads-precision\",\"signature\":\"beads-precision\",\"subset_ids\":[\"a8\",\"a9\",\"a10\",\"a11\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-5",
+            "item_hash": "fd65a3792d23dcd09a8a0f9b03a48424d136fed710a7d1d15ee05e1672b816df",
+            "field_pointer": "/description",
+            "content_digest": "f55a066906de43e2c4d51e2b0e54fad89faa62c348a2f3691ddabba25eba95b2"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:33.580Z\",\"result\":\"target_fail\",\"scenario\":\"beads-precision\",\"signature\":\"beads-precision\",\"subset_ids\":[\"a8\",\"a9\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-6",
+            "item_hash": "0d83acd505289fc1a89960c85c37d1f3c90c9161bcf4494cd0496e7ae100dc33",
+            "field_pointer": "/description",
+            "content_digest": "f5d47e62f8f0960fabe1a7cae816e9377bb4928acae7392227c6ab71ab7c2826"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:35.547Z\",\"result\":\"pass\",\"scenario\":\"beads-precision\",\"signature\":null,\"subset_ids\":[\"a8\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-7",
+            "item_hash": "9477a8342f0776cbd9d1aad49a00ad42375d12c5d5fe93db3dd493afc4dc0fe2",
+            "field_pointer": "/description",
+            "content_digest": "1fd6dbff3712f38b544ab97c4c2dacff127001017c43750fa54d60afba79b5a3"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:36.321Z\",\"result\":\"target_fail\",\"scenario\":\"beads-precision\",\"signature\":\"beads-precision\",\"subset_ids\":[\"a9\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-8",
+            "item_hash": "047acf9b01eeb30ee9965963cf42dce8c56fb8495bfd846764aa7966ee086e97",
+            "field_pointer": "/description",
+            "content_digest": "ef72e686a730b11592d60ff00f23a906e25af8a640416141b99090de523802e7"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:36.947Z\",\"result\":\"pass\",\"scenario\":\"beads-precision\",\"signature\":null,\"subset_ids\":[]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-9",
+            "item_hash": "d8792e86c96daddd4fa534690a206e74dbcf39d88d2ab1ce4a89d936631d1865",
+            "field_pointer": "/description",
+            "content_digest": "ef767db83b6234047df4bf3a6d42872a8f469811319a87813f308037676542ab"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:37.589Z\",\"result\":\"target_fail\",\"scenario\":\"beads-precision\",\"signature\":\"beads-precision\",\"subset_ids\":[\"a9\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-beads-precision-evidence-10",
+            "item_hash": "42b99080ca28a7aa259a0ff0be9654db2e2973c87eee6b019874bc5bb6bd8363",
+            "field_pointer": "/description",
+            "content_digest": "d6138a792735c849f44f251186a4b222c98b49f75e86dcf12c45c4f45f608c22"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:38.413Z\",\"result\":\"pass\",\"scenario\":\"beads-precision\",\"signature\":null,\"subset_ids\":[]}"
+        }
+      ],
+      "delivered_results": 80,
+      "source": "https://github.com/unbraind/pm-beads/blob/70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d/repair.ts",
+      "source_sha256": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+      "native_anchor": {
+        "item_id": "pm-beads-y6cp",
+        "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+        "field_pointer": "/description",
+        "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+        "description": "Overlap checked against beads validate, core relationship analytics, pm-graph analytics, and pm-csv provenance. This adds Beads JSONL row addresses and exact external identities plus revalidated edge-removal proposals. It does not replace core topology or CSV cell provenance."
+      },
+      "original_digest": "54a9451923ebe340102e6eaaa3926ca95ccdeae02aabef176c050ae091ce157d",
+      "initial_atoms": 16,
+      "final_atoms": 1,
+      "original_bytes": 15198,
+      "reduced_bytes": 87,
+      "reserved_trials": 8,
+      "actual_trials": 10,
+      "outcomes": {
+        "target_fail": 6,
+        "pass": 4,
+        "unresolved": 0
+      },
+      "cache_hits": 8,
+      "resumes": 5,
+      "independent_checks": 2,
+      "qualification": "one_minimal_under_recorded_oracle",
+      "witness_digest": "56508c0448d744f4d9ffd2f6f714dc510dc26d4153335638f680ae823326bfb1",
+      "packet_bytes": 3303,
+      "packet_estimated_tokens": 826,
+      "raw_estimated_tokens": 3800,
+      "manual_log_bytes": 26331,
+      "resume_questions": 10,
+      "latency_ms": 14809,
+      "complete_observations": 10,
+      "journal": [
+        {
+          "request": "trial-1",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "a6",
+            "a7",
+            "a8",
+            "a9",
+            "a10",
+            "a11",
+            "a12",
+            "a13",
+            "a14",
+            "a15"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-2",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "a6",
+            "a7"
+          ],
+          "result": "pass"
+        },
+        {
+          "request": "trial-3",
+          "subset": [
+            "a8",
+            "a9",
+            "a10",
+            "a11",
+            "a12",
+            "a13",
+            "a14",
+            "a15"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-4",
+          "subset": [
+            "a8",
+            "a9",
+            "a10",
+            "a11"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-5",
+          "subset": [
+            "a8",
+            "a9"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-6",
+          "subset": [
+            "a8"
+          ],
+          "result": "pass"
+        },
+        {
+          "request": "trial-7",
+          "subset": [
+            "a9"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-8",
+          "subset": [],
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "scenario": "jev-unicode",
+      "owner_id": "public-jev-unicode",
+      "revision": "b2ee6d3478dfc651be6f563dfd1c8f0e227a65584860b7aaa09a7531d7806b48",
+      "reduction_snapshot": {
+        "version": 1,
+        "package": "pm-reduce",
+        "algorithm_version": "ddmin-1",
+        "definition": {
+          "atoms": [
+            {
+              "atom_id": "a0",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a1",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a2",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a3",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a4",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a5",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a6",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a7",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a8",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a9",
+              "payload_digest": "130016b2599bf7e5978cae78e528c67f29aa47eaa2490ffedd729df334a2790c",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a10",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a11",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a12",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a13",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a14",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a15",
+              "payload_digest": "6d0851629c0a1aabc08ddc5af7345ed676df44e4e6e40b0eece72f5e5989df4b",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            }
+          ],
+          "composition": "ordered_subset",
+          "original_digest": "bbbc9eeab5d276f44f7ce845e403b6ff4747d7948174b093799389ca2d58ef51",
+          "oracle": {
+            "oracle_key": "jev-unicode",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "target_failure_signature": "jev-unicode",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "deterministic_declared": true
+          },
+          "max_trials": 256
+        },
+        "best_failing_subset": [
+          "a9"
+        ],
+        "partition_cursor": "search_complete",
+        "requests": [
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3",
+              "a4",
+              "a5",
+              "a6",
+              "a7",
+              "a8",
+              "a9",
+              "a10",
+              "a11",
+              "a12",
+              "a13",
+              "a14",
+              "a15"
+            ],
+            "subset_digest": "9e8bbef68d62d0f5331831a478dacd040276da0e1d3544977a71754cf9690426",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "baseline",
+            "partition_cursor": "baseline",
+            "request_id": "trial-1",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3",
+              "a4",
+              "a5",
+              "a6",
+              "a7"
+            ],
+            "subset_digest": "b91f5c22227bbe7bc01403292f84f10ce8d586192c3dc0f1b44d50882c9ce0fc",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "subset",
+            "partition_cursor": "16:2:subset:0",
+            "request_id": "trial-2",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8",
+              "a9",
+              "a10",
+              "a11",
+              "a12",
+              "a13",
+              "a14",
+              "a15"
+            ],
+            "subset_digest": "2ba0a3cef3af87f255a8da6439034e7622d14c522289545e6fc316a4d9c15c60",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "subset",
+            "partition_cursor": "16:2:subset:1",
+            "request_id": "trial-3",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8",
+              "a9",
+              "a10",
+              "a11"
+            ],
+            "subset_digest": "e2310f2cd01c71dd1a88d6bb625ed89e9cb74fcf4a5cb4542f308a5ad10e433b",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "subset",
+            "partition_cursor": "8:2:subset:0",
+            "request_id": "trial-4",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8",
+              "a9"
+            ],
+            "subset_digest": "396306cf13b0b8b6d0680b2a6d7315a082caf528aa346f1a48fc0130c4009122",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "subset",
+            "partition_cursor": "4:2:subset:0",
+            "request_id": "trial-5",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a8"
+            ],
+            "subset_digest": "b7fcb318c20693ce6e26ae67a2f5c347110beb7bc4fbcfe4a9973102f55e0e90",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "subset",
+            "partition_cursor": "2:2:subset:0",
+            "request_id": "trial-6",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a9"
+            ],
+            "subset_digest": "11e6e95458c1aa50ee45af6e750310a066fba047049212760628332f8de291fb",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "subset",
+            "partition_cursor": "2:2:subset:1",
+            "request_id": "trial-7",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [],
+            "subset_digest": "902837fc3ac1f647dca39ca4482f75732f01ad6d29155c0140ebb1124305cd30",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "purpose": "deletion",
+            "partition_cursor": "deletion:0",
+            "request_id": "trial-8",
+            "state": "completed"
+          }
+        ],
+        "observations": [
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-unicode",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-1",
+              "item_hash": "9555197a095bd9313b09c5def40dcd0e51d07c53d2e44e0fd337dad04b162a9e",
+              "field_pointer": "/description",
+              "content_digest": "837c181016c27c50b71aca49f0d4862db04cb6f124dff5ab2f15232d311cf27d"
+            },
+            "observed_at": "2026-11-06T12:33:39.689Z",
+            "recorder": "fixture",
+            "subset_digest": "9e8bbef68d62d0f5331831a478dacd040276da0e1d3544977a71754cf9690426",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-1",
+            "request_id": "trial-1",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-2",
+              "item_hash": "ee6ea8d8e1ee8708f7120ca811b670a30372b7d74455326d98a904d242871766",
+              "field_pointer": "/description",
+              "content_digest": "5e1bbaaaa6c363b79cce8dd900fe6903d35c7a0cc06e602644d7d351624c48bd"
+            },
+            "observed_at": "2026-11-06T12:33:40.827Z",
+            "recorder": "fixture",
+            "subset_digest": "b91f5c22227bbe7bc01403292f84f10ce8d586192c3dc0f1b44d50882c9ce0fc",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-2",
+            "request_id": "trial-2",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-unicode",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-3",
+              "item_hash": "d157eadaee83966a6c90a51835dc727398b864e869e8ed5ea3b5ae0ebda45120",
+              "field_pointer": "/description",
+              "content_digest": "bc0192881de597bae303c975e2a3791859f9a8eb2a86c705d8a3aae5231eb1a5"
+            },
+            "observed_at": "2026-11-06T12:33:41.594Z",
+            "recorder": "fixture",
+            "subset_digest": "2ba0a3cef3af87f255a8da6439034e7622d14c522289545e6fc316a4d9c15c60",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-3",
+            "request_id": "trial-3",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-unicode",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-4",
+              "item_hash": "ba4e1ff5fd33bfea17df2f7659397d91137a1b3b1871c9cb42d25cc13af4491f",
+              "field_pointer": "/description",
+              "content_digest": "115718cfcaa4c96897e41a67a01124e2876e7647e3734f95a606b70c2681f17e"
+            },
+            "observed_at": "2026-11-06T12:33:42.466Z",
+            "recorder": "fixture",
+            "subset_digest": "e2310f2cd01c71dd1a88d6bb625ed89e9cb74fcf4a5cb4542f308a5ad10e433b",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-4",
+            "request_id": "trial-4",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-unicode",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-5",
+              "item_hash": "77b2b75e13674e9510aebe06680694f670254cb60d610ec3a88f63cdc6e619cc",
+              "field_pointer": "/description",
+              "content_digest": "5a71527d5e2908822c1183e819ba87fb77bb10a99dc37027112c6d671a87e4bf"
+            },
+            "observed_at": "2026-11-06T12:33:43.654Z",
+            "recorder": "fixture",
+            "subset_digest": "396306cf13b0b8b6d0680b2a6d7315a082caf528aa346f1a48fc0130c4009122",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-5",
+            "request_id": "trial-5",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-6",
+              "item_hash": "859ce3f2308ddfc977034942d0f27aad64cc7ac5c07ad9056ade66baf04fbf62",
+              "field_pointer": "/description",
+              "content_digest": "a88a093961150d8e113a089161ed83346b5c1dda20676dc9beffb0d17deea5b6"
+            },
+            "observed_at": "2026-11-06T12:33:44.856Z",
+            "recorder": "fixture",
+            "subset_digest": "b7fcb318c20693ce6e26ae67a2f5c347110beb7bc4fbcfe4a9973102f55e0e90",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-6",
+            "request_id": "trial-6",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-unicode",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-7",
+              "item_hash": "12970b02532b3ef041c17b811a297ba172ca0fb62333e2b9d5f2390ce7bdc3fe",
+              "field_pointer": "/description",
+              "content_digest": "0caf659434ce6004f85286dcd2232927c2796a132b2f60b0f39c15fa29b9919b"
+            },
+            "observed_at": "2026-11-06T12:33:45.835Z",
+            "recorder": "fixture",
+            "subset_digest": "11e6e95458c1aa50ee45af6e750310a066fba047049212760628332f8de291fb",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-7",
+            "request_id": "trial-7",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-8",
+              "item_hash": "ad16dbe1d0ac48b5ce4498b798c9c212c0e9b8d6f1c56947e17c1c059356c405",
+              "field_pointer": "/description",
+              "content_digest": "e3aa77e5ca54794a971f7478dc07a6101a159b3ee6ce994e90f3be062187a67f"
+            },
+            "observed_at": "2026-11-06T12:33:46.305Z",
+            "recorder": "fixture",
+            "subset_digest": "902837fc3ac1f647dca39ca4482f75732f01ad6d29155c0140ebb1124305cd30",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-8",
+            "request_id": "trial-8",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-unicode",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-9",
+              "item_hash": "4fffadab70d88a65f1e0bc9683e461706f20895310499d76f85a5fa308c98fee",
+              "field_pointer": "/description",
+              "content_digest": "171a7d2b8add8eac12f6952717f66ccea29756dcf0efa41fa0b21a36071c35c7"
+            },
+            "observed_at": "2026-11-06T12:33:46.626Z",
+            "recorder": "fixture",
+            "subset_digest": "11e6e95458c1aa50ee45af6e750310a066fba047049212760628332f8de291fb",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-9",
+            "request_id": "trial-7",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-unicode-evidence-10",
+              "item_hash": "a89ea1c4396d9bb9b25e33a3f26dd33a9f2dc1c4e267a968270d96c1e45464a2",
+              "field_pointer": "/description",
+              "content_digest": "40023047aba8c85e330b4d07d31f9e518d0841217c5b32caffdb23a4ba1bdd6d"
+            },
+            "observed_at": "2026-11-06T12:33:47.141Z",
+            "recorder": "fixture",
+            "subset_digest": "902837fc3ac1f647dca39ca4482f75732f01ad6d29155c0140ebb1124305cd30",
+            "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-10",
+            "request_id": "trial-8",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          }
+        ],
+        "trial_budget": {
+          "limit": 256,
+          "reserved": 8,
+          "completed": 8,
+          "pending": 0
+        },
+        "qualification": "one_minimal_under_recorded_oracle",
+        "replay_receipts": [
+          {
+            "operation_id": "birth",
+            "request_digest": "d2369dfd7e72c7cf9135b7f0bf8841a515bc3885eb3089997374fb4e714b31f0",
+            "result": {
+              "kind": "create",
+              "identity": "public-jev-unicode",
+              "sequence": 1,
+              "digest": "fa794e136a7081d7749fa98a845ac091d4089c7d539f9541cc6c898df6abe82b"
+            },
+            "result_digest": "2dcdca66fbaf979d4adeb3a7e238905777198b256eb2dc9eb4c96e73deea0949"
+          },
+          {
+            "operation_id": "reserve-0",
+            "request_digest": "a2b742de3b2f0e28409d2ea71771bf4906d96185fddc443e5a6d14495ffcf53c",
+            "result": {
+              "kind": "request",
+              "identity": "trial-1",
+              "sequence": 2,
+              "digest": "8ac8c9f6723dfd782bafaad6ebcbae1bf90dbf23c361aa1fe283534259648206"
+            },
+            "result_digest": "df9fa16d3863a70158c781476ff8b5d9a6850fb945a578aab6108d042c94d2c3"
+          },
+          {
+            "operation_id": "record-1",
+            "request_digest": "41d7d9a2b875babc1d9601dd6a31befb08060c69beb747ccb1c284c3bd00b309",
+            "result": {
+              "kind": "record",
+              "identity": "observation-1",
+              "sequence": 3,
+              "digest": "68c49788295c873f57a95a037aabfe0f1d03346ed0209d811c8baa5fb555abd8"
+            },
+            "result_digest": "41db498e887a640cbb1c52c1300c0e9cb61b0c5831bc495c5dbf907b65fd6ae1"
+          },
+          {
+            "operation_id": "reserve-1",
+            "request_digest": "2f637d6ce65ba79fe806d31d7621943b7dd9f5a1ed25ffa75273c2e064a52e7d",
+            "result": {
+              "kind": "request",
+              "identity": "trial-2",
+              "sequence": 4,
+              "digest": "801111cbd1eed03defb641055616dcc6efa2d2dc07caf6b9ae8054336d1f6ea6"
+            },
+            "result_digest": "b5d03c07f93d3e6c4902d10ad0b948db23d852ad433e05a8cea78bb5797c6ccb"
+          },
+          {
+            "operation_id": "record-2",
+            "request_digest": "701893c83ab2040eb0b67dafcd4edf6f1eac5638b173584ac84f446a2545605c",
+            "result": {
+              "kind": "record",
+              "identity": "observation-2",
+              "sequence": 5,
+              "digest": "30aa1897f2cae294683d141f7fde88b253c224bc710111e7a808fc6f4e94d117"
+            },
+            "result_digest": "66a2e3e827e8c46790b264111321097812f6dff64f2a58c0d4a5432858b20d20"
+          },
+          {
+            "operation_id": "reserve-2",
+            "request_digest": "ba038cf9016c0247ecd6739663aab6239d288645e3d5bbf10bc415abf3509e88",
+            "result": {
+              "kind": "request",
+              "identity": "trial-3",
+              "sequence": 6,
+              "digest": "ea824eb0d56a10258c70203af4ef7b429e1f1a583223cf33f42a71940fbb352c"
+            },
+            "result_digest": "591f2539ec3c42c092cfa3fea941e135c98d3f5c51103dcdc196ac1710996ab8"
+          },
+          {
+            "operation_id": "record-3",
+            "request_digest": "e862aee24d28f390999a5dabc8912467d757024bcf0ca7ef774641803ec8b255",
+            "result": {
+              "kind": "record",
+              "identity": "observation-3",
+              "sequence": 7,
+              "digest": "6d541de0858b06a0ad6ed8959782cf3a4f202433d90c97aa6b0f78f1fc65843c"
+            },
+            "result_digest": "00bd3dccfeb3fdf2a1cbf45ece05c828f22d5cba8be1d6b038c09cf9879229a6"
+          },
+          {
+            "operation_id": "reserve-3",
+            "request_digest": "41ed097054e0f4b33bee2105c56754d0df8265c06c31bc019ad877eb5287a020",
+            "result": {
+              "kind": "request",
+              "identity": "trial-4",
+              "sequence": 8,
+              "digest": "12f467a240d4259fd2105434e9a6c4578e2a733bf6d5e4971f122ceeb2123d25"
+            },
+            "result_digest": "89cb9013ce51e0679d45d0b2d93fdc017d1a495962f30a8f92c6ef64ba0ef3ee"
+          },
+          {
+            "operation_id": "record-4",
+            "request_digest": "f0f07142cabd95351df6b65f36c8aacebb8dfbf8631e1e197653a94b5e8d03dc",
+            "result": {
+              "kind": "record",
+              "identity": "observation-4",
+              "sequence": 9,
+              "digest": "7618dfb8e7c25d065d0b7d411fb4f2ecd2a5c228925fde4b52352b7e8697017f"
+            },
+            "result_digest": "9cceed6f823487ce1c5b956134e85d7446040b6be1419ae443f1a8431a85bd16"
+          },
+          {
+            "operation_id": "reserve-4",
+            "request_digest": "f1a5d80bb510239f357bf655b02aa0a8e66bc5890da149d0dee827a2bcd7e369",
+            "result": {
+              "kind": "request",
+              "identity": "trial-5",
+              "sequence": 10,
+              "digest": "3d0b24655e5cf0d2ff320a39c2dbdf866fa514e7b859521241e9784f12d553ba"
+            },
+            "result_digest": "36e52feaeabdff8b50c9de1c3ff6c215ec51d6f5aeaa939dbf53b36a53967d97"
+          },
+          {
+            "operation_id": "record-5",
+            "request_digest": "a44cf6682acc13086e25f01a93ac8fdcae0639b8acfb03b8d78c627c86088078",
+            "result": {
+              "kind": "record",
+              "identity": "observation-5",
+              "sequence": 11,
+              "digest": "0987993ad91f43c1a2e989bd4a4af3945bbb8a80e01f5d862033286fda373bd2"
+            },
+            "result_digest": "e55f5ed81e461157410e4ed81682ad133c60e4c72cfd713ac7e7856f023993a5"
+          },
+          {
+            "operation_id": "reserve-5",
+            "request_digest": "adde58b260c82e78fb5e362be4b0bb69815ad30e1d54c5b244857ceaee2af825",
+            "result": {
+              "kind": "request",
+              "identity": "trial-6",
+              "sequence": 12,
+              "digest": "ec8ba1ca00ff9daeb3a18623a42912f7d2d48de6781f333ac277d296742db186"
+            },
+            "result_digest": "bb1857ae0ab4621a9ba902f84e9f4ee439f6b6b45469f58064a401fbcf3e681f"
+          },
+          {
+            "operation_id": "record-6",
+            "request_digest": "87c0ff3089a5bb2605c5848719735adcf1ea92af005cb525b5de96a6dec2ca3d",
+            "result": {
+              "kind": "record",
+              "identity": "observation-6",
+              "sequence": 13,
+              "digest": "b5584ad881614524091437869d9d42805ae97cda6ba591454d6ad2a381409172"
+            },
+            "result_digest": "b013e8f14c1edf1699eebbcbf5c6cf97204dff03a6dcc9c836cec8d3b48659dc"
+          },
+          {
+            "operation_id": "reserve-6",
+            "request_digest": "054fce4a6f3e81094c3398af12617fb42f2c10960213cac655163b8c76f822bc",
+            "result": {
+              "kind": "request",
+              "identity": "trial-7",
+              "sequence": 14,
+              "digest": "af70394ff510b142a014e4fafd8528fcf370a0f50dc9d454583dc24232f0e4f0"
+            },
+            "result_digest": "dbb8def5f53baa657daa7ffbb7ae30e9617107508b5213c4bb1f1005b30cf9a0"
+          },
+          {
+            "operation_id": "record-7",
+            "request_digest": "46420ae176f63885ef1be20445dcb4fb5654a12e53dd459432062be15ddceaef",
+            "result": {
+              "kind": "record",
+              "identity": "observation-7",
+              "sequence": 15,
+              "digest": "00064150639802b08a3b31477d5ee392b4d3e2c63b32efcbf71d094b769f8d8e"
+            },
+            "result_digest": "3f3ddc2973d6a10efa6f9b163db5743ef9cae80bf2021962cbc516ad5730c349"
+          },
+          {
+            "operation_id": "reserve-7",
+            "request_digest": "5a56b4cf148d0294c24b60d074a76473809eb7b612f95b7e94a1a7c4236aa0dd",
+            "result": {
+              "kind": "request",
+              "identity": "trial-8",
+              "sequence": 16,
+              "digest": "a2cc86b586d8840e59c7034b9a9d780e7d734c19cd5648deeb470fa5d0e48ad3"
+            },
+            "result_digest": "513f91d0fb903302d0b03d530fe217dba70ddd62a1c9f8fd9a5b31a294da7b1b"
+          },
+          {
+            "operation_id": "record-8",
+            "request_digest": "85f0c00083ea390b0fe3fca5ce59ee1dff3691ad2ee8749ef05b5af9daf1ab79",
+            "result": {
+              "kind": "record",
+              "identity": "observation-8",
+              "sequence": 17,
+              "digest": "4c07df1d320f3342108b1e3b6ba1f875cf34e2e988afb22b088de4715da8fa1e"
+            },
+            "result_digest": "80a86cf55b5db4cbf63620c2e04bff735c6ca28e7858be30efb9355cdfd5987c"
+          },
+          {
+            "operation_id": "independent-0",
+            "request_digest": "7b89d72baaee375e64ca3d81176d4281e9d83650e927c97afec223a7bb81a2ee",
+            "result": {
+              "kind": "record",
+              "identity": "observation-9",
+              "sequence": 18,
+              "digest": "de738943b898264c64b9e4a0653ef42c805647cb6f5d575b8c79cab3aad22018"
+            },
+            "result_digest": "16f2cc9a8c773d2c4b43a0da5ffcb0f2bb1e37d9bf470423c5a263fef675af7b"
+          },
+          {
+            "operation_id": "independent-1",
+            "request_digest": "fdab8620a5574ae30a1cc02a991ac06867a84c4e24c9a5cb398fd856c48182b3",
+            "result": {
+              "kind": "record",
+              "identity": "observation-10",
+              "sequence": 19,
+              "digest": "0bb00fcebca9b011e595d0fb208a9b0570da99a45ad5ed82cdf2d65982350bd9"
+            },
+            "result_digest": "58dc931c9aee432e1a5aa3ad9f8e72a5e8599cbe283c26376b90fa1bc5468167"
+          }
+        ]
+      },
+      "certificate": {
+        "qualification": "one_minimal_under_recorded_oracle",
+        "best_subset": [
+          "a9"
+        ],
+        "oracle_digest": "4f40b5b82824dc73054cc959a2ad254ec52ddb0678845cbae859bf61073d8954",
+        "failing_witnesses": [
+          "observation-7",
+          "observation-9"
+        ],
+        "deletion_witnesses": [
+          {
+            "removed_atom": "a9",
+            "subset_digest": "902837fc3ac1f647dca39ca4482f75732f01ad6d29155c0140ebb1124305cd30",
+            "pass_witnesses": [
+              "observation-8",
+              "observation-10"
+            ],
+            "status": "pass"
+          }
+        ],
+        "missing_deletions": [],
+        "evidence": "recorded_oracle",
+        "limitations": [
+          "Relative to declared ordered atoms and recorded oracle only.",
+          "Not globally smallest, a proven cause, authenticated testimony or a future reproducibility guarantee."
+        ],
+        "witness_digest": "66a47d5ce7e2af459713ec5decabd45ea72016aac22b5ce60aea37a17669dc5c"
+      },
+      "total_delivered_bytes": 285250,
+      "complete_sdk_snapshot_bytes": 198816,
+      "auxiliary_sdk_bytes": 7864,
+      "oracle_evidence": [
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-1",
+            "item_hash": "9555197a095bd9313b09c5def40dcd0e51d07c53d2e44e0fd337dad04b162a9e",
+            "field_pointer": "/description",
+            "content_digest": "837c181016c27c50b71aca49f0d4862db04cb6f124dff5ab2f15232d311cf27d"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:39.689Z\",\"result\":\"target_fail\",\"scenario\":\"jev-unicode\",\"signature\":\"jev-unicode\",\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\",\"a4\",\"a5\",\"a6\",\"a7\",\"a8\",\"a9\",\"a10\",\"a11\",\"a12\",\"a13\",\"a14\",\"a15\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-2",
+            "item_hash": "ee6ea8d8e1ee8708f7120ca811b670a30372b7d74455326d98a904d242871766",
+            "field_pointer": "/description",
+            "content_digest": "5e1bbaaaa6c363b79cce8dd900fe6903d35c7a0cc06e602644d7d351624c48bd"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:40.827Z\",\"result\":\"pass\",\"scenario\":\"jev-unicode\",\"signature\":null,\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\",\"a4\",\"a5\",\"a6\",\"a7\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-3",
+            "item_hash": "d157eadaee83966a6c90a51835dc727398b864e869e8ed5ea3b5ae0ebda45120",
+            "field_pointer": "/description",
+            "content_digest": "bc0192881de597bae303c975e2a3791859f9a8eb2a86c705d8a3aae5231eb1a5"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:41.594Z\",\"result\":\"target_fail\",\"scenario\":\"jev-unicode\",\"signature\":\"jev-unicode\",\"subset_ids\":[\"a8\",\"a9\",\"a10\",\"a11\",\"a12\",\"a13\",\"a14\",\"a15\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-4",
+            "item_hash": "ba4e1ff5fd33bfea17df2f7659397d91137a1b3b1871c9cb42d25cc13af4491f",
+            "field_pointer": "/description",
+            "content_digest": "115718cfcaa4c96897e41a67a01124e2876e7647e3734f95a606b70c2681f17e"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:42.466Z\",\"result\":\"target_fail\",\"scenario\":\"jev-unicode\",\"signature\":\"jev-unicode\",\"subset_ids\":[\"a8\",\"a9\",\"a10\",\"a11\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-5",
+            "item_hash": "77b2b75e13674e9510aebe06680694f670254cb60d610ec3a88f63cdc6e619cc",
+            "field_pointer": "/description",
+            "content_digest": "5a71527d5e2908822c1183e819ba87fb77bb10a99dc37027112c6d671a87e4bf"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:43.654Z\",\"result\":\"target_fail\",\"scenario\":\"jev-unicode\",\"signature\":\"jev-unicode\",\"subset_ids\":[\"a8\",\"a9\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-6",
+            "item_hash": "859ce3f2308ddfc977034942d0f27aad64cc7ac5c07ad9056ade66baf04fbf62",
+            "field_pointer": "/description",
+            "content_digest": "a88a093961150d8e113a089161ed83346b5c1dda20676dc9beffb0d17deea5b6"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:44.856Z\",\"result\":\"pass\",\"scenario\":\"jev-unicode\",\"signature\":null,\"subset_ids\":[\"a8\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-7",
+            "item_hash": "12970b02532b3ef041c17b811a297ba172ca0fb62333e2b9d5f2390ce7bdc3fe",
+            "field_pointer": "/description",
+            "content_digest": "0caf659434ce6004f85286dcd2232927c2796a132b2f60b0f39c15fa29b9919b"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:45.835Z\",\"result\":\"target_fail\",\"scenario\":\"jev-unicode\",\"signature\":\"jev-unicode\",\"subset_ids\":[\"a9\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-8",
+            "item_hash": "ad16dbe1d0ac48b5ce4498b798c9c212c0e9b8d6f1c56947e17c1c059356c405",
+            "field_pointer": "/description",
+            "content_digest": "e3aa77e5ca54794a971f7478dc07a6101a159b3ee6ce994e90f3be062187a67f"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:46.305Z\",\"result\":\"pass\",\"scenario\":\"jev-unicode\",\"signature\":null,\"subset_ids\":[]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-9",
+            "item_hash": "4fffadab70d88a65f1e0bc9683e461706f20895310499d76f85a5fa308c98fee",
+            "field_pointer": "/description",
+            "content_digest": "171a7d2b8add8eac12f6952717f66ccea29756dcf0efa41fa0b21a36071c35c7"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:46.626Z\",\"result\":\"target_fail\",\"scenario\":\"jev-unicode\",\"signature\":\"jev-unicode\",\"subset_ids\":[\"a9\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-unicode-evidence-10",
+            "item_hash": "a89ea1c4396d9bb9b25e33a3f26dd33a9f2dc1c4e267a968270d96c1e45464a2",
+            "field_pointer": "/description",
+            "content_digest": "40023047aba8c85e330b4d07d31f9e518d0841217c5b32caffdb23a4ba1bdd6d"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:47.141Z\",\"result\":\"pass\",\"scenario\":\"jev-unicode\",\"signature\":null,\"subset_ids\":[]}"
+        }
+      ],
+      "delivered_results": 80,
+      "source": "https://github.com/unbraind/pm-jev/blob/78b01cb0690026a79832f460d4a4f40b6bb5bd98/exemplar-retrieval.ts",
+      "source_sha256": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+      "native_anchor": {
+        "item_id": "pm-jev-sdk-unicode",
+        "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+        "field_pointer": "/description",
+        "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+        "description": "Validate and fix SDK audit F13 and F15 against origin/main with SDK text primitives and byte-based estimates."
+      },
+      "original_digest": "bbbc9eeab5d276f44f7ce845e403b6ff4747d7948174b093799389ca2d58ef51",
+      "initial_atoms": 16,
+      "final_atoms": 1,
+      "original_bytes": 15021,
+      "reduced_bytes": 6,
+      "reserved_trials": 8,
+      "actual_trials": 10,
+      "outcomes": {
+        "target_fail": 6,
+        "pass": 4,
+        "unresolved": 0
+      },
+      "cache_hits": 8,
+      "resumes": 5,
+      "independent_checks": 2,
+      "qualification": "one_minimal_under_recorded_oracle",
+      "witness_digest": "66a47d5ce7e2af459713ec5decabd45ea72016aac22b5ce60aea37a17669dc5c",
+      "packet_bytes": 3275,
+      "packet_estimated_tokens": 819,
+      "raw_estimated_tokens": 3756,
+      "manual_log_bytes": 26335,
+      "resume_questions": 10,
+      "latency_ms": 8457,
+      "complete_observations": 10,
+      "journal": [
+        {
+          "request": "trial-1",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "a6",
+            "a7",
+            "a8",
+            "a9",
+            "a10",
+            "a11",
+            "a12",
+            "a13",
+            "a14",
+            "a15"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-2",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "a6",
+            "a7"
+          ],
+          "result": "pass"
+        },
+        {
+          "request": "trial-3",
+          "subset": [
+            "a8",
+            "a9",
+            "a10",
+            "a11",
+            "a12",
+            "a13",
+            "a14",
+            "a15"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-4",
+          "subset": [
+            "a8",
+            "a9",
+            "a10",
+            "a11"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-5",
+          "subset": [
+            "a8",
+            "a9"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-6",
+          "subset": [
+            "a8"
+          ],
+          "result": "pass"
+        },
+        {
+          "request": "trial-7",
+          "subset": [
+            "a9"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-8",
+          "subset": [],
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "scenario": "jev-utf8-budget",
+      "owner_id": "public-jev-utf8-budget",
+      "revision": "8fe8692c132986846a959de8923db71d2e46b8ae0d3cd02cfb348050f1284e7d",
+      "reduction_snapshot": {
+        "version": 1,
+        "package": "pm-reduce",
+        "algorithm_version": "ddmin-1",
+        "definition": {
+          "atoms": [
+            {
+              "atom_id": "a0",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a1",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a2",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a3",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a4",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a5",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a6",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a7",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a8",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a9",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a10",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a11",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a12",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a13",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a14",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            },
+            {
+              "atom_id": "a15",
+              "payload_digest": "c57d3643b197a6f768542bc0be94d7224592f2905204e76a736bc0e079d06d91",
+              "source_ref": {
+                "item_id": "pm-jev-sdk-unicode",
+                "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+                "field_pointer": "/description",
+                "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+                "citation_id": "78b01cb0690026a79832f460d4a4f40b6bb5bd98"
+              }
+            }
+          ],
+          "composition": "ordered_subset",
+          "original_digest": "b5dfebe9b2aa35db5ff8623aa06f87752b31af76cfda3a2e84643fd5db5fdd60",
+          "oracle": {
+            "oracle_key": "jev-utf8-budget",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "target_failure_signature": "jev-utf8-budget",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "deterministic_declared": true
+          },
+          "max_trials": 256
+        },
+        "best_failing_subset": [
+          "a0"
+        ],
+        "partition_cursor": "search_complete",
+        "requests": [
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3",
+              "a4",
+              "a5",
+              "a6",
+              "a7",
+              "a8",
+              "a9",
+              "a10",
+              "a11",
+              "a12",
+              "a13",
+              "a14",
+              "a15"
+            ],
+            "subset_digest": "73c5d0dac49c2830cbec05416b1f8ad8d630efe0097aae7d367cd22cb05dfa37",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "purpose": "baseline",
+            "partition_cursor": "baseline",
+            "request_id": "trial-1",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3",
+              "a4",
+              "a5",
+              "a6",
+              "a7"
+            ],
+            "subset_digest": "dc124b7b77767a672cc1c72706b65d48cfd0d617f7963adb4d1e9a78293b4f8a",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "purpose": "subset",
+            "partition_cursor": "16:2:subset:0",
+            "request_id": "trial-2",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a0",
+              "a1",
+              "a2",
+              "a3"
+            ],
+            "subset_digest": "8c856dbf34ef661bae5e443fa722030d941ee3333c7087ebf3b0e95a9dc2d03b",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "purpose": "subset",
+            "partition_cursor": "8:2:subset:0",
+            "request_id": "trial-3",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a0",
+              "a1"
+            ],
+            "subset_digest": "76b622067617a66404327cb80efc8111a64eb2941953023c7b46b949b0505da6",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "purpose": "subset",
+            "partition_cursor": "4:2:subset:0",
+            "request_id": "trial-4",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [
+              "a0"
+            ],
+            "subset_digest": "3d1f9af00f538b370663064acdcbe060dc1cb2249fc84a6db4349089f5eade65",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "purpose": "subset",
+            "partition_cursor": "2:2:subset:0",
+            "request_id": "trial-5",
+            "state": "completed"
+          },
+          {
+            "subset_ids": [],
+            "subset_digest": "c335720b8cb6dda1ed1638b359dc14fcdd39ff595aaadc6d63c1c7e7adf6f180",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "purpose": "deletion",
+            "partition_cursor": "deletion:0",
+            "request_id": "trial-6",
+            "state": "completed"
+          }
+        ],
+        "observations": [
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-utf8-budget",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-1",
+              "item_hash": "10c8be261761c4f53751618f56126d73d40a12ca044520710d56786789b1dc74",
+              "field_pointer": "/description",
+              "content_digest": "72d8222b6398f43bfa345e10870d3dd225d7da43f154accb412c7a8619d921c9"
+            },
+            "observed_at": "2026-11-06T12:33:48.689Z",
+            "recorder": "fixture",
+            "subset_digest": "73c5d0dac49c2830cbec05416b1f8ad8d630efe0097aae7d367cd22cb05dfa37",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-1",
+            "request_id": "trial-1",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-utf8-budget",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-2",
+              "item_hash": "2ff1d720f51f44292c3c1d81063182b37d1c925fa41a4333babfa282acc1936a",
+              "field_pointer": "/description",
+              "content_digest": "94511854966d3e09f8c58e6d7a857e4be135a0f147d98417d3c16b4ce4d4f8ce"
+            },
+            "observed_at": "2026-11-06T12:33:50.071Z",
+            "recorder": "fixture",
+            "subset_digest": "dc124b7b77767a672cc1c72706b65d48cfd0d617f7963adb4d1e9a78293b4f8a",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-2",
+            "request_id": "trial-2",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-utf8-budget",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-3",
+              "item_hash": "97da173c342af5f221beadcca6366a155f74cff25ac97292b60fdb54a0185faa",
+              "field_pointer": "/description",
+              "content_digest": "dfc37d06984af50dd287e8353dd2656c44ba9d7d434525dcc5e64f864badb3f5"
+            },
+            "observed_at": "2026-11-06T12:33:50.770Z",
+            "recorder": "fixture",
+            "subset_digest": "8c856dbf34ef661bae5e443fa722030d941ee3333c7087ebf3b0e95a9dc2d03b",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-3",
+            "request_id": "trial-3",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-utf8-budget",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-4",
+              "item_hash": "eacc3f522bbd221c293a647940116ba0cb295516c3948cb3835aadf90e36b671",
+              "field_pointer": "/description",
+              "content_digest": "f8d4b622b05ed3c423af43393a2dfeb9afc7244d842a13963f28d7bb05fd2295"
+            },
+            "observed_at": "2026-11-06T12:33:51.606Z",
+            "recorder": "fixture",
+            "subset_digest": "76b622067617a66404327cb80efc8111a64eb2941953023c7b46b949b0505da6",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-4",
+            "request_id": "trial-4",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-utf8-budget",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-5",
+              "item_hash": "274666871c6c300bf35f6a79ae11e1356a5043f034685056d80860f4c10f911d",
+              "field_pointer": "/description",
+              "content_digest": "f855b89f0336b42bd52f6c7ba11f8c79c05693b8a63e20c6a832162c9bba0a08"
+            },
+            "observed_at": "2026-11-06T12:33:52.358Z",
+            "recorder": "fixture",
+            "subset_digest": "3d1f9af00f538b370663064acdcbe060dc1cb2249fc84a6db4349089f5eade65",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-5",
+            "request_id": "trial-5",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-6",
+              "item_hash": "3d67f628264d2c475a0d443b8940d99fb8d29c174c9da3578b5062e9965bb3e3",
+              "field_pointer": "/description",
+              "content_digest": "73b2e9475e51a3a8c0846492f7a4a8af61fd4774a579a03897052b45445dfcd7"
+            },
+            "observed_at": "2026-11-06T12:33:53.137Z",
+            "recorder": "fixture",
+            "subset_digest": "c335720b8cb6dda1ed1638b359dc14fcdd39ff595aaadc6d63c1c7e7adf6f180",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-6",
+            "request_id": "trial-6",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "target_fail",
+            "completed": true,
+            "actual_signature": "jev-utf8-budget",
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-7",
+              "item_hash": "c545d5c3c9f5b5db887fd43f96e9c7b0d67dce6c072e20a38bd68ecd6a79d419",
+              "field_pointer": "/description",
+              "content_digest": "3fe7b1aa84dadcc7106f0b391f45d2df4537ef8a86674f919f5e36b9ca19743f"
+            },
+            "observed_at": "2026-11-06T12:33:53.548Z",
+            "recorder": "fixture",
+            "subset_digest": "3d1f9af00f538b370663064acdcbe060dc1cb2249fc84a6db4349089f5eade65",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-7",
+            "request_id": "trial-5",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          },
+          {
+            "result": "pass",
+            "completed": true,
+            "actual_signature": null,
+            "reason": "",
+            "evidence_ref": {
+              "item_id": "public-jev-utf8-budget-evidence-8",
+              "item_hash": "2f03247248f456b3c2f4bada4a7abc588dfcf3fd1dea7191e5db137edd5cd426",
+              "field_pointer": "/description",
+              "content_digest": "5574615a53e25efe48155e8dba78fb5d46ee442a62f48de7935d52f4e6a1a702"
+            },
+            "observed_at": "2026-11-06T12:33:54.104Z",
+            "recorder": "fixture",
+            "subset_digest": "c335720b8cb6dda1ed1638b359dc14fcdd39ff595aaadc6d63c1c7e7adf6f180",
+            "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+            "recipe_digest": "f091affaf506a724a413de15783eb65aadf4561c1fb22285a2030c5ae27b76d0",
+            "subject_digest": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+            "environment_digest": "c30cd8f03ba4190603d538aba27b635615fa105e58542fb5f9b85ebd8609d82a",
+            "result_schema_digest": "603e5c29e4d701678cc87a5eb1aa8140bbf26904b221ffaf78d32d0cd8c66aeb",
+            "observation_id": "observation-8",
+            "request_id": "trial-6",
+            "evidence": "reported_oracle",
+            "verification_digest": null
+          }
+        ],
+        "trial_budget": {
+          "limit": 256,
+          "reserved": 6,
+          "completed": 6,
+          "pending": 0
+        },
+        "qualification": "one_minimal_under_recorded_oracle",
+        "replay_receipts": [
+          {
+            "operation_id": "birth",
+            "request_digest": "04cf48bdc89a3b07f4c1e788e0526990108ffd4c6a11572ef641f157f2f8ca55",
+            "result": {
+              "kind": "create",
+              "identity": "public-jev-utf8-budget",
+              "sequence": 1,
+              "digest": "e0ca966db8026c393d7494b0b10205cce319ccf5803fab0d599c86cc0ca7812f"
+            },
+            "result_digest": "53480132f587556d0c12fce53b9c4a3c7c2617f644a5ec0741ee06e222af3f04"
+          },
+          {
+            "operation_id": "reserve-0",
+            "request_digest": "cd1a487b80bc48675a0c018844d00de4cfa43591583a611d281ae5d375555c05",
+            "result": {
+              "kind": "request",
+              "identity": "trial-1",
+              "sequence": 2,
+              "digest": "a037031f798ab106d1e929fc71c38cffc466f7e4b61c0d27345ad95959757eb4"
+            },
+            "result_digest": "cdc41f80a0ce011c83c38363206b917911ad34604a299d6a792d7b369b4d3263"
+          },
+          {
+            "operation_id": "record-1",
+            "request_digest": "459364b43ae4bbdc0bc99a1e22f028c737202c4f5615dd7f5f2dd5481d47e7e5",
+            "result": {
+              "kind": "record",
+              "identity": "observation-1",
+              "sequence": 3,
+              "digest": "363425355803a5f15624930a76b520d0766c39415970648363a8302377d5549a"
+            },
+            "result_digest": "b3a7ce11d872c7cbe6b0e86b04f9e6546157c2937390bfa466d7f21ed4ed0c87"
+          },
+          {
+            "operation_id": "reserve-1",
+            "request_digest": "40ebb15a425e875613cd9629a9a6b0abbdea473f731e45665c238240a518bb1e",
+            "result": {
+              "kind": "request",
+              "identity": "trial-2",
+              "sequence": 4,
+              "digest": "2fecea6267ade27469d262a19771e41044208b0a92da6ba39bc5596937b6a362"
+            },
+            "result_digest": "3493387eaa2d86980cff0c437ad33f8d45f43e1d8c2e4562106edc0b43e9f4d3"
+          },
+          {
+            "operation_id": "record-2",
+            "request_digest": "6253df1dcb6a8a79859d40b42300e982da4f01d458d134d5dfcf78d047efa9f6",
+            "result": {
+              "kind": "record",
+              "identity": "observation-2",
+              "sequence": 5,
+              "digest": "801e766deca6d0754a44d37459fd1fd84a7a97aa3138abd3a7c7ed87a9c38d31"
+            },
+            "result_digest": "f1c0893dd8ba6b56af52f24db4b707639da4ac00a582a574b09abad8a51c1cb0"
+          },
+          {
+            "operation_id": "reserve-2",
+            "request_digest": "67ec7cd005b528cef3fe2e5ab2de1ee712d08ee13952c3685caabc5cb37d4087",
+            "result": {
+              "kind": "request",
+              "identity": "trial-3",
+              "sequence": 6,
+              "digest": "e0b22e3cf038301b89e69af20595cf7210244263d85ce94843199fc1d9026e2d"
+            },
+            "result_digest": "40abf1bbfe164f4ec206a724a2496573e86c4c395b354752e0bb9e9d8b669ad8"
+          },
+          {
+            "operation_id": "record-3",
+            "request_digest": "3722af44ea91758d88e674bd370d83bb9f4f6c1c1980a6594834d290fdd88cd8",
+            "result": {
+              "kind": "record",
+              "identity": "observation-3",
+              "sequence": 7,
+              "digest": "fb7ead21f1ded597ad02e602cf5c26ec1509145f75ac0754e93bddc1682be764"
+            },
+            "result_digest": "42373415e72daeee482b749588aa8f599f107a444937790c6c6bd9385610452d"
+          },
+          {
+            "operation_id": "reserve-3",
+            "request_digest": "c5e771f33e14c0cd5d7190c923668c639f29b246f7d2d5341e1ee4ffb3783863",
+            "result": {
+              "kind": "request",
+              "identity": "trial-4",
+              "sequence": 8,
+              "digest": "b63ed9748231a880d95cbc9ebb74f028e4a29af2f3f0b37208b7e97a4dfde3ff"
+            },
+            "result_digest": "ac084dbb75b618ae9cb8a3e7c70c8b04748e7ec836ad96b5296f3cc545fb53f7"
+          },
+          {
+            "operation_id": "record-4",
+            "request_digest": "d5e122f7132b064a7f4c76329183a93d55b72b1b625f9c9de0265efb10c714f3",
+            "result": {
+              "kind": "record",
+              "identity": "observation-4",
+              "sequence": 9,
+              "digest": "f9dcebb05b9d27fdd6b756462ce5b4fb5e15817867bdfe344ca9961135bca2cf"
+            },
+            "result_digest": "14f89efa63bcd52bbfb04b15a79842a160cf3bc2b61aa94fcc72aa916c3ead2e"
+          },
+          {
+            "operation_id": "reserve-4",
+            "request_digest": "a73fa3352f4984713284422f215a373b9adf6c9e5b190ed8e816338bcff93ad6",
+            "result": {
+              "kind": "request",
+              "identity": "trial-5",
+              "sequence": 10,
+              "digest": "acb23fd0b79733499f0378eb83767895e05a2bc8316e2cd5fcfe256485a9695a"
+            },
+            "result_digest": "b053edecca2ff89b20f62b963e960563d07567e27c445298e7005cadc92d41be"
+          },
+          {
+            "operation_id": "record-5",
+            "request_digest": "2c5b7696c66842bdf45b0b18e3eb0db9a334cd371365f639be070e256822f1a2",
+            "result": {
+              "kind": "record",
+              "identity": "observation-5",
+              "sequence": 11,
+              "digest": "7d28b431264e3ee43ff8c8a8de7a33af20e829bc0c9fd58d3dc0070d54495364"
+            },
+            "result_digest": "6cae8ad9ac441ff42569ca7e68b06632890e713d54fd46636fac03937339b2e0"
+          },
+          {
+            "operation_id": "reserve-5",
+            "request_digest": "0a2820157e6d15e32257874c264260f203f2b44c5a588e393454d1f6a4b1dca4",
+            "result": {
+              "kind": "request",
+              "identity": "trial-6",
+              "sequence": 12,
+              "digest": "601f862c12de533b5c221026145af705628e3b29fe6ab7b63361dfa80fd30e70"
+            },
+            "result_digest": "4cacdff288b4c3dd17f64dded36d4dc27852c59b05b076d40a682ff911805c1b"
+          },
+          {
+            "operation_id": "record-6",
+            "request_digest": "92b40ba48ebcf5208ea9c471ec031b3b92650954ffe17af9ec3016ae748bfadb",
+            "result": {
+              "kind": "record",
+              "identity": "observation-6",
+              "sequence": 13,
+              "digest": "b770738efe7073c68adc0f5790df7ad26dcfce98a4e9c816fa1fa9ace3671b8e"
+            },
+            "result_digest": "85dc5da4c01ccc9286cdabb86380cfe0c1f978ad4a1aa8acaa07a1bbedc27c48"
+          },
+          {
+            "operation_id": "independent-0",
+            "request_digest": "18e4e246386f4ac5b2fa8f3104697ae630d7fe6f9caede2563e7e75918a291bd",
+            "result": {
+              "kind": "record",
+              "identity": "observation-7",
+              "sequence": 14,
+              "digest": "4fc3902c0ab7f8f4a47e681b7982292b8e7327f97caff8f4d487fb6aeb296d18"
+            },
+            "result_digest": "b0695fb5a2fe67ccae16b28ec46070843ff70d0410f8ed6ac9ebc580dfca6a7c"
+          },
+          {
+            "operation_id": "independent-1",
+            "request_digest": "e8f07c3cf3ac62400e89d1d2f9756deb2a527dc8490b875967fdb0544a87e3e8",
+            "result": {
+              "kind": "record",
+              "identity": "observation-8",
+              "sequence": 15,
+              "digest": "fba04edd4ff70c49e6a3eb51693e2ef0ec5e9ac5d23cee8a268a243d8711d894"
+            },
+            "result_digest": "7cdeef92c88361b6ad1e5d918e7fedb62965b09c25d76d351ac398ae6683e3ac"
+          }
+        ]
+      },
+      "certificate": {
+        "qualification": "one_minimal_under_recorded_oracle",
+        "best_subset": [
+          "a0"
+        ],
+        "oracle_digest": "d0d8ad07f65a48f75d4448a9e9d38b0779dfa2c52f934952bfbbffbaaa976d5a",
+        "failing_witnesses": [
+          "observation-5",
+          "observation-7"
+        ],
+        "deletion_witnesses": [
+          {
+            "removed_atom": "a0",
+            "subset_digest": "c335720b8cb6dda1ed1638b359dc14fcdd39ff595aaadc6d63c1c7e7adf6f180",
+            "pass_witnesses": [
+              "observation-6",
+              "observation-8"
+            ],
+            "status": "pass"
+          }
+        ],
+        "missing_deletions": [],
+        "evidence": "recorded_oracle",
+        "limitations": [
+          "Relative to declared ordered atoms and recorded oracle only.",
+          "Not globally smallest, a proven cause, authenticated testimony or a future reproducibility guarantee."
+        ],
+        "witness_digest": "2fbca9be997c265c23aebec27134b4314fc3d74f359943d22bfcfcd2ae938ac4"
+      },
+      "total_delivered_bytes": 218492,
+      "complete_sdk_snapshot_bytes": 144370,
+      "auxiliary_sdk_bytes": 6452,
+      "oracle_evidence": [
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-1",
+            "item_hash": "10c8be261761c4f53751618f56126d73d40a12ca044520710d56786789b1dc74",
+            "field_pointer": "/description",
+            "content_digest": "72d8222b6398f43bfa345e10870d3dd225d7da43f154accb412c7a8619d921c9"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:48.689Z\",\"result\":\"target_fail\",\"scenario\":\"jev-utf8-budget\",\"signature\":\"jev-utf8-budget\",\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\",\"a4\",\"a5\",\"a6\",\"a7\",\"a8\",\"a9\",\"a10\",\"a11\",\"a12\",\"a13\",\"a14\",\"a15\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-2",
+            "item_hash": "2ff1d720f51f44292c3c1d81063182b37d1c925fa41a4333babfa282acc1936a",
+            "field_pointer": "/description",
+            "content_digest": "94511854966d3e09f8c58e6d7a857e4be135a0f147d98417d3c16b4ce4d4f8ce"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:50.071Z\",\"result\":\"target_fail\",\"scenario\":\"jev-utf8-budget\",\"signature\":\"jev-utf8-budget\",\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\",\"a4\",\"a5\",\"a6\",\"a7\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-3",
+            "item_hash": "97da173c342af5f221beadcca6366a155f74cff25ac97292b60fdb54a0185faa",
+            "field_pointer": "/description",
+            "content_digest": "dfc37d06984af50dd287e8353dd2656c44ba9d7d434525dcc5e64f864badb3f5"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:50.770Z\",\"result\":\"target_fail\",\"scenario\":\"jev-utf8-budget\",\"signature\":\"jev-utf8-budget\",\"subset_ids\":[\"a0\",\"a1\",\"a2\",\"a3\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-4",
+            "item_hash": "eacc3f522bbd221c293a647940116ba0cb295516c3948cb3835aadf90e36b671",
+            "field_pointer": "/description",
+            "content_digest": "f8d4b622b05ed3c423af43393a2dfeb9afc7244d842a13963f28d7bb05fd2295"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:51.606Z\",\"result\":\"target_fail\",\"scenario\":\"jev-utf8-budget\",\"signature\":\"jev-utf8-budget\",\"subset_ids\":[\"a0\",\"a1\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-5",
+            "item_hash": "274666871c6c300bf35f6a79ae11e1356a5043f034685056d80860f4c10f911d",
+            "field_pointer": "/description",
+            "content_digest": "f855b89f0336b42bd52f6c7ba11f8c79c05693b8a63e20c6a832162c9bba0a08"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:52.358Z\",\"result\":\"target_fail\",\"scenario\":\"jev-utf8-budget\",\"signature\":\"jev-utf8-budget\",\"subset_ids\":[\"a0\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-6",
+            "item_hash": "3d67f628264d2c475a0d443b8940d99fb8d29c174c9da3578b5062e9965bb3e3",
+            "field_pointer": "/description",
+            "content_digest": "73b2e9475e51a3a8c0846492f7a4a8af61fd4774a579a03897052b45445dfcd7"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:53.137Z\",\"result\":\"pass\",\"scenario\":\"jev-utf8-budget\",\"signature\":null,\"subset_ids\":[]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-7",
+            "item_hash": "c545d5c3c9f5b5db887fd43f96e9c7b0d67dce6c072e20a38bd68ecd6a79d419",
+            "field_pointer": "/description",
+            "content_digest": "3fe7b1aa84dadcc7106f0b391f45d2df4537ef8a86674f919f5e36b9ca19743f"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:53.548Z\",\"result\":\"target_fail\",\"scenario\":\"jev-utf8-budget\",\"signature\":\"jev-utf8-budget\",\"subset_ids\":[\"a0\"]}"
+        },
+        {
+          "source_ref": {
+            "item_id": "public-jev-utf8-budget-evidence-8",
+            "item_hash": "2f03247248f456b3c2f4bada4a7abc588dfcf3fd1dea7191e5db137edd5cd426",
+            "field_pointer": "/description",
+            "content_digest": "5574615a53e25efe48155e8dba78fb5d46ee442a62f48de7935d52f4e6a1a702"
+          },
+          "description": "{\"observed_at\":\"2026-11-06T12:33:54.104Z\",\"result\":\"pass\",\"scenario\":\"jev-utf8-budget\",\"signature\":null,\"subset_ids\":[]}"
+        }
+      ],
+      "delivered_results": 66,
+      "source": "https://github.com/unbraind/pm-jev/blob/78b01cb0690026a79832f460d4a4f40b6bb5bd98/exemplar-retrieval.ts",
+      "source_sha256": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+      "native_anchor": {
+        "item_id": "pm-jev-sdk-unicode",
+        "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+        "field_pointer": "/description",
+        "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+        "description": "Validate and fix SDK audit F13 and F15 against origin/main with SDK text primitives and byte-based estimates."
+      },
+      "original_digest": "b5dfebe9b2aa35db5ff8623aa06f87752b31af76cfda3a2e84643fd5db5fdd60",
+      "initial_atoms": 16,
+      "final_atoms": 1,
+      "original_bytes": 5695,
+      "reduced_bytes": 355,
+      "reserved_trials": 6,
+      "actual_trials": 8,
+      "outcomes": {
+        "target_fail": 6,
+        "pass": 2,
+        "unresolved": 0
+      },
+      "cache_hits": 6,
+      "resumes": 5,
+      "independent_checks": 2,
+      "qualification": "one_minimal_under_recorded_oracle",
+      "witness_digest": "2fbca9be997c265c23aebec27134b4314fc3d74f359943d22bfcfcd2ae938ac4",
+      "packet_bytes": 3301,
+      "packet_estimated_tokens": 826,
+      "raw_estimated_tokens": 1424,
+      "manual_log_bytes": 22422,
+      "resume_questions": 10,
+      "latency_ms": 6740,
+      "complete_observations": 8,
+      "journal": [
+        {
+          "request": "trial-1",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "a6",
+            "a7",
+            "a8",
+            "a9",
+            "a10",
+            "a11",
+            "a12",
+            "a13",
+            "a14",
+            "a15"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-2",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3",
+            "a4",
+            "a5",
+            "a6",
+            "a7"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-3",
+          "subset": [
+            "a0",
+            "a1",
+            "a2",
+            "a3"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-4",
+          "subset": [
+            "a0",
+            "a1"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-5",
+          "subset": [
+            "a0"
+          ],
+          "result": "target_fail"
+        },
+        {
+          "request": "trial-6",
+          "subset": [],
+          "result": "pass"
+        }
+      ]
+    }
+  ]
+}
