@@ -25,3 +25,9 @@ test('privacy traversal bounds shared graphs while preserving ordinary shared va
   let graph: unknown = 0; for (let index = 0; index < 16; index++) graph = [graph, graph];
   assert.throws(() => guardSubmitted(graph), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:traversal_budget');
 });
+
+test('compiler flags cannot smuggle private home paths while public URLs remain data', () => {
+  const home = '/' + ['home', 'example', 'include'].join('/');
+  for (const flag of ['-I', '-L', '-isystem']) assert.throws(() => guardSubmitted(flag + home), hasCode('invalid_input'), 'proof:compiler_home');
+  for (const value of ['-Iinclude', '-Llib', '-Ihttps://example.com/' + ['home', 'page'].join('/')]) assert.doesNotThrow(() => guardSubmitted(value));
+});

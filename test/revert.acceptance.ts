@@ -29,6 +29,8 @@ const changes = [
 
   { name: 'native normalizer receiver binding removed', file: 'api', pattern: /host.normalizeId\?\.bind\(host\)/, replacement: 'host.normalizeId', test: 'contracts', filter: 'creation identity policy', proof: 'proof:normalizer_binding' },
 
+  { name: 'compiler flag home-path admission restored', file: 'schema', pattern: /\(\?:-\[a-z\]\[a-z0-9_-\]\*\)\?/, replacement: '', test: 'privacy', filter: 'compiler flags cannot', proof: 'proof:compiler_home' },
+
 ];
 for (const change of changes) {
   const root = mkdtempSync(join(tmpdir(), 'reduce-revert-'));
