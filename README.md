@@ -132,7 +132,7 @@ Every domain command works in a plain SDK-initialized tracker with Git absent fr
 
 ## Privacy
 
-Text is inert data. New submissions refuse ANSI/control and bidi sequences, malformed Unicode, prototype keys, oversized inputs, absolute home paths and credential-shaped text through the SDK privacy scanner. The scanner is heuristic, not proof that text is shareable. Legacy structured records remain readable; rendering escapes unsafe controls. Default packets omit source bodies. Correction does not erase native history; retention, redaction and deletion use the host's supported policy. Only public fixture inputs are used in the proof corpus.
+Text is inert data. New submissions refuse ANSI/control and bidi sequences, malformed Unicode, prototype keys, oversized inputs, absolute home paths (including mounted Windows profiles in WSL) and credential-shaped text through the SDK privacy scanner. The scanner is heuristic, not proof that text is shareable. Legacy structured records remain readable; rendering escapes unsafe controls. Default packets omit source bodies. Correction does not erase native history; retention, redaction and deletion use the host's supported policy. Only public fixture inputs are used in the proof corpus.
 
 ## Evidence and limitations
 

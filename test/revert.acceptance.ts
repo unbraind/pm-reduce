@@ -6,6 +6,8 @@ import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { assertIntendedFailure, assertRestoredTests } from './revert-tools.ts';
 import { npmEnvironment, testEnvironment } from '../scripts/environment.ts';
+/** Exact previous admission rule, used only in disposable behavioral reverts. */
+const previousHomeGuard = "insist(!/(?:^|[\\s\"'`([{=:,;<>])(?:-[a-z][a-z0-9_-]*)?(?:file:\\/\\/)?(?:[a-z]:[\\\\/](?:Users|home)[\\\\/]|\\/(?:home|Users)\\/|\\/root(?:\\/|$))/iu.test(value), 'invalid_input', 'Private home paths are forbidden');";
 const changes = [
   { name: 'complete witness content binding removed', file: 'kernel', pattern: /witness_digest: digest\(\{ certificate: content, owner_identity: state.replay_receipts\[0\].result.identity, algorithm_version: state.algorithm_version, definition: state.definition, requests: state.requests, observations: state.observations \}\)/, replacement: 'witness_digest: digest(content)', test: 'kernel', filter: 'certificate digest binds full', proof: 'proof:witness_binding' },
   { name: 'native CAS removed', file: 'api', pattern: /const guarded = await host\.client\.withExpectedItemRevisions\(\[\{ id: snapshot.id, itemHash: snapshot.revision \}\], \(\) => host\.client\.update\(snapshot.id, (\{[^\n]+\})\)\);/, replacement: 'const guarded = { result: await host.client.update(snapshot.id, $1), checked: [snapshot.id], unchecked: [] };', test: 'concurrency', filter: 'a competing native write', proof: 'proof:native_cas' },
@@ -39,6 +41,10 @@ const changes = [
   { name: 'seeded certificate nonvacuity removed', file: 'test/kernel.test.ts', pattern: /assert.ok\(certifiedScenarios > 0, 'proof:seeded_certificates'\);/, replacement: '', test: 'kernel', filter: 'seeded arbitrary', proof: 'proof:seeded_nonvacuity' },
   { name: 'restored suite coverage hardcoded again', file: 'test/revert-tools.ts', pattern: /const files = \[\.\.\.new Set\(changes.map\(change => `test\/\$\{change.test\}.test.ts`\)\)\];/, replacement: "const files = ['test/api.test.ts', 'test/kernel.test.ts', 'test/privacy.test.ts'];", test: 'revert-tools', filter: 'restored baseline includes', proof: 'proof:restored_suites' },
 
+  { name: "mounted-home path admission reverted", file: 'schema', pattern: /insist\(!\/.*'Private home paths are forbidden'\);/, replacement: previousHomeGuard, test: "privacy", filter: "mounted profile aliases", proof: "proof:mounted_home" },
+  { name: "mounted-home SDK admission reverted", file: 'schema', pattern: /insist\(!\/.*'Private home paths are forbidden'\);/, replacement: previousHomeGuard, test: "privacy", filter: "mounted homes refuse SDK", proof: "proof:mounted_sdk" },
+  { name: "mounted-home CLI admission reverted", file: 'schema', pattern: /insist\(!\/.*'Private home paths are forbidden'\);/, replacement: previousHomeGuard, test: "contracts", filter: "CLI mounted-home refusals", proof: "proof:mounted_cli" },
+  { name: 'mounted-home corpus case guard reverted', file: 'test/corpus-privacy.test.ts', pattern: /\)\/iu.test\(text\), 'Corpus contains an absolute home path'/, replacement: ")/u.test(text), 'Corpus contains an absolute home path'", test: 'corpus-privacy', filter: 'public corpus guard', proof: 'proof:mounted_corpus' },
 ];
 for (const change of changes) {
   const root = mkdtempSync(join(tmpdir(), 'reduce-revert-'));

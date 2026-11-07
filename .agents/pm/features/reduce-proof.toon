@@ -6,11 +6,11 @@ status: in_progress
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:47:18.375Z"
-updated_at: "2026-11-06T23:17:22.700Z"
+updated_at: "2026-11-07T02:42:28.582Z"
 author: codex-agent
 acceptance_criteria: "Three real public failures from at least sixteen atoms; exact provenance, resumes and packed consumers; full source coverage and npm plus Bun release gates."
 parent: reduce-release
-comments[18]{created_at,author,text}:
+comments[23]{created_at,author,text}:
   "2026-11-06T12:36:23.991Z",codex-agent,"Public proof is complete for three reproduced historical defects across two public packages: Beads numeric preservation, Jev Unicode tokenization, and Jev UTF-8 exemplar packing. Each reduces 16 atoms to 1 with independent failing-final and passing-deletion observations, retained caller-owned immutable result snapshots, frozen native source revisions, and public source hashes. Reservations/actual executions are 8/10, 8/10 and 6/8. Five pending-result handoffs and ten independent resume questions pass for each. Packets include frozen oracle identities and latest operation receipts; full JSON evidence retains the complete independently checked reduction snapshots. No synthetic defect is counted as real data."
   "2026-11-06T14:35:52.749Z",codex-agent,"Review-loop checkpoint on b34b0c4: CI test (26) and codeql completed successfully; test (22) remains queued. CodeRabbit automatic review was skipped for the new repository policy and the shared queue is awaiting its manual review request. No review completion or actionable thread is recorded yet; skipped and neutral bot checks are not treated as review approval."
   "2026-11-06T14:43:23.688Z",codex-agent,"Required public CI passed on b34b0c4: test (22), test (26), and codeql. No CI fix is needed on this head. CodeRabbit remains unreviewed while the shared manual-review queue is pending; skipped/neutral reviewer checks are kept separate from the successful build checks."
@@ -29,24 +29,33 @@ comments[18]{created_at,author,text}:
   "2026-11-06T22:43:55.898Z",codex-agent,"The first full npm gate stopped at the unchanged zero-duplication threshold: the two syntax guards repeated their member-call name decoder. Both now share the documented calledName helper, preserving direct/computed/optional behavior. Correction to the linked-test count above: the proof suite contains 12 tests (three generated historical scenario tests plus the provenance test), not 10; the focused suite contains 19. The earlier count is retained as an audit record."
   "2026-11-06T23:17:20.094Z",codex-agent,"Final source certification: npm run release:check passed in 1229 seconds and bun run release:check passed in 713 seconds, serially within about 33 minutes combined. Each passed 46 tests including 500 seeded journal sequences, 100 percent of 540 statements / 326 branches / 124 functions / 468 lines across eight emitted production modules, one packed acceptance test, 27 named behavioral mutation failures and 40 restored tests. Packed acceptance passed npm and Bun installation with Git absent, 45 primary CLI commands per manager, SDK writes, both exact Node 22.19.0 and 26.13.0 probes, immutable archive selection and swapped-archive refusal. Both accepted archives have SHA-256 eed507f0d8ca40e1bc91caa3b23465a706e4aff274cec1d2b3f01108fb83ea58. Typecheck, lint, zero duplication, 90 documented declarations, zero production audit vulnerabilities, 40-file pack allowlist, tracker health, changelog and publish attestation passed at unchanged thresholds. No local timeout occurred. Five history files preserve main as a byte-identical prefix. No production code, dependency pin or committed distribution changed in this round."
   "2026-11-06T23:17:21.482Z",codex-agent,"All five unresolved review findings are addressed with distinguishing regression proofs; none was rejected. The saved WIP production-guard hunk was reused and strengthened; its old tracker/changelog changes were not adopted. Remaining operational limitation: a host-global pm-github version skew requires clean-HOME certification, and linked-test provenance requires local acknowledgement. No new SDK gap was found or upstream issue filed. Hosted checks have not yet certified the forthcoming push; the orchestrator owns final CI verification. No review reply, thread resolution, merge or release was performed. The local saved-WIP branch will be deleted after the push."
-files[16]{path,scope}:
+  "2026-11-07T02:15:31.399Z",codex-agent,"Auto re-review round 1: PRRT_kwDOVlPkts60wiT0 is valid. General rule: every newly submitted JSON string must reject private home path aliases before durable effects, regardless of field, SDK/CLI transport or output format; legacy persisted text must remain readable. Rechecked clean worktree and remote head 436e8f4; main is already contained. Full review-thread and comment pagination is complete; this is the only unresolved finding and the latest review has no Outside diff range section. Package search found the shared schema admission guard used by all create/request/record/read input contracts; corpus and tracked-file guards already catch the Users path component. Plan: cover every mounted drive, path wrappers and compiler flags with an adversarial corpus; exercise SDK and CLI create/record admission, JSON/TOON refusals, non-git trackers, packed npm/Bun consumers, side-effect absence and legacy read compatibility."
+  "2026-11-07T02:19:29.505Z",codex-agent,"Class audit and focused result: 17 tests passed. One shared schema admission change covers every command and public SDK input; source/corpus guards already reject the profile component. Generated adversarial coverage spans all 26 drives, two profile roots, case and repeated-separator variants, 12 wrappers/flags, and four nested JSON shapes (7488 refusal assertions), plus 472 public URL/relative-path controls. SDK tests cover title, label, oracle signature, reason and evidence pointer, absence of new item/history, unchanged existing revision/history, public URL writes and legacy storage reads. Native CLI tests verify create/record refusal plus JSON/TOON inert output in plain trackers. Packed npm/Bun journeys now cover both CLI formats and SDK writes with the same mounted-path fixture. Existing tests are retained; typecheck, lint and zero duplication passed. Adding three independent old-guard reversions for pure, SDK and CLI regressions."
+  "2026-11-07T02:21:35.740Z",codex-agent,"Revert evidence before full gates: npm run test:revert passed 30 expected named failures and 43 restored tests. Reverting only the prior home-admission rule failed independently at proof:mounted_home (generated nested corpus), proof:mounted_sdk (SDK pre-write refusal), and proof:mounted_cli (CLI JSON/TOON refusal). Native linked verification of the new focused command also passed 17 tests. Further class audit found the public corpus path scanner was case-sensitive; uppercase mounted profiles escaped it although the tracked-file gate already uses case-insensitive matching. Fixed that scanner, applied the whole generated forbidden corpus to it, and added a fourth regression mutation at proof:mounted_corpus; the full revert gate now contains 31 cases. Existing must-allow and legacy tests remain intact. No finding is factually wrong."
+  "2026-11-07T02:42:25.003Z",codex-agent,"Auto round 1 complete: PRRT_kwDOVlPkts60wiT0 was valid. Class rule is enforced at shared pre-write admission for mounted home aliases across fields and transports, with case-insensitive public-corpus scanning as the other discovered instance. Final regressions: prior schema guard reverted -> proof:mounted_home, proof:mounted_sdk, proof:mounted_cli; prior corpus case guard reverted -> proof:mounted_corpus. All four are behavioral failures at their named assertion headers in disposable copies, with 43 restored tests passing afterward. The generated corpus checks 7488 nested refusal placements and 472 public controls. Existing legacy-read, relative-path, URL, compiler-flag and all prior review tests remain intact. Focused and pinned-pm linked verification passed 17 tests."
+  "2026-11-07T02:42:26.726Z",codex-agent,"Exact final source gates: npm run release:check passed in 552 seconds; bun run release:check passed in 613 seconds, serially in about 20 minutes. Each passed 49 tests (including 500 seeded journal sequences), one packed acceptance test, 31 named mutation failures and 43 restored tests. Both use at most two test workers, isolated HOME/Git configuration, and unchanged thresholds. Coverage remains 100 percent of 540 statements, 326 branches, 124 functions and 468 lines across eight emitted modules. Typecheck, lint, zero duplication, 90 documented declarations, zero production audit vulnerabilities, native health, identity/privacy, 40-file pack allowlist, changelog and publication attestation passed. Packed npm/Bun consumers each made 51 primary CLI calls plus SDK/exact-runtime probes; both validated archives have SHA-256 66e66c26bd148477829978bbc3ae627df489f67ba52b07cb6ad40958ff8b2028. No local timeout, new dependency pin, test weakening or new SDK gap. No release or committed binary artifact. Hosted checks for the forthcoming push remain pending; the orchestrator owns final CI/re-review verification. No thread reply or resolution was made."
+files[20]{path,scope}:
   .github/workflows/release.yml,project
+  src/schema.ts,project
+  test/contracts.test.ts,project
   test/corpus-privacy.test.ts,project
   test/corpus.ts,project
   test/fixtures/history.ts,project
   test/fixtures/provenance.json,project
+  test/home-paths.ts,project
   test/install-tools.test.ts,project
   test/install-tools.ts,project
   test/install.acceptance.ts,project
   test/kernel.test.ts,project
   test/packed-sdk-consumer.ts,project
+  test/privacy.test.ts,project
   test/real-data.acceptance.ts,project
   test/real-data.test.ts,project
   test/revert-tools.test.ts,project
   test/revert-tools.ts,project
   test/revert.acceptance.ts,project
   test/workflow.test.ts,project
-tests[2]:
+tests[3]:
   - command: "npm run test:proof"
     scope: project
     timeout_seconds: 600
@@ -62,8 +71,16 @@ tests[2]:
       created_at: "2026-11-06T22:40:18.379Z"
       source_kind: local_mutation
       source_ref: review/reduce-1107
-docs[3]{path,scope}:
+  - command: npm run build && node --test --test-concurrency=2 test/privacy.test.ts test/contracts.test.ts test/corpus-privacy.test.ts
+    scope: project
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-07T02:19:27.638Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1107
+docs[4]{path,scope}:
   ARCHITECTURE.md,project
   docs/real-data-receipt.json,project
   docs/real-data.md,project
+  README.md,project
 body: ""

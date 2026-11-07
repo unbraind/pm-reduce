@@ -5,10 +5,11 @@ import { createHash } from 'node:crypto';
 import { parse } from '@babel/parser';
 import { digest, validateReductionCertificate } from '../dist/index.js';
 import { runtimeSources } from '../scripts/inventory.ts';
+import { mountedHomePaths } from './home-paths.ts';
 /** Bound public citations by repository identity, without accessing a named repository. */
 function publicText(text: string) {
   for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) assert.ok(!new RegExp(`(?<![\\w-])${name}(?![\\w-])`, 'i').test(text), 'Corpus contains a private repository reference');
-  assert.ok(!/(?:[\\/](?:home|Users)[\\/]|[\\/]root[\\/])/u.test(text), 'Corpus contains an absolute home path');
+  assert.ok(!/(?:[\\/](?:home|Users)[\\/]|[\\/]root[\\/])/iu.test(text), 'Corpus contains an absolute home path');
 }
 /** Traverse syntax as data; never execute a harvested source during privacy inspection. */
 function walk(value: unknown, visit: (node: Record<string, unknown>) => void) {
@@ -45,6 +46,7 @@ function confined(source: string) {
   assert.equal(reads, 1);
 }
 test('public corpus guard confines reads and rejects private citations and source-root mutations', () => {
+  for (const path of mountedHomePaths().forbidden) assert.throws(() => publicText(path), /Corpus contains an absolute home path/, 'proof:mounted_corpus');
   for (const file of ['test/corpus.ts', 'test/fixtures/history.ts', 'test/fixtures/provenance.json', 'docs/real-data-receipt.json']) publicText(readFileSync(file, 'utf8'));
   for (const name of ['pm-observer', 'pm-web-hosted', 'pm-gpt']) { assert.throws(() => publicText(`https://github.com/example/${name}`)); publicText(`${name}-tools`); }
   const source = readFileSync('test/corpus.ts', 'utf8'); confined(source);

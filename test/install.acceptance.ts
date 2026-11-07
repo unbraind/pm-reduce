@@ -8,6 +8,8 @@ import { createHash } from 'node:crypto';
 import { npmEnvironment } from '../scripts/environment.ts';
 import { definition, outcome } from './helpers.ts';
 import { packedRequirement, assertBudgetRefusal } from './install-tools.ts';
+import { mountedHomePaths } from './home-paths.ts';
+import { decodeToon } from '@unbrained/pm-cli/sdk/testing';
 /** Run a credential-free consumer command and preserve only bounded diagnostics. */
 function execute(executable: string, args: string[], cwd: string, env: NodeJS.ProcessEnv, input?: string, expected = 0): string {
   const result = spawnSync(executable, args, { cwd, env, input, encoding: 'utf8', timeout: 180000, maxBuffer: 4 * 1024 * 1024 });
@@ -38,6 +40,12 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       run(['init', 'packed', '--defaults', '--agent-guidance', 'skip', '--no-merge-fence']); run(['package', 'install', './node_modules/pm-reduce']); run(['reduce', '--help']);
       assert.ok(JSON.parse(run(['contracts', '--json', '--output-budget', 'unbounded'])));
       const def = definition(1); const birthInput = JSON.stringify({ title: 'Public reproduction', definition: def });
+      const privatePath = mountedHomePaths().forbidden[0]; const privateDefinition = structuredClone(def); privateDefinition.atoms[0].label = privatePath;
+      for (const format of ['json', 'toon']) {
+        const refused = run(['reduce', 'create', '--id', 'packed-private', '--op', 'birth', '--input', '-', ...(format === 'json' ? ['--json'] : [])], JSON.stringify({ title: 'Public', definition: privateDefinition }), 2);
+        assert.equal((format === 'json' ? JSON.parse(refused) : decodeToon(refused)).refusal.code, 'invalid_input'); assert.ok(!refused.includes(privatePath));
+        assert.equal(JSON.parse(run(['reduce', 'next', 'packed-private', '--json'], undefined, 3)).refusal.code, 'not_found');
+      }
       const birth = JSON.parse(run(['reduce', 'create', '--id', 'packed-repro', '--op', 'birth', '--input', '-', '--json'], birthInput)); assert.equal(birth.ok, true);
       assert.equal(JSON.parse(run(['reduce','create','--id','packed-repro','--op','birth','--input','-','--json'],birthInput)).replayed,true);
       let next = JSON.parse(run(['reduce','next','packed-repro','--json'])); assert.equal(next.data.candidate.purpose,'baseline');
@@ -50,6 +58,10 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
         const requested = JSON.parse(run(['reduce','request','packed-repro','--op',`request-${index}`,'--proposal',next.data.proposal_digest,'--revision',next.revision,'--json'])); assert.equal(requested.ok,true);
         const verdict=outcome(def,next.data.candidate.subset_digest,index===0?'target_fail':'pass');
         if(index===0) {
+          for (const format of ['json', 'toon']) {
+            const refused = run(['reduce', 'record', 'packed-repro', '--request', requested.data.result.identity, '--op', 'private-reason', '--revision', requested.revision, '--input', '-', ...(format === 'json' ? ['--json'] : [])], JSON.stringify({ ...verdict, reason: privatePath }), 2);
+            assert.equal((format === 'json' ? JSON.parse(refused) : decodeToon(refused)).refusal.code, 'invalid_input'); assert.ok(!refused.includes(privatePath));
+          }
           assert.equal(JSON.parse(run(['reduce','request','packed-repro','--op','pending','--proposal','f'.repeat(64),'--revision',requested.revision,'--json'],undefined,2)).refusal.code,'pending_trial');
           for(const [patch,expected] of [[{environment_digest:'f'.repeat(64)},'oracle_mismatch'],[{subset_digest:'f'.repeat(64)},'subset_mismatch'],[{actual_signature:'other'},'invalid_signature']] as const) assert.equal(JSON.parse(run(['reduce','record','packed-repro','--request',requested.data.result.identity,'--op',expected,'--revision',requested.revision,'--input','-','--json'],JSON.stringify({...verdict,...patch}),2)).refusal.code,expected);
         }
@@ -71,6 +83,7 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       assert.equal(JSON.parse(run(['reduce','packet','packed-missing','--json'],undefined,3)).refusal.code,'not_found');
       for(const name of ['next','certificate','packet']) {const text=run(['reduce',name,'packed-repro']);assert.ok(Buffer.byteLength(text)<=6400);assert.match(text,/schema_version: 1/);}
       writeFileSync(join(cwd, 'sdk-write.ts'), readFileSync('test/packed-sdk-consumer.ts','utf8'));
+      copyFileSync('test/home-paths.ts', join(cwd, 'home-paths.ts'));
       assert.match(execute(manager === 'npm' ? 'node' : 'bun', ['sdk-write.ts'], cwd, safe), /SDK WRITE AND BOUNDARIES OK/);
       assert.equal(JSON.parse(run(['reduce','next','packed-peer','--json'],undefined,2)).refusal.code,'invalid_record');
       writeFileSync(join(cwd, 'sdk.mjs'), "import assert from 'node:assert/strict';import {createDirectoryHost,readReduction,reductionCertificate,recordReductionOutcome} from 'pm-reduce';const host=createDirectoryHost(process.cwd()+'/.agents/pm','consumer');const owner=await readReduction(host,'packed-repro');assert.equal(owner.state.requests.length,2);assert.equal((await reductionCertificate(host,{id:owner.id})).certificate.qualification,'one_minimal_under_recorded_oracle');const {observation_id,request_id,evidence,verification_digest,...outcome}=owner.state.observations[0];assert.equal(outcome.result,'target_fail');void recordReductionOutcome;void observation_id;void request_id;void evidence;void verification_digest;console.log('SDK OK '+(globalThis.Bun?'bun':'node'));\n");

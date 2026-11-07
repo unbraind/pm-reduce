@@ -2,11 +2,17 @@
 import assert from 'node:assert/strict';
 import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, validateReductionCertificate, readState, canonical, digest, ReductionRefusal } from 'pm-reduce';
 import type { Outcome, ReductionState } from 'pm-reduce';
+import { mountedHomePaths } from './home-paths.ts';
 /** Match one stable packed refusal without depending on its diagnostics. */
 function code(expected: string) { return (error: unknown) => error instanceof ReductionRefusal && error.code === expected; }
 const host = createDirectoryHost(process.cwd() + '/.agents/pm', 'consumer'); const owner = await readReduction(host, 'packed-repro');
 const { observation_id, request_id, evidence, verification_digest, ...observed } = owner.state.observations[0]; void observation_id; void evidence; void verification_digest;
 const input = { id: owner.id, op: 'packed-sdk-write', revision: owner.revision, request: request_id, outcome: observed };
+const privatePath = mountedHomePaths().forbidden[0]; const privateDefinition = structuredClone(owner.state.definition); privateDefinition.atoms[0].label = privatePath;
+await assert.rejects(createReduction(host, { id: 'packed-private-sdk', op: 'birth', title: 'Public', definition: privateDefinition }), code('invalid_input'));
+await assert.rejects(readReduction(host, 'packed-private-sdk'), code('not_found'));
+await assert.rejects(recordReductionOutcome(host, { ...input, outcome: { ...observed, reason: privatePath } }), code('invalid_input'));
+assert.equal((await readReduction(host, owner.id)).revision, owner.revision);
 await recordReductionOutcome(host, input); assert.equal((await recordReductionOutcome(host, input)).replayed, true); assert.equal((await readReduction(host, owner.id)).state.observations.length, 3);
 const current = await readReduction(host, owner.id); const proof = await reductionCertificate(host, { id: owner.id });
 assert.throws(() => validateReductionCertificate(current.state, { ...proof.certificate, witness_digest: digest('forged') }), code('invalid_certificate'));
