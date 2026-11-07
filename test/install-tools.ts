@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { captureProcessResult } from '../scripts/process-tools.ts';
 import { isAbsolute } from 'node:path';
 
 /** Explain missing acceptance prerequisites without treating absent runtime proof as a pass. */
@@ -19,7 +20,7 @@ export function assertBudgetRefusal(flag: string, result: { refusal?: { code?: s
 export function selectNodeRuntime(version: string, candidates: readonly (string | undefined)[], cwd: string, env: NodeJS.ProcessEnv): string {
   for (const candidate of candidates) {
     if (candidate === undefined || !isAbsolute(candidate)) continue;
-    const probe = spawnSync(candidate, ['--version'], { cwd, env, encoding: 'utf8', timeout: 10000, maxBuffer: 1024 });
+    const probe = captureProcessResult(spawnSync(candidate, ['--version'], { cwd, env, encoding: 'utf8', timeout: 10000, maxBuffer: 1024 }));
     if (probe.error === undefined && probe.status === 0 && probe.stdout.trim() === `v${version}`) return candidate;
   }
   assert.fail(`Required Node ${version} runtime is missing or unusable; set PM_REDUCE_NODE_${version.split('.')[0]} to the exact executable or provision both acceptance runtimes`);

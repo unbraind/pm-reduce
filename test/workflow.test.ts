@@ -7,6 +7,8 @@ import { decideDailyRelease } from 'pm-ops/daily-release';
 import { verify } from 'pm-ops/attestation';
 import { fixture } from './helpers.ts';
 import { fixtureEnvironment } from '../scripts/environment.ts';
+import { captureProcessResult } from '../scripts/process-tools.ts';
+import { assertProcessStatus } from './gate-tools.ts';
 import { assertAcceptanceRuntimes } from './workflow-tools.ts';
 
 test('CI and release provision both exact acceptance runtimes before their gates', () => {
@@ -39,9 +41,9 @@ test('runtime capture validation rejects reordered, overwritten and cross-job ca
 test('CI health accepts a plain tracker but rejects corrupt native history',async t=>{
   const {root,pmRoot,id}=await fixture(t);const script=resolve('scripts/tracker-health.ts');
   const env={...fixtureEnvironment(process.env),PM_PATH:pmRoot,PM_AUTHOR:'fixture',HOME:root,GIT_CEILING_DIRECTORIES:root};
-  const accepted=spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout:30000});assert.equal(accepted.status,0,accepted.stderr);assert.equal(JSON.parse(accepted.stdout).ok,true);
+  const accepted=captureProcessResult(spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout:30000}));assertProcessStatus(accepted,0,'tracker health acceptance');assert.equal(JSON.parse(accepted.stdout).ok,true);
   appendFileSync(join(pmRoot,'history',`${id}.jsonl`),'not-json\n');
-  const refused=spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout:30000});assert.equal(refused.status,1,refused.stderr);const result=JSON.parse(refused.stdout);assert.equal(result.ok,false);assert.match(result.failed_because.join(','),/history/,JSON.stringify(result.failed_because));
+  const refused=captureProcessResult(spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout:30000}));assertProcessStatus(refused,1,'tracker health refusal');const result=JSON.parse(refused.stdout);assert.equal(result.ok,false);assert.match(result.failed_because.join(','),/history/,JSON.stringify(result.failed_because));
   assert.match(readFileSync('.github/workflows/ci.yml','utf8'),/run: npm run tracker:health/);
 });
 

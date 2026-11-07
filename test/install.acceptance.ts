@@ -9,16 +9,17 @@ import { fixtureEnvironment, npmEnvironment } from '../scripts/environment.ts';
 import { definition, outcome } from './helpers.ts';
 import { packedRequirement, assertBudgetRefusal, selectNodeRuntime } from './install-tools.ts';
 import { mountedHomePaths } from './home-paths.ts';
+import { captureProcessResult, processDiagnostics } from '../scripts/process-tools.ts';
 import { decodeToon } from '@unbrained/pm-cli/sdk/testing';
 /** Run a credential-free consumer command and preserve only bounded diagnostics. */
 function execute(executable: string, args: string[], cwd: string, env: NodeJS.ProcessEnv, input?: string, expected = 0): string {
-  const result = spawnSync(executable, args, { cwd, env, input, encoding: 'utf8', timeout: 180000, maxBuffer: 4 * 1024 * 1024 });
-  assert.equal(result.status, expected, `${executable} ${args.slice(0, 4).join(' ')}: ${result.stderr.slice(-1500)} ${result.stdout.slice(-1500)}`); return result.stdout || result.stderr;
+  const result = captureProcessResult(spawnSync(executable, args, { cwd, env, input, encoding: 'utf8', timeout: 180000, maxBuffer: 4 * 1024 * 1024 }));
+  assert.equal(result.status, expected, `${executable} ${args.slice(0, 4).join(' ')}: ${processDiagnostics(result)}`); return result.stdout || result.stderr;
 }
 test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', () => {
   assert.equal(packedRequirement(process.platform), null, packedRequirement(process.platform) ?? '');
   const tools = new Map(['bun', 'npm', 'npx'].flatMap(name => {
-    const found = spawnSync('bash', ['-c', `command -v ${name}`], { encoding: 'utf8', env: npmEnvironment(process.env) });
+    const found = captureProcessResult(spawnSync('bash', ['-c', `command -v ${name}`], { encoding: 'utf8', env: npmEnvironment(process.env) }));
     return found.status === 0 && found.stdout.trim() !== '' ? [[name, found.stdout.trim()] as const] : [];
   }));
   assert.equal(packedRequirement(process.platform, [...tools.keys()]), null, packedRequirement(process.platform, [...tools.keys()]) ?? '');

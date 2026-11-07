@@ -6,6 +6,7 @@ import instrumentLibrary from 'istanbul-lib-instrument';
 import coverageLibrary from 'istanbul-lib-coverage';
 import reportLibrary from 'istanbul-lib-report';
 import reports from 'istanbul-reports';
+import { captureProcessResult, processDiagnostics } from './process-tools.ts';
 import { runtimeSources } from './inventory.ts';
 import { npmEnvironment, testEnvironment } from './environment.ts';
 
@@ -26,11 +27,11 @@ try {
   }
   const preload = join(output, 'collect.mjs');
   writeFileSync(preload, "import {writeFileSync} from 'node:fs';process.on('exit',()=>writeFileSync(new URL('./raw-'+process.pid+'.json',import.meta.url),JSON.stringify(globalThis.__coverage__||{})));\n");
-  const result = spawnSync(process.execPath, ['--import', preload, '--test', '--test-concurrency=2', '--test-reporter=spec', ...readdirSync('test').filter(name => name.endsWith('.test.ts')).map(name => `test/${name}`)], { cwd: root, env: testEnvironment(npmEnvironment(process.env)), encoding:'utf8',maxBuffer:8*1024*1024 });
+  const result = captureProcessResult(spawnSync(process.execPath, ['--import', preload, '--test', '--test-concurrency=2', '--test-reporter=spec', ...readdirSync('test').filter(name => name.endsWith('.test.ts')).map(name => `test/${name}`)], { cwd: root, env: testEnvironment(npmEnvironment(process.env)), encoding:'utf8',maxBuffer:8*1024*1024 }));
   process.stdout.write(result.stdout);process.stderr.write(result.stderr);
+  if (result.status !== 0) throw new Error(`Coverage tests failed: ${processDiagnostics(result)}`);
   const count=result.stdout.match(/^(?:ℹ |# )tests (\d+)\s*$/m);
   if (count === null || Number(count[1]) === 0 || /^(?:ℹ |# )(?:skipped|todo|cancelled) [1-9]/m.test(result.stdout)) throw new Error('A complete nonzero unskipped test run is required');
-  if (result.status !== 0) throw new Error('Coverage tests failed');
   const map = coverageLibrary.createCoverageMap({});
   for (const file of readdirSync(output).filter(name => /^raw-.*\.json$/.test(name))) map.merge(JSON.parse(readFileSync(join(output, file), 'utf8')));
   for (const file of files) if (!map.files().includes(file)) throw new Error('A production source is absent from the report');

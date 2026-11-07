@@ -1,9 +1,10 @@
 /** Prove the package tarball has only public allowlisted text assets. */
+import { captureProcessResult, processDiagnostics } from './process-tools.ts';
 import { runtimeSources } from './inventory.ts';
 import { spawnSync } from 'node:child_process';
 import { npmEnvironment } from './environment.ts';
-const result = spawnSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], { env: npmEnvironment(process.env), encoding: 'utf8' });
-if (result.status !== 0) throw new Error('Package enumeration failed');
+const result = captureProcessResult(spawnSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], { env: npmEnvironment(process.env), encoding: 'utf8' }));
+if (result.status !== 0) throw new Error(`Package enumeration failed: ${processDiagnostics(result)}`);
 const packs = JSON.parse(result.stdout) as { files: { path: string }[] }[];
 const files = packs[0].files.map(file => file.path);
 const sources=runtimeSources();

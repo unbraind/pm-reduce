@@ -7,6 +7,7 @@ import { guardSubmitted, parse, DefinitionSchema } from '../dist/src/schema.js';
 import { fixture, definition, hasCode, historyEvents, reserve, outcome } from './helpers.ts';
 import { mountedHomePaths } from './home-paths.ts';
 import { containsPrivateHomePath } from '../dist/src/privacy.js';
+import { regexWork, linearPattern } from './privacy-tools.ts';
 
 test('strict privacy must-refuse and must-allow corpora run before any owner mutation', async t => {
   const { host, native, birth, pmRoot } = await fixture(t);
@@ -29,10 +30,26 @@ test('mounted profile aliases are refused in every nested JSON value while publi
 });
 
 test('home classification has a linear work budget for overlapping flags and preserves long flags', () => {
-  const hostile = '-a' + '--a'.repeat(2600); const start = process.cpuUsage();
-  for (let attempt = 0; attempt < 20; attempt++) assert.equal(containsPrivateHomePath(hostile), false);
-  const used = process.cpuUsage(start); assert.ok(used.user + used.system < 400000, 'proof:path_complexity');
+  for (const size of [64, 512, 2600]) for (const input of ['-a' + '--a'.repeat(size), ':'.repeat(size), ('public ').repeat(size)]) {
+    const work = regexWork(() => { for (let attempt = 0; attempt < 20; attempt++) assert.equal(containsPrivateHomePath(input), false); });
+    assert.ok(work <= 20 * 64 * (input.length + 1), 'proof:path_complexity');
+  }
+  const corpus = mountedHomePaths();
+  for (const input of [...corpus.forbidden, ...corpus.allowed]) assert.ok(regexWork(() => { containsPrivateHomePath(input); }) <= 64 * (input.length + 1), 'proof:path_complexity');
+  const hostile = '-a' + '--a'.repeat(2600);
   const path = mountedHomePaths().forbidden[0]; assert.equal(containsPrivateHomePath(hostile + path), true, 'proof:long_flag');
+});
+
+test('deterministic work guard rejects overlapping regex starts and nested repetition independently of CPU readings', () => {
+  for (const source of ['(?:^|[^a])(?:-[a-z][a-z0-9_-]*)?/private', '^(a+)+$', '^a*a*$', '^(a+){1,2}$', '^([^.]+.){1,2}$', '^a|a*$', '^a{1,}$', '^a\\1']) assert.equal(linearPattern(source), false, 'proof:linear_grammar');
+  for (const source of ['[a-z]+', '\\/+', '^a+$', '^(?:[^/]+\\/){1,2}users']) assert.equal(linearPattern(source), true);
+  const execute = RegExp.prototype.exec;
+  assert.throws(() => regexWork(() => /(?:^|[^a])(?:-[a-z][a-z0-9_-]*)?\/private/u.test('-a--a')), /proof:path_complexity/, 'proof:linear_guard');
+  assert.throws(() => regexWork(() => /^[\s\S]*a/m.test('z\nz')), /proof:path_complexity/, 'proof:linear_guard');
+  assert.equal(RegExp.prototype.exec, execute);
+  const original = process.cpuUsage;
+  process.cpuUsage = () => { assert.fail('proof:deterministic_work'); };
+  try { assert.ok(regexWork(() => containsPrivateHomePath('-a--a')) > 0, 'proof:regex_count'); } finally { process.cpuUsage = original; }
 });
 
 test('mounted homes refuse SDK writes before effects and preserve previously persisted text', async t => {

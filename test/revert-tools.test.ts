@@ -4,10 +4,19 @@ import { assertIntendedFailure, assertRestoredTests } from './revert-tools.ts';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
+import { fixtureEnvironment } from '../scripts/environment.ts';
 test('revert evidence rejects unrelated assertions, failed execution, signals and timeouts', () => {
   const ordinary = { status: 1, signal: null, stdout: 'AssertionError [ERR_ASSERTION]: proof:expected', stderr: '', error: undefined };
   assertIntendedFailure(ordinary, 'proof:expected');
   for (const changed of [{ ...ordinary, status: 0 }, { ...ordinary, status: null }, { ...ordinary, signal: 'SIGTERM' as const }, { ...ordinary, error: new Error('ETIMEDOUT') }, { ...ordinary, stdout: 'AssertionError [ERR_ASSERTION]: unrelated' }, { ...ordinary, stdout: 'AssertionError [ERR_ASSERTION]: unrelated\nsource snippet contains proof:expected' }]) assert.throws(() => assertIntendedFailure(changed, 'proof:expected'));
+});
+test('restored and mutation runners preserve real missing-process diagnostics', t => {
+  const root = mkdtempSync(join(tmpdir(), 'reduce-runner-failure-')); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const absent = join(root, 'absent');
+  assert.throws(() => assertRestoredTests([{ test: 'unstarted' }], absent), /ENOENT/, 'proof:restore_spawn');
+  const result = spawnSync(join(root, 'missing'), [], { encoding: 'utf8', env: fixtureEnvironment(process.env) });
+  assert.throws(() => assertIntendedFailure(result, 'proof:expected'), (error: unknown) => error instanceof Error && error.message.split('\n')[0].includes('ENOENT'), 'proof:mutation_spawn');
 });
 test('restored baseline includes every mutation suite and deduplicates paths', t => {
   const root = mkdtempSync(join(tmpdir(), 'reduce-restored-')); t.after(() => rmSync(root, { recursive: true, force: true })); mkdirSync(join(root, 'test'));

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { parse } from '@babel/parser';
 import { digest, validateReductionCertificate } from '../dist/index.js';
@@ -24,6 +24,25 @@ function calledName(node: Record<string, unknown>): string {
   const callee = node.callee as { name?: string; property?: { name?: string; value?: string } };
   return callee.name ?? callee.property?.name ?? callee.property?.value ?? '';
 }
+/** Unit gates cannot depend on host-clock speed; preserved corpus latency remains descriptive evidence. */
+function clockFree(source: string): void {
+  const tree = parse(source, { sourceType: 'module', plugins: ['typescript'] });
+  const clocks = new Set(['cpuUsage', 'hrtime', 'bigint', 'now']);
+  walk(tree, node => {
+    if (node.type === 'ImportSpecifier' && clocks.has((node.imported as { name?: string }).name ?? '')) clocks.add((node.local as { name: string }).name);
+    if (node.type === 'VariableDeclarator' && node.init) {
+      const id = node.id as { name?: string; properties?: { key: { name?: string }; value: { name?: string } }[] };
+      if (id.name && clocks.has(calledName({ callee: node.init }))) clocks.add(id.name);
+      for (const property of id.properties ?? []) if (clocks.has(property.key?.name ?? '') && property.value?.name) clocks.add(property.value.name);
+    }
+  });
+  walk(tree, node => { if (node.type === 'CallExpression' || node.type === 'OptionalCallExpression') assert.ok(!clocks.has(calledName(node)), 'proof:clock_free_gates'); });
+}
+test('unit gate sources forbid direct member optional and aliased host-clock measurements', () => {
+  for (const file of readdirSync('test').filter(file => file.endsWith('.test.ts'))) clockFree(readFileSync(`test/${file}`, 'utf8'));
+  for (const source of ['process.cpuUsage()', "process['cpuUsage']()", 'process?.cpuUsage?.()', 'process.hrtime.bigint()', 'performance.now()', 'Date.now()', "import { cpuUsage as measure } from 'node:process'; measure()", 'const measure = performance.now; const alias = measure; alias()', 'const {cpuUsage: measure} = process; measure()']) assert.throws(() => clockFree(source), /proof:clock_free_gates/);
+  clockFree("const prior = process.cpuUsage; process.cpuUsage = () => { throw new Error('clock disabled'); }; const text = 'process.cpuUsage()';");
+});
 /** Corpus harness reads only the frozen local provenance file and imports reviewed modules. */
 function confined(source: string) {
   const tree = parse(source, { sourceType: 'module', plugins: ['typescript'] }); let reads = 0; const readNames = new Set(['readFile', 'readFileSync']);
