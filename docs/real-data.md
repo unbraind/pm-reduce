@@ -2,6 +2,8 @@
 
 The caller harness in `test/corpus.ts` executes frozen MIT-licensed public function excerpts. The production package only reserves trials and records their reported outcomes. Source acquisition was restricted to the exact public repositories, commits and files in `test/fixtures/provenance.json`; the frozen fixture and each function excerpt have SHA-256 checks. No private repository or tracker is read.
 
+New harness runs bind the complete frozen fixture SHA-256 into the oracle recipe, covering transitive helpers and constants as well as the harness, materializer and historical source identity. The published receipt below is an immutable earlier execution record; its recipe fingerprint predates this stronger binding. Its recorded bytes, timings and witness identities are preserved rather than relabeled.
+
 | Reproduction | Atoms | Bytes | Reserved / actual trials | Target fail / pass / unresolved | Resumes | Packet tokens | Raw tokens |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | beads-precision | 16 → 1 | 15198 → 87 | 8 / 10 | 6 / 4 / 0 | 5 | 826 | 3800 |

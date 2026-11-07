@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { createReduction, readReduction, recordReductionOutcome, reductionPacket, digest, canonical } from '../dist/index.js';
 import { guardSubmitted, parse, DefinitionSchema } from '../dist/src/schema.js';
 import { fixture, definition, hasCode, historyEvents, reserve, outcome } from './helpers.ts';
-import { mountedHomePaths } from './home-paths.ts';
+import { mountedHomePaths, homeProbePaths, publicRootPaths } from './home-paths.ts';
 import { containsPrivateHomePath } from '../dist/src/privacy.js';
 import { regexWork, linearPattern } from './privacy-tools.ts';
 
@@ -29,13 +29,17 @@ test('mounted profile aliases are refused in every nested JSON value while publi
   for (const text of allowed) assert.doesNotThrow(() => guardSubmitted({ arbitrary: [text] }), 'proof:mounted_public');
 });
 
+test('root-named public directories retain their Windows drive or network share scope', () => {
+  for (const path of publicRootPaths()) assert.equal(containsPrivateHomePath(path), false, 'proof:public_root_scope');
+});
+
 test('home classification has a linear work budget for overlapping flags and preserves long flags', () => {
   for (const size of [64, 512, 2600]) for (const input of ['-a' + '--a'.repeat(size), ':'.repeat(size), ('public ').repeat(size)]) {
     const work = regexWork(() => { for (let attempt = 0; attempt < 20; attempt++) assert.equal(containsPrivateHomePath(input), false); });
     assert.ok(work <= 20 * 64 * (input.length + 1), 'proof:path_complexity');
   }
   const corpus = mountedHomePaths();
-  for (const input of [...corpus.forbidden, ...corpus.allowed]) assert.ok(regexWork(() => { containsPrivateHomePath(input); }) <= 64 * (input.length + 1), 'proof:path_complexity');
+  for (const input of [...corpus.forbidden, ...corpus.allowed, ...publicRootPaths()]) assert.ok(regexWork(() => { containsPrivateHomePath(input); }) <= 64 * (input.length + 1), 'proof:path_complexity');
   const hostile = '-a' + '--a'.repeat(2600);
   const path = mountedHomePaths().forbidden[0]; assert.equal(containsPrivateHomePath(hostile + path), true, 'proof:long_flag');
 });
@@ -69,6 +73,21 @@ test('mounted homes refuse SDK writes before effects and preserve previously per
   old.definition.atoms[0].label = path; old.replay_receipts[0].result.digest = digest(old.definition); old.replay_receipts[0].result_digest = digest(old.replay_receipts[0].result);
   await historical.host.client.update(historical.id, { field: [`reduce_state=${canonical(old)}`] });
   assert.equal((await readReduction(historical.host, historical.id)).state.definition.atoms[0].label, path, 'proof:mounted_legacy'); await reductionPacket(historical.host, { id: historical.id });
+});
+
+test('delimited root and resolved home aliases refuse SDK mutations while old records remain readable', async t => {
+  const { host, id, birth, pmRoot, native } = await fixture(t, true, definition(1)); const pending = await reserve(host);
+  const before = await readReduction(host, id); const events = await historyEvents(pmRoot, id);
+  for (const path of homeProbePaths()) {
+    await assert.rejects(createReduction(host, { ...birth, id: 'corpus-resolved-private', title: path }), hasCode('invalid_input'), 'proof:home_sdk_boundaries');
+    await assert.rejects(recordReductionOutcome(host, { id, op: 'resolved-private', request: pending.receipt.result.identity, revision: before.revision, outcome: outcome(birth.definition, pending.candidate.subset_digest, 'target_fail', { reason: path }) }), hasCode('invalid_input'), 'proof:home_sdk_boundaries');
+    assert.equal((await readReduction(host, id)).revision, before.revision); assert.equal(await historyEvents(pmRoot, id), events);
+  }
+  await assert.rejects(native.get('corpus-resolved-private'), hasCode('item_not_found'));
+  const historical = await fixture(t, true, definition(1)); const legacy = structuredClone((await readReduction(historical.host, historical.id)).state); legacy.definition.atoms[0].label = homeProbePaths()[1];
+  legacy.replay_receipts[0].result.digest = digest(legacy.definition); legacy.replay_receipts[0].result_digest = digest(legacy.replay_receipts[0].result);
+  await historical.host.client.update(historical.id, { field: [`reduce_state=${canonical(legacy)}`] });
+  assert.equal((await readReduction(historical.host, historical.id)).state.definition.atoms[0].label, legacy.definition.atoms[0].label); await reductionPacket(historical.host, { id: historical.id });
 });
 
 test('privacy traversal bounds shared graphs while preserving ordinary shared values', () => {

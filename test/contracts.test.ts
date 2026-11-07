@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createExtensionTestHarness, decodeToon } from '@unbrained/pm-cli/sdk/testing';
-import { fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError } from '@unbrained/pm-cli/sdk';
+import { fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError, writeSettingsSection, readSettingsSection } from '@unbrained/pm-cli/sdk';
+import { readFileSync } from 'node:fs';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
 import extension, { createReduction, readReduction, nextReductionTrial, reductionCertificate, requestReductionTrial, recordReductionOutcome, reductionPacket, envelope, fitEnvelope, ReductionRefusal, digest, exitCode } from '../dist/index.js';
 import type { ReductionResult, Host } from '../dist/index.js';
@@ -10,18 +11,26 @@ import { persistedSchemaPort } from '../dist/src/host.js';
 import { refusal, insist } from '../dist/src/errors.js';
 import { wire, renderOutput, refusalEnvelope } from '../dist/src/output.js';
 import { fixture, definition, outcome, hasCode, runTrial, reserve, historyEvents } from './helpers.ts';
-import { mountedHomePaths } from './home-paths.ts';
+import { mountedHomePaths, homeProbePaths } from './home-paths.ts';
 import type { CommandHandlerContext } from '@unbrained/pm-cli/sdk/authoring';
 
+/** Exercise the actual registered serializers for every inert pre-write privacy refusal. */
+async function assertCliPrivacy(ext: Awaited<ReturnType<typeof createExtensionTestHarness>>, command: string, result: ReductionResult, path: string, proof: string): Promise<void> {
+  assert.equal(result.refusal?.code, 'invalid_input', proof);
+  for (const format of ['json', 'toon'] as const) {
+    const rendered = await ext.runRendererOverride({ format, command: `reduce ${command}`, result }); const text = String(rendered.rendered);
+    assert.ok(!text.includes(path), proof); assert.equal((format === 'json' ? JSON.parse(text) : decodeToon(text)).refusal.code, 'invalid_input');
+  }
+}
+
 test('CLI mounted-home refusals are inert in JSON and TOON and cannot change a non-git tracker', async t => {
-  const { host, pmRoot, id, birth, native } = await fixture(t, true, definition(1)); const path = mountedHomePaths().forbidden[0];
+  const { host, pmRoot, id, birth, native } = await fixture(t, true, definition(1)); const paths = [mountedHomePaths().forbidden[0], ...homeProbePaths()];
   const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
   const pending = await reserve(host); const snapshot = await readReduction(host, id); const events = await historyEvents(pmRoot, id);
-  for (const command of ['create', 'record']) {
+  for (const [index, path] of paths.entries()) for (const command of ['create', 'record']) {
     const options = command === 'create' ? { id: 'corpus-mounted', op: 'birth', input: JSON.stringify({ title: 'Public', definition: { ...birth.definition, atoms: birth.definition.atoms.map(atom => ({ ...atom, label: path })) } }) } : { op: 'mounted', revision: snapshot.revision, request: pending.receipt.result.identity, input: JSON.stringify(outcome(birth.definition, pending.candidate.subset_digest, 'target_fail', { reason: path })) };
     const ran = await ext.runCommand({ command: `reduce ${command}`, args: command === 'create' ? [] : [id], options, pmRoot }); if (ran.cause) throw ran.cause;
-    const result = ran.result as ReductionResult; assert.equal(result.refusal?.code, 'invalid_input', 'proof:mounted_cli');
-    for (const format of ['json', 'toon'] as const) { const rendered = await ext.runRendererOverride({ format, command: `reduce ${command}`, result }); const text = String(rendered.rendered); assert.ok(!text.includes(path), 'proof:mounted_cli'); assert.equal((format === 'json' ? JSON.parse(text) : decodeToon(text)).refusal.code, 'invalid_input'); }
+    await assertCliPrivacy(ext, command, ran.result as ReductionResult, path, index === 0 ? 'proof:mounted_cli' : 'proof:home_cli_boundaries');
   }
   await assert.rejects(native.get('corpus-mounted'), hasCode('item_not_found')); assert.equal((await readReduction(host, id)).revision, snapshot.revision); assert.equal(await historyEvents(pmRoot, id), events);
 });
@@ -80,6 +89,23 @@ test('settings validation and unavailable schemas refuse without domain writes',
   assert.equal((await runCommand('packet', context({ output_budget: 1600 })) as ReductionResult).refusal?.code, 'not_found');
   await native.schemaAddField('reduce_state', { type: 'string', description: 'Peer incompatible field' });
   assert.equal((await runCommand('packet', context(undefined)) as ReductionResult).refusal?.code, 'invalid_record');
+});
+test('documented settings budget endpoints match real stored CLI policy without side effects', async t => {
+  const paragraph = readFileSync('README.md', 'utf8').split('\n').find(line => line.startsWith('Settings section'))!;
+  assert.match(paragraph, /`1\.\.8192`/u, 'proof:settings_range_docs');
+  const { pmRoot, id } = await fixture(t, true, definition(1));
+  const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  for (const budget of [0, 1, 1600, 8192, 8193, -1, 1.5]) {
+    await writeSettingsSection(pmRoot, 'reduce', { output_budget: budget }, { author: 'fixture' });
+    const settings = await readSettingsSection(pmRoot, 'reduce'); const events = await historyEvents(pmRoot, id);
+    for (const command of ['next', 'certificate', 'packet']) {
+      const ran = await ext.runCommand({ command: `reduce ${command}`, args: [id], pmRoot }); if (ran.cause) throw ran.cause;
+      const result = ran.result as ReductionResult;
+      assert.equal(result.ok, budget === 1600 || budget === 8192, 'proof:settings_range');
+      if (!result.ok) assert.equal(result.refusal?.code, budget === 1 ? 'output_budget' : 'invalid_input', 'proof:settings_range');
+    }
+    assert.equal((await readSettingsSection(pmRoot, 'reduce')).revision, settings.revision); assert.equal(await historyEvents(pmRoot, id), events);
+  }
 });
 test('exact fitting provides usable minimums, hard ceilings and fail-closed host capability errors', async t => {
   const { host, id } = await fixture(t); const value = envelope(await reductionPacket(host, { id })); const fitted = fitEnvelope(host, value); assert.ok(fitted.output_fit.estimated_tokens <= 1600);

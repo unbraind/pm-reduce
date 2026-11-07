@@ -4,6 +4,7 @@ import { advanceReduction, canonicalSubsetDigest, validateReductionCertificate, 
 import type { ReductionState, Outcome } from '../dist/index.js';
 import { projectState, validateOutcome, cachedOutcome } from '../dist/src/kernel.js';
 import { definition, outcome, hasCode } from './helpers.ts';
+import { hashCalls } from './kernel-tools.ts';
 /** Pure journal fixture independently admits one observation per exact candidate. */
 function state(count = 16): ReductionState {
   const result = { kind: 'create' as const, identity: 'owner', sequence: 1, digest: digest(definition(count)) };
@@ -22,6 +23,38 @@ function appendOperation(s: ReductionState, kind: 'request' | 'record', identity
   const result = { kind, identity, sequence: s.replay_receipts.length + 1, digest: digest(content) };
   s.replay_receipts.push({ operation_id: `extra-${result.sequence}`, request_digest: digest(result), result, result_digest: digest(result) });
 }
+test('certificate subset and oracle hashing is independent of repeated observation count', () => {
+  const base = state(1); observe(base, 'target_fail'); observe(base, 'pass');
+  const oracle = canonical(base.definition.oracle);
+  for (const reserveAgain of [false, true]) {
+    const counts: number[][] = [];
+    for (const repeats of [0, 1, 16, 64]) {
+      const copy = structuredClone(base);
+      for (let index = 0; index < repeats; index++) {
+        let request_id = copy.requests[0].request_id;
+        if (reserveAgain) {
+          request_id = `repeated-request-${index}`; const request = { ...copy.requests[0], request_id };
+          copy.requests.push(request); appendOperation(copy, 'request', request_id, { ...request, state: 'pending' });
+        }
+        const observed = { ...copy.observations[0], request_id, observation_id: `repeat-${index}` }; copy.observations.push(observed); appendOperation(copy, 'record', observed.observation_id, observed);
+      }
+      projectState(copy); readState(copy);
+      const action = () => { assert.equal(validateReductionCertificate(copy).qualification, 'one_minimal_under_recorded_oracle'); };
+      counts.push([hashCalls(action, text => text.startsWith('{"atoms":') && Object.keys(JSON.parse(text)).join(',') === 'atoms,original_digest'), hashCalls(action, text => text === oracle)]);
+    }
+    assert.ok(counts[0].every(count => count > 0));
+    for (const count of counts) { assert.equal(count[1], counts[0][1], 'proof:invariant_hashes'); if (!reserveAgain) assert.deepEqual(count, counts[0], 'proof:invariant_hashes'); }
+    // Two reservation validations, three algorithm replays and two complete certificates.
+    assert.ok(counts[0][0] <= 12, 'proof:subset_digest_reuse');
+  }
+});
+
+test('canonical subset validation selects its immutable atoms once', () => {
+  const def = definition(64); let selections = 0;
+  def.atoms = new Proxy(def.atoms, { get(target, key, receiver) { if (key === 'filter') selections++; return Reflect.get(target, key, receiver); } });
+  assert.equal(canonicalSubsetDigest(def, ['a0']), canonicalSubsetDigest(definition(64), ['a0']));
+  assert.equal(selections, 1, 'proof:subset_selection');
+});
 test('ddmin and independent deletion witnesses retain 1-minimality for monotone and nonmonotone inputs', () => {
   for (const predicate of [(ids: string[]) => ids.includes('a7'), (ids: string[]) => ids.includes('a3') && ids.includes('a12') || ids.length === 16, (ids: string[]) => ids.length === 0 || ids.length === 16]) {
     const s = state(); let loops = 0;

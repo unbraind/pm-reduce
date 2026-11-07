@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 import { fixtureEnvironment, npmEnvironment } from '../scripts/environment.ts';
 import { definition, outcome } from './helpers.ts';
 import { packedRequirement, assertBudgetRefusal, selectNodeRuntime } from './install-tools.ts';
-import { mountedHomePaths } from './home-paths.ts';
+import { mountedHomePaths, homeProbePaths } from './home-paths.ts';
 import { captureProcessResult, processDiagnostics } from '../scripts/process-tools.ts';
 import { decodeToon } from '@unbrained/pm-cli/sdk/testing';
 /** Run a credential-free consumer command and preserve only bounded diagnostics. */
@@ -41,8 +41,9 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       run(['init', 'packed', '--defaults', '--agent-guidance', 'skip', '--no-merge-fence']); run(['package', 'install', './node_modules/pm-reduce']); run(['reduce', '--help']);
       assert.ok(JSON.parse(run(['contracts', '--json', '--output-budget', 'unbounded'])));
       const def = definition(1); const birthInput = JSON.stringify({ title: 'Public reproduction', definition: def });
-      const privatePath = mountedHomePaths().forbidden.find(path => path.startsWith('c://'))!; const privateDefinition = structuredClone(def); privateDefinition.atoms[0].label = privatePath;
-      for (const format of ['json', 'toon']) {
+      const privatePath = mountedHomePaths().forbidden.find(path => path.startsWith('c://'))!; const privateDefinition = structuredClone(def); privateDefinition.atoms[0].label = privatePath; const privatePaths = [privatePath, ...homeProbePaths()];
+      for (const privatePath of privatePaths) for (const format of ['json', 'toon']) {
+        privateDefinition.atoms[0].label = privatePath;
         const refused = run(['reduce', 'create', '--id', 'packed-private', '--op', 'birth', '--input', '-', ...(format === 'json' ? ['--json'] : [])], JSON.stringify({ title: 'Public', definition: privateDefinition }), 2);
         assert.equal((format === 'json' ? JSON.parse(refused) : decodeToon(refused)).refusal.code, 'invalid_input'); assert.ok(!refused.includes(privatePath));
         assert.equal(JSON.parse(run(['reduce', 'next', 'packed-private', '--json'], undefined, 3)).refusal.code, 'not_found');
@@ -59,7 +60,7 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
         const requested = JSON.parse(run(['reduce','request','packed-repro','--op',`request-${index}`,'--proposal',next.data.proposal_digest,'--revision',next.revision,'--json'])); assert.equal(requested.ok,true);
         const verdict=outcome(def,next.data.candidate.subset_digest,index===0?'target_fail':'pass');
         if(index===0) {
-          for (const format of ['json', 'toon']) {
+          for (const privatePath of privatePaths) for (const format of ['json', 'toon']) {
             const refused = run(['reduce', 'record', 'packed-repro', '--request', requested.data.result.identity, '--op', 'private-reason', '--revision', requested.revision, '--input', '-', ...(format === 'json' ? ['--json'] : [])], JSON.stringify({ ...verdict, reason: privatePath }), 2);
             assert.equal((format === 'json' ? JSON.parse(refused) : decodeToon(refused)).refusal.code, 'invalid_input'); assert.ok(!refused.includes(privatePath));
           }

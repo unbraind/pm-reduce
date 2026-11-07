@@ -8,7 +8,7 @@ function fileProtocol(value = ''): boolean {
 
 /** Recognize absolute home aliases with disjoint token/colon scans and anchored local rules. */
 export function containsPrivateHomePath(text: string): boolean {
-  for (const match of text.matchAll(/[\p{L}\p{N}_./\\~:+-]+/gu)) {
+  for (const match of text.matchAll(/[\p{L}\p{N}_./\\~:$+-]+/gu)) {
     const token = match[0];
     const protocol = token.split(':', 1)[0].toLowerCase();
     const localScheme = /^(?:[a-z]|source)$/u.test(protocol) || fileProtocol(protocol);
@@ -20,10 +20,16 @@ export function containsPrivateHomePath(text: string): boolean {
       if (!local.startsWith('/')) continue;
       local = local.replace(/^\/+(?:[?.]\/)?unc\//iu, '//');
       for (const spelling of [local, posix.normalize(local)]) {
-        const path = spelling.split(/\/+/u).filter(Boolean).join('/').toLowerCase();
-        if (/^(?:home|users|root)\//u.test(path) || (/^(?:home|users|root)$/u.test(path) && spelling.endsWith('/')) || (path === 'root' && match.index + token.length === text.length)) return true;
-        if (/^(?:[a-z]|cygdrive\/[a-z]|mnt\/(?:host\/)?[a-z]|run\/desktop\/mnt\/host\/[a-z])\/(?:users|home)(?:\/|$)/u.test(path)) return true;
-        if (local.startsWith('//') && /^(?:[^/]+\/){1,2}(?:users|home)(?:\/|$)/u.test(path)) return true;
+        const parts = spelling.toLowerCase().split(/\/+/u).filter(Boolean);
+        const drive = pieces[index - 1]?.toLowerCase();
+        if (drive?.length === 1 && 'abcdefghijklmnopqrstuvwxyz'.includes(drive)) parts.unshift(drive);
+        const wsl = local.startsWith('//') && (parts[0] === 'wsl$' || parts[0] === 'wsl.localhost');
+        const path = (wsl ? parts.slice(2) : parts).join('/');
+        const after = text[match.index + token.length];
+        if (/^(?:home|users|root)\//u.test(path) || (/^(?:home|users|root)$/u.test(path) && spelling.endsWith('/')) || (path === 'root' && (after === undefined || after.trim() === '' || '"\'`,;[]{}<>|&!?)'.includes(after)))) return true;
+        if (/^(?:[a-z]|cygdrive\/[a-z]|mnt\/(?:host\/)?[a-z]|run\/desktop\/mnt\/host\/[a-z]|var|system\/volumes\/data)\/(?:users|home)(?:\/|$)/u.test(path)) return true;
+        if (/^(?:var|private\/var)\/root(?:\/|$)/u.test(path)) return true;
+        if (!wsl && local.startsWith('//') && /^(?:[^/]+\/){1,2}(?:users|home)(?:\/|$)/u.test(path)) return true;
       }
     }
   }

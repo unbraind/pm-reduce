@@ -124,7 +124,7 @@ Default budget: 1600 estimated tokens, using **ceil(final UTF-8 bytes / 4)**. Th
 
 `packet` pages observations (default 20, range 1..100). Its summary always carries the frozen oracle and original input identities, latest operation receipt, best subset, outstanding trial, trial budget, qualification, missing deletions and the complete certificate digest. Omitted counts include every observation outside the current page. Cursors bind owner revision, query and ordering; any mutation invalidates them. `certificate` carries the full witness set and can truthfully require a larger budget.
 
-Settings section `reduce` accepts only `{output_budget: positive_integer}`. Activation and reads never write settings or migrate data. Operation keys are retained up to 512 receipts, without eviction. Bounds also include 1..64 atoms, 256 requests, 512 observations and 256 KiB canonical owner state. A bound stops progress with explicit outstanding obligations.
+Settings section `reduce` accepts only the optional `output_budget` key: an integer in `1..8192` estimated tokens (default 1600). Activation and reads never write settings or migrate data. Operation keys are retained up to 512 receipts, without eviction. Bounds also include 1..64 atoms, 256 requests, 512 observations and 256 KiB canonical owner state. A bound stops progress with explicit outstanding obligations.
 
 ## Without git
 
@@ -132,7 +132,7 @@ Every domain command works in a plain SDK-initialized tracker with Git absent fr
 
 ## Privacy
 
-Text is inert data. New submissions refuse ANSI/control and bidi sequences, malformed Unicode, prototype keys, oversized inputs, absolute home paths (including Windows profiles exposed through WSL, Git Bash, Cygwin or Docker Desktop) and credential-shaped text. Admission, corpus and tracked-file checks share a linear lexical path classifier; SDK secret scanning adds credential checks. Public URLs and relative paths remain data. The checks are heuristic, not proof that text is shareable; lexical normalization does not inspect filesystem links. Legacy structured records remain readable; rendering escapes unsafe controls. Default packets omit source bodies. Correction does not erase native history; retention, redaction and deletion use the host's supported policy. Only public fixture inputs are used in the proof corpus.
+Text is inert data. New submissions refuse ANSI/control and bidi sequences, malformed Unicode, prototype keys, oversized inputs, absolute home paths (including resolved home aliases on Fedora Atomic/macOS and Windows profiles exposed through WSL mounts, Git Bash, Cygwin or Docker Desktop, plus Linux homes reached through WSL UNC) and credential-shaped text. Admission, corpus and tracked-file checks share a linear lexical path classifier; SDK secret scanning adds credential checks. Public URLs and relative paths remain data. The checks are heuristic, not proof that text is shareable; lexical normalization does not inspect filesystem links. Legacy structured records remain readable; rendering escapes unsafe controls. Default packets omit source bodies. Correction does not erase native history; retention, redaction and deletion use the host's supported policy. Only public fixture inputs are used in the proof corpus.
 
 ## Evidence and limitations
 

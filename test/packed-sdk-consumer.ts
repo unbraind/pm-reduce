@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, validateReductionCertificate, readState, canonical, digest, ReductionRefusal } from 'pm-reduce';
 import type { Outcome, ReductionState } from 'pm-reduce';
-import { mountedHomePaths } from './home-paths.ts';
+import { mountedHomePaths, homeProbePaths } from './home-paths.ts';
 import { appendObservation, fillJournal, largestOutcome } from './capacity-tools.ts';
 /** Match one stable packed refusal without depending on its diagnostics. */
 function code(expected: string) { return (error: unknown) => error instanceof ReductionRefusal && error.code === expected; }
@@ -17,6 +17,11 @@ const privatePath = mountedHomePaths().forbidden[0]; const privateDefinition = s
 await assert.rejects(createReduction(host, { id: 'packed-private-sdk', op: 'birth', title: 'Public', definition: privateDefinition }), code('invalid_input'));
 await assert.rejects(readReduction(host, 'packed-private-sdk'), code('not_found'));
 await assert.rejects(recordReductionOutcome(host, { ...input, outcome: { ...observed, reason: privatePath } }), code('invalid_input'));
+for (const path of homeProbePaths()) {
+  await assert.rejects(createReduction(host, { id: 'packed-resolved-sdk', op: 'birth', title: path, definition: owner.state.definition }), code('invalid_input'));
+  await assert.rejects(readReduction(host, 'packed-resolved-sdk'), code('not_found'));
+  await assert.rejects(recordReductionOutcome(host, { ...input, outcome: { ...observed, reason: path } }), code('invalid_input'));
+}
 assert.equal((await readReduction(host, owner.id)).revision, owner.revision);
 await recordReductionOutcome(host, input); assert.equal((await recordReductionOutcome(host, input)).replayed, true); assert.equal((await readReduction(host, owner.id)).state.observations.length, 3);
 const current = await readReduction(host, owner.id); const proof = await reductionCertificate(host, { id: owner.id });

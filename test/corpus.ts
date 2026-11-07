@@ -32,6 +32,11 @@ export function historicalOracle(name: typeof scenarios[number], atoms: string[]
 }
 /** Hash exact fixture bytes, separately from canonical JSON identities in the domain API. */
 export function bytesDigest(text: string): string { return createHash('sha256').update(text).digest('hex'); }
+/** Bind the complete reviewed fixture module, including every transitive helper and constant. */
+export function oracleRecipeDigest(historical_source: string, fixture_sha256: string | undefined): string {
+  assert.match(fixture_sha256 ?? '', /^[a-f0-9]{64}$/u, 'proof:recipe_fixture_required');
+  return digest({ harness: historicalOracle.toString(), materialize: materialize.toString(), historical_source, fixture_sha256 });
+}
 /** Bind scenarios to reviewed source filenames independently of provenance array order. */
 export function sourceForScenario<T extends { file: string }>(sources: T[], name: typeof scenarios[number]): T {
   const sourceFile = name === 'beads-precision' ? 'repair.ts' : 'exemplar-retrieval.ts';
@@ -55,9 +60,9 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
     const revision = await delivered(host.client.readItemRevision(created.item.id), 1600);
     const source_ref = { item_id: created.item.id, item_hash: revision.item_hash, field_pointer: '/description', content_digest: digest(description) }; oracleEvidence.push({ source_ref, description }); return { evidence_ref: source_ref, observed_at };
   }
-  const provenance = JSON.parse(await readFile('test/fixtures/provenance.json', 'utf8')) as { sources: { file: string; repository: string; revision: string; source_sha256: string; native_anchor: { item_id: string; item_hash: string; field_pointer: string; content_digest: string } }[] };
+  const provenance = JSON.parse(await readFile('test/fixtures/provenance.json', 'utf8')) as { fixture_sha256: string; sources: { file: string; repository: string; revision: string; source_sha256: string; native_anchor: { item_id: string; item_hash: string; field_pointer: string; content_digest: string } }[] };
   const anchor = sourceForScenario(provenance.sources, name); const payloads = atomsFor(name); const def = definition(16);
-  def.original_digest = bytesDigest(materialize(name, payloads)); def.oracle.oracle_key = name; def.oracle.recipe_digest = digest({ harness: historicalOracle.toString(), materialize: materialize.toString(), historical_source: anchor.source_sha256 }); def.oracle.environment_digest = digest({ runtime: process.version, platform: process.platform, architecture: process.arch, harness: 'historical-excerpts-v1' }); def.oracle.result_schema_digest = digest(z.toJSONSchema(OutcomeSchema)); def.oracle.subject_digest = anchor.source_sha256; def.oracle.target_failure_signature = name;
+  def.original_digest = bytesDigest(materialize(name, payloads)); def.oracle.oracle_key = name; def.oracle.recipe_digest = oracleRecipeDigest(anchor.source_sha256, provenance.fixture_sha256); def.oracle.environment_digest = digest({ runtime: process.version, platform: process.platform, architecture: process.arch, harness: 'historical-excerpts-v1' }); def.oracle.result_schema_digest = digest(z.toJSONSchema(OutcomeSchema)); def.oracle.subject_digest = anchor.source_sha256; def.oracle.target_failure_signature = name;
   def.atoms = payloads.map((text, index) => ({ atom_id: `a${index}`, payload_digest: bytesDigest(text), source_ref: { item_id: anchor.native_anchor.item_id, item_hash: anchor.native_anchor.item_hash, field_pointer: anchor.native_anchor.field_pointer, content_digest: anchor.native_anchor.content_digest, citation_id: anchor.revision } }));
   /** Verify every exact caller artifact byte digest and the original order before execution. */
   function materialized(ids: string[]): string[] {

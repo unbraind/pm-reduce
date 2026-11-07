@@ -5,14 +5,19 @@ import { insist } from './errors.ts';
 /** Identity includes original order; callers cannot reorder, duplicate or invent atoms. */
 export function canonicalSubsetDigest(definition: ReductionDefinition, subset: string[]): string {
   const selected = new Set(subset);
-  insist(selected.size === subset.length && canonical(definition.atoms.filter(atom => selected.has(atom.atom_id)).map(atom => atom.atom_id)) === canonical(subset), 'subset_mismatch', 'Subset must preserve the declared unique atom order');
-  return digest({ original_digest: definition.original_digest, atoms: definition.atoms.filter(atom => selected.has(atom.atom_id)) });
+  const atoms = definition.atoms.filter(atom => selected.has(atom.atom_id));
+  insist(selected.size === subset.length && canonical(atoms.map(atom => atom.atom_id)) === canonical(subset), 'subset_mismatch', 'Subset must preserve the declared unique atom order');
+  return digest({ original_digest: definition.original_digest, atoms });
 }
 /** Check all frozen oracle and subset identities before any observation is admitted. */
 export function validateOutcome(definition: ReductionDefinition, subsetDigest: string, outcome: Outcome): void {
+  validateOutcomeForOracle(definition, subsetDigest, outcome);
+}
+/** Reuse a locally computed frozen oracle identity when validating a complete journal. */
+function validateOutcomeForOracle(definition: ReductionDefinition, subsetDigest: string, outcome: Outcome, oracleDigest?: string): void {
   insist(outcome.subset_digest === subsetDigest, 'subset_mismatch', 'Observed subset differs from the reserved trial', 'Reconcile the reserved input identity; do not relabel a different materialized subset');
   const oracle = definition.oracle;
-  insist(outcome.oracle_digest === digest(oracle) && outcome.recipe_digest === oracle.recipe_digest && outcome.subject_digest === oracle.subject_digest && outcome.environment_digest === oracle.environment_digest && outcome.result_schema_digest === oracle.result_schema_digest, 'oracle_mismatch', 'Observed oracle differs from the frozen contract', 'Reconcile the frozen contract; create a new owner for a changed source, recipe or environment');
+  insist(outcome.oracle_digest === (oracleDigest ?? digest(oracle)) && outcome.recipe_digest === oracle.recipe_digest && outcome.subject_digest === oracle.subject_digest && outcome.environment_digest === oracle.environment_digest && outcome.result_schema_digest === oracle.result_schema_digest, 'oracle_mismatch', 'Observed oracle differs from the frozen contract', 'Reconcile the frozen contract; create a new owner for a changed source, recipe or environment');
   insist(outcome.result === 'unresolved' || outcome.completed, 'invalid_signature', 'A conclusive outcome needs an explicit completed verdict', 'Record incomplete execution as unresolved with its retained evidence');
   insist(outcome.result !== 'target_fail' || outcome.actual_signature === oracle.target_failure_signature, 'invalid_signature', 'Target failure signature does not match the declared signature', 'Keep other failures as unresolved with their actual signature and reason');
   insist(outcome.result !== 'pass' || outcome.actual_signature === null, 'invalid_signature', 'A pass cannot carry a failure signature; record other failures as unresolved', 'Record a non-target failure as unresolved; pass requires an explicit successful verdict');
@@ -24,6 +29,10 @@ function partitions(subset: string[], count: number): string[][] {
 /** Exact cached verdict; unresolved results never provide pass evidence. */
 export function cachedOutcome(state: ReductionState, subset: string[]): 'target_fail' | 'pass' | 'unresolved' | 'missing' | 'conflict' {
   const key = canonicalSubsetDigest(state.definition, subset);
+  return cachedOutcomeForDigest(state, key);
+}
+/** Share exact cached-result classification without rehashing an already validated subset. */
+function cachedOutcomeForDigest(state: ReductionState, key: string): 'target_fail' | 'pass' | 'unresolved' | 'missing' | 'conflict' {
   const results = new Set(state.observations.filter(row => row.subset_digest === key).map(row => row.result));
   if (results.has('pass') && results.has('target_fail')) return 'conflict';
   if (results.has('target_fail')) return 'target_fail';
@@ -99,10 +108,11 @@ export type ReductionCertificate = z.infer<typeof ReductionCertificateSchema>;
 /** Construct and optionally independently compare a complete certificate against every observation. */
 function certificateFromJournal(state: ReductionState, claimed?: ReductionCertificate): ReductionCertificate {
   const advanced = advanceReduction(state); const best = advanced.best;
-  const failing = best === null ? [] : state.observations.filter(row => row.subset_digest === canonicalSubsetDigest(state.definition, best) && row.result === 'target_fail').map(row => row.observation_id);
+  const bestDigest = best === null ? null : canonicalSubsetDigest(state.definition, best);
+  const failing = bestDigest === null ? [] : state.observations.filter(row => row.subset_digest === bestDigest && row.result === 'target_fail').map(row => row.observation_id);
   const deletions = best === null ? [] : best.map((removed_atom, index) => {
     const subset = best.filter((_, at) => at !== index); const subset_digest = canonicalSubsetDigest(state.definition, subset);
-    return { removed_atom, subset_digest, pass_witnesses: state.observations.filter(row => row.subset_digest === subset_digest && row.result === 'pass').map(row => row.observation_id), status: cachedOutcome(state, subset) };
+    return { removed_atom, subset_digest, pass_witnesses: state.observations.filter(row => row.subset_digest === subset_digest && row.result === 'pass').map(row => row.observation_id), status: cachedOutcomeForDigest(state, subset_digest) };
   });
   const missing = deletions.filter(row => row.status !== 'pass').map(row => row.removed_atom);
   const qualification = advanced.status === 'flaky_oracle' ? 'flaky_oracle' : best === null ? (advanced.status === 'baseline_not_failing' ? 'baseline_not_failing' : 'baseline_unresolved') : best.length === 0 ? 'empty_target_failure' : missing.length === 0 && failing.length > 0 && !state.requests.some(row => row.state === 'pending') ? 'one_minimal_under_recorded_oracle' : 'minimality_unproven';
@@ -122,13 +132,14 @@ export function readState(value: unknown): ReductionState {
   const state = parse(ReductionStateSchema, value, true);
   insist(Buffer.byteLength(canonical(state)) <= 262144, 'capacity_exceeded', 'Owner state exceeds 256 KiB', 'Create a successor owner; journals are never pruned');
   const requests = new Map(state.requests.map(row => [row.request_id, row]));
+  const oracleDigest = digest(state.definition.oracle);
   insist(requests.size === state.requests.length && new Set(state.observations.map(row => row.observation_id)).size === state.observations.length && new Set(state.replay_receipts.map(row => row.operation_id)).size === state.replay_receipts.length, 'invalid_record', 'Journal identities are duplicated');
   insist(state.requests.length <= state.definition.max_trials && state.requests.filter(row => row.state === 'pending').length <= 1, 'invalid_record', 'Trial reservations exceed the declared limits');
   for (const row of state.requests) {
-    insist(row.subset_digest === canonicalSubsetDigest(state.definition, row.subset_ids) && row.oracle_digest === digest(state.definition.oracle), 'invalid_record', 'Stored trial contract is inconsistent');
+    insist(row.subset_digest === canonicalSubsetDigest(state.definition, row.subset_ids) && row.oracle_digest === oracleDigest, 'invalid_record', 'Stored trial contract is inconsistent');
     insist((row.state === 'completed') === state.observations.some(observation => observation.request_id === row.request_id), 'invalid_record', 'Stored reservation completion is inconsistent');
   }
-  for (const row of state.observations) { const request = requests.get(row.request_id); insist(request, 'invalid_record', 'Observation has no reserved request'); validateOutcome(state.definition, request.subset_digest, row); insist((row.evidence === 'host_verified') === (row.verification_digest !== null), 'invalid_record', 'Verification attribution is inconsistent'); }
+  for (const row of state.observations) { const request = requests.get(row.request_id); insist(request, 'invalid_record', 'Observation has no reserved request'); validateOutcomeForOracle(state.definition, request.subset_digest, row, oracleDigest); insist((row.evidence === 'host_verified') === (row.verification_digest !== null), 'invalid_record', 'Verification attribution is inconsistent'); }
   insist(state.replay_receipts.length === 1 + state.requests.length + state.observations.length, 'invalid_record', 'Journal operation cardinality is inconsistent');
   const targets = new Map<string, unknown>([['create', state.definition], ...state.requests.map(row => [`request:${row.request_id}`, { ...row, state: 'pending' }] as [string, unknown]), ...state.observations.map(row => [`record:${row.observation_id}`, row] as [string, unknown])]);
   const identities = new Set<string>();

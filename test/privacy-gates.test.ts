@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fixtureEnvironment } from '../scripts/environment.ts';
-import { mountedHomePaths } from './home-paths.ts';
+import { mountedHomePaths, homeProbePaths, publicRootPaths } from './home-paths.ts';
 import { assertProcessStatus } from './gate-tools.ts';
 
 test('identity privacy checks distinguish absolute homes from public URLs and relative paths', t => {
@@ -17,7 +17,7 @@ test('identity privacy checks distinguish absolute homes from public URLs and re
   /** Initialize only the disposable development-gate fixture. */
   const git = (args: string[]) => { const result = spawnSync('git', args, { cwd: root, env, encoding: 'utf8' }); assertProcessStatus(result, 0, 'fixture Git command'); };
   git(['init', '--quiet']); const { forbidden, allowed } = mountedHomePaths(); const document = join(root, 'public.md');
-  writeFileSync(document, allowed.join('\n')); git(['add', 'public.md', '.github/approved-git-identities.txt']); git(['commit', '--quiet', '-m', 'Synthetic gate fixture']);
+  writeFileSync(document, [...allowed, ...publicRootPaths()].join('\n')); git(['add', 'public.md', '.github/approved-git-identities.txt']); git(['commit', '--quiet', '-m', 'Synthetic gate fixture']);
   /** Run the real gate against fixture Git identity and content. */
   const check = (parent = process.env) => spawnSync(process.execPath, [resolve('scripts/identity-gate.ts')], { cwd: root, env: isolate(parent), encoding: 'utf8', timeout: 30000 });
   const accepted = check(); assertProcessStatus(accepted, 0, 'proof:identity_path_scope');
@@ -25,7 +25,7 @@ test('identity privacy checks distinguish absolute homes from public URLs and re
     const event = join(root, 'event.json'); writeFileSync(event, JSON.stringify({ before: 'f'.repeat(40), after: 'e'.repeat(40), pull_request: { base: { sha: 'f'.repeat(40) }, head: { sha: 'e'.repeat(40) } } }));
     assertProcessStatus(check({ ...process.env, GITHUB_EVENT_NAME: name, GITHUB_EVENT_PATH: event }), 0, 'proof:fixture_environment');
   }
-  for (const privatePath of [forbidden[0], forbidden.at(-1)!]) { writeFileSync(document, privatePath); const refused = check(); assertProcessStatus(refused, 1, 'private fixture refusal'); assert.match(refused.stderr, /Private path policy failed/); }
+  for (const privatePath of [forbidden[0], forbidden.at(-1)!, ...homeProbePaths()]) { writeFileSync(document, privatePath); const refused = check(); assertProcessStatus(refused, 1, 'proof:home_identity_boundaries'); assert.match(refused.stderr, /Private path policy failed/); }
 });
 
 test('fixture environments remove all parent Git and GitHub variants while preserving runtime evidence', () => {
