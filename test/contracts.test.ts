@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createExtensionTestHarness, decodeToon } from '@unbrained/pm-cli/sdk/testing';
 import { fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError } from '@unbrained/pm-cli/sdk';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
-import extension, { createReduction, readReduction, reductionPacket, envelope, fitEnvelope, ReductionRefusal, digest, exitCode } from '../dist/index.js';
+import extension, { createReduction, readReduction, nextReductionTrial, reductionCertificate, requestReductionTrial, recordReductionOutcome, reductionPacket, envelope, fitEnvelope, ReductionRefusal, digest, exitCode } from '../dist/index.js';
 import type { ReductionResult, Host } from '../dist/index.js';
 import { runCommand, inputJson } from '../dist/src/commands.js';
 import { persistedSchemaPort } from '../dist/src/host.js';
@@ -95,8 +95,42 @@ test('exact fitting provides usable minimums, hard ceilings and fail-closed host
   assert.throws(() => fitEnvelope({ fitOutputEnvelope: fault('deny') }, value, 1), hasCode('permission_denied'));
   assert.throws(() => fitEnvelope({ fitOutputEnvelope: fault('short') }, value, 1), hasCode('output_budget'));
 });
+
+test('SDK fitter failures stay typed on every read, initial probe and minimum-budget retry', async t => {
+  const { host, id } = await fixture(t); const value = envelope(await reductionPacket(host, { id }));
+  for (const phase of ['initial', 'retry']) for (const read of [nextReductionTrial, reductionCertificate, reductionPacket]) {
+    let calls = 0; const fitter: typeof fitOutputEnvelope = (...args) => { if (++calls === 1 && phase === 'retry') return fitOutputEnvelope(...args); throw new Error('sensitive host diagnostics'); }; const broken = { ...host, fitOutputEnvelope: fitter };
+    await assert.rejects(read(broken, { id, budget: phase === 'retry' ? 1 : 1600 }), error => error instanceof ReductionRefusal && error.code === 'output_unavailable' && error.retryable && exitCode(error.code) === 5 && !error.message.includes('sensitive'), 'proof:sdk_fitter_read');
+  }
+  const native = createPmCliExpectedError('not reflected', { exitCode: 5, context: { code: 'outcome_unknown' } });
+  for (const error of [native, createPmCliExpectedError('not reflected', { exitCode: 5, context: { code: 'permission_denied' } }), new ReductionRefusal('permission_denied', 'Explicit host policy')]) assert.throws(() => fitEnvelope({ fitOutputEnvelope: () => { throw error; } }, value), found => found instanceof ReductionRefusal && found.code === error.code);
+  assert.throws(() => fitEnvelope({ fitOutputEnvelope: () => undefined as never }, value), hasCode('output_unavailable'), 'proof:sdk_fitter_read');
+  const broken = { fitOutputEnvelope: () => { throw new Error('untrusted host diagnostics'); } };
+  assert.throws(() => fitEnvelope(broken, { ...value, operation_id: 'untrusted-mirror' }), hasCode('output_unavailable'), 'proof:sdk_fitter_read');
+  assert.throws(() => fitEnvelope(broken, refusalEnvelope(new ReductionRefusal('invalid_input', 'Refused'))), hasCode('output_unavailable'));
+});
+
+test('SDK mutation fitter failures preserve pre-write refusal and post-write same-key recovery', async t => {
+  const { host, birth, id, pmRoot, native } = await fixture(t, true, definition(1));
+  const mutation = envelope(await createReduction(host, birth)); const { operation_id, ...withoutMirror } = mutation; void operation_id;
+  assert.throws(() => fitEnvelope({ fitOutputEnvelope: () => { throw new Error('untrusted'); } }, withoutMirror), hasCode('outcome_unknown'), 'proof:sdk_fitter_mutation');
+  /** Fail the selected measurement boundary while leaving real native storage intact. */
+  const broken = (phase: number): Host => { let calls = 0; return { ...host, fitOutputEnvelope: (...args) => { if (++calls === phase) throw new Error('sensitive host diagnostics'); return fitOutputEnvelope(...args); } }; };
+  for (const phase of [1, 2]) {
+    const input = { ...birth, id: `corpus-fitter-${phase}` };
+    await assert.rejects(createReduction(broken(phase), input), hasCode('outcome_unknown'), 'proof:sdk_fitter_mutation');
+    if (phase === 1) await assert.rejects(native.get(input.id), hasCode('item_not_found'));
+    else assert.equal((await createReduction(host, input)).replayed, true);
+  }
+  const next = await nextReductionTrial(host, { id }); const request = { id, op: 'fitter-request', revision: next.revision, proposal: next.proposal_digest! }; const events = await historyEvents(pmRoot, id);
+  await assert.rejects(requestReductionTrial(broken(1), request), hasCode('outcome_unknown')); assert.equal(await historyEvents(pmRoot, id), events);
+  await assert.rejects(requestReductionTrial(broken(2), request), hasCode('outcome_unknown')); const requested = await requestReductionTrial(host, request); assert.equal(requested.replayed, true);
+  const record = { id, op: 'fitter-record', revision: requested.revision, request: requested.result.identity, outcome: outcome(birth.definition, next.candidate!.subset_digest) }; const reservedEvents = await historyEvents(pmRoot, id);
+  await assert.rejects(recordReductionOutcome(broken(1), record), hasCode('outcome_unknown')); assert.equal(await historyEvents(pmRoot, id), reservedEvents);
+  await assert.rejects(recordReductionOutcome(broken(2), record), hasCode('outcome_unknown')); assert.equal((await recordReductionOutcome(host, record)).replayed, true);
+});
 test('refusal mapping and rendering never emit raw exceptions or active control sequences', () => {
-  for (const [code, expected] of [['not_found', 3], ['revision_conflict', 4], ['operation_conflict', 4], ['stale_cursor', 4], ['stale_proposal', 4], ['backend_unsupported', 5], ['permission_denied', 5], ['incomplete_read', 5], ['outcome_unknown', 5], ['invalid_input', 2]] as const) assert.equal(exitCode(code), expected);
+  for (const [code, expected] of [['not_found', 3], ['revision_conflict', 4], ['operation_conflict', 4], ['stale_cursor', 4], ['stale_proposal', 4], ['backend_unsupported', 5], ['permission_denied', 5], ['incomplete_read', 5], ['outcome_unknown', 5], ['output_unavailable', 5], ['invalid_input', 2]] as const) assert.equal(exitCode(code), expected);
   assert.equal(exitCode('stale_revision', 4), 4);
   assert.equal(refusal(new Error('untrusted sensitive content')).code, 'outcome_unknown');
   const expected = createPmCliExpectedError('not reflected', { exitCode: 4, context: { code: 'item_revision_conflict', required: 'Reread' } }); assert.equal(refusal(expected).code, 'revision_conflict'); assert.match(refusal(expected).remedy, /original operation key/); Object.assign(expected, { remedy: '/' + ['home','example','private'].join('/') }); assert.match(refusal(expected).remedy, /original operation key/); assert.ok(!refusal(expected).remedy.includes('private'));

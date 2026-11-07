@@ -3,7 +3,7 @@ import { encode, rawString } from '@toon-format/toon';
 import { fitOutputEnvelope, OutputEnvelopeFitError } from '@unbrained/pm-cli/sdk';
 import { parse, KeySchema, DigestSchema, CandidateSchema, TrialRequestSchema, CommittedResultSchema, ReductionStateSchema, OracleSchema, ReplaySchema } from './schema.ts';
 import { ReductionCertificateSchema } from './kernel.ts';
-import { ReductionRefusal, insist, exitCode } from './errors.ts';
+import { ReductionRefusal, insist, exitCode, refusal } from './errors.ts';
 import type { Host } from './host.ts';
 const owner = { owner_id: KeySchema, revision: DigestSchema };
 /** Strict immutable committed-result transport, separate from current native revision. */
@@ -53,7 +53,13 @@ export function envelope(input: Data): ReductionResult {
 export function refusalEnvelope(error: ReductionRefusal): ReductionResult {
   return { ...frame(), source_completeness: 'not_certified', ok: false, owner_id: null, revision: null, output_complete: true, returned: 0, omitted: 0, next_cursor: null, warnings: [], exit_code: exitCode(error.code, error.nativeExit), refusal: { code: error.code, message: error.message, remedy: error.remedy, retryable: error.retryable, details: error.details } };
 }
-/** Fit both exact serializers, counting native framing, with a 32 KiB hard ceiling. */
+/** Preserve expected host errors and distinguish read availability from mutation uncertainty. */
+function fittingRefusal(error: unknown, value: ReductionResult): ReductionRefusal {
+  const mapped = refusal(error);
+  if (error instanceof ReductionRefusal || mapped.code !== 'outcome_unknown' || (value.data !== undefined && 'operation_id' in value.data) || mapped.nativeExit !== undefined) return mapped;
+  return new ReductionRefusal('output_unavailable', 'Host output could not be verified', 'Retry this read on a conforming output host');
+}
+/** Fit both exact serializers, preserving typed host failures on initial and retry probes. */
 export function fitEnvelope(host: Pick<Host, 'fitOutputEnvelope'>, value: ReductionResult, budget = 1600) {
   parse(ReductionResultSchema, value, true); insist(Number.isSafeInteger(budget) && budget > 0 && budget <= 8192, 'invalid_input', 'Budget must be an integer from 1 to 8192');
   /** Ask the host to measure full envelopes; no row or string projection is permitted. */
@@ -61,12 +67,12 @@ export function fitEnvelope(host: Pick<Host, 'fitOutputEnvelope'>, value: Reduct
   try {
     const result = measure(budget); insist(result.renderings.every(row => row.bytes <= 32768), 'output_budget', 'Envelope exceeds 32 KiB', 'Select a smaller journal page'); return result.envelope;
   } catch (error) {
-    if (!(error instanceof OutputEnvelopeFitError)) throw error;
+    if (!(error instanceof OutputEnvelopeFitError)) throw fittingRefusal(error, value);
     let minimum = error.minimum_tokens; insist(minimum !== undefined, 'backend_unsupported', 'Host fitter omitted its minimum retry budget');
     for (;;) {
       if (minimum > 8192) throw new ReductionRefusal('output_budget', 'Mandatory content exceeds the hard ceiling', 'Select a smaller journal page or a narrower owner', { minimum_usable_budget: null });
       try { measure(minimum); break; }
-      catch (failure) { if (!(failure instanceof OutputEnvelopeFitError)) throw failure; insist(failure.minimum_tokens !== undefined && failure.minimum_tokens > minimum, 'backend_unsupported', 'Host fitter returned an unusable retry hint'); minimum = failure.minimum_tokens; }
+      catch (failure) { if (!(failure instanceof OutputEnvelopeFitError)) throw fittingRefusal(failure, value); insist(failure.minimum_tokens !== undefined && failure.minimum_tokens > minimum, 'backend_unsupported', 'Host fitter returned an unusable retry hint'); minimum = failure.minimum_tokens; }
     }
     throw new ReductionRefusal('output_budget', 'Mandatory content does not fit', `Repeat with --budget ${minimum} or a smaller page`, { minimum_usable_budget: minimum });
   }

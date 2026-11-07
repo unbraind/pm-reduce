@@ -7,17 +7,33 @@ import { decideDailyRelease } from 'pm-ops/daily-release';
 import { verify } from 'pm-ops/attestation';
 import { fixture } from './helpers.ts';
 import { npmEnvironment } from '../scripts/environment.ts';
+import { assertAcceptanceRuntimes } from './workflow-tools.ts';
 
 test('CI and release provision both exact acceptance runtimes before their gates', () => {
   for (const file of ['ci.yml', 'release.yml']) {
     const workflow = readFileSync(`.github/workflows/${file}`, 'utf8');
-    const gate = workflow.indexOf(file === 'ci.yml' ? 'run: npm run test:install' : 'run: npm run release:check');
-    for (const [major, version] of [['22', '22.19.0'], ['26', '26.13.0']]) {
-      const setup = workflow.indexOf(`node-version: ${version}\n`);
-      const capture = workflow.indexOf(`run: echo "PM_REDUCE_NODE_${major}=$(command -v node)" >> "$GITHUB_ENV"`);
-      assert.ok(setup >= 0 && capture > setup && gate > capture, 'proof:release_runtimes');
-    }
+    assertAcceptanceRuntimes(workflow, file === 'ci.yml' ? 'npm run test:install' : 'npm run release:check');
   }
+});
+
+test('runtime capture validation rejects reordered, overwritten and cross-job captures', () => {
+  const steps = [
+    '      - name: Setup 22\n        uses: actions/setup-node@pinned\n        with:\n          node-version: 22.19.0',
+    '      - name: Capture 22\n        run: echo "PM_REDUCE_NODE_22=$(command -v node)" >> "$GITHUB_ENV"',
+    '      - name: Setup 26\n        uses: actions/setup-node@pinned\n        with:\n          node-version: 26.13.0',
+    '      - name: Capture 26\n        run: echo "PM_REDUCE_NODE_26=$(command -v node)" >> "$GITHUB_ENV"',
+  ];
+  const gate = '\n      - name: Gate\n        run: npm run release:check'; const prefix = 'jobs:\n  test:\n    steps:\n';
+  for (let a = 0; a < 4; a++) for (let b = 0; b < 4; b++) for (let c = 0; c < 4; c++) for (let d = 0; d < 4; d++) {
+    const order = [a, b, c, d]; if (new Set(order).size !== 4) continue;
+    const valid = [1, 3].every(capture => order.slice(0, order.indexOf(capture)).filter(step => step % 2 === 0).at(-1) === capture - 1);
+    const workflow = prefix + order.map(index => steps[index]).join('\n') + gate;
+    if (valid) assert.doesNotThrow(() => assertAcceptanceRuntimes(workflow, 'npm run release:check'));
+    else assert.throws(() => assertAcceptanceRuntimes(workflow, 'npm run release:check'), /proof:release_runtimes/, 'proof:runtime_capture_order');
+  }
+  const valid = prefix + steps.join('\n');
+  assert.doesNotThrow(() => assertAcceptanceRuntimes((valid + gate).replace(/      - name: [^\n]+\n        /gu, '      - '), 'npm run release:check'));
+  for (const changed of [valid + '\n  other:\n    steps:' + gate, valid + '\n' + steps[3] + gate, valid]) assert.throws(() => assertAcceptanceRuntimes(changed, 'npm run release:check'), /proof:release_runtimes/, 'proof:runtime_capture_order');
 });
 
 test('CI health accepts a plain tracker but rejects corrupt native history',async t=>{

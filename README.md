@@ -80,7 +80,7 @@ A pending request survives a crash. Inspect `next` or `packet`, retrieve the cal
 
 ## SDK
 
-All host functions return promises and throw `ReductionRefusal` with `code`, `message`, `remedy`, `retryable` and bounded details. Strict Zod schemas are exported for every nested input and persisted record. CLI and SDK use the same pure kernel and write path.
+The domain SDK operations below return promises and throw `ReductionRefusal` with `code`, `message`, `remedy`, `retryable` and bounded details. Unexpected output-fitter failures use `output_unavailable` for reads and `outcome_unknown` for mutation receipts; typed host refusals and output-budget retry hints are preserved. Pure schema and kernel helpers remain synchronous. Strict Zod schemas are exported for every nested input and persisted record. CLI and SDK use the same pure kernel and write path.
 
 ```typescript
 import {
@@ -132,7 +132,7 @@ Every domain command works in a plain SDK-initialized tracker with Git absent fr
 
 ## Privacy
 
-Text is inert data. New submissions refuse ANSI/control and bidi sequences, malformed Unicode, prototype keys, oversized inputs, absolute home paths (including mounted Windows profiles in WSL) and credential-shaped text through the SDK privacy scanner. The scanner is heuristic, not proof that text is shareable. Legacy structured records remain readable; rendering escapes unsafe controls. Default packets omit source bodies. Correction does not erase native history; retention, redaction and deletion use the host's supported policy. Only public fixture inputs are used in the proof corpus.
+Text is inert data. New submissions refuse ANSI/control and bidi sequences, malformed Unicode, prototype keys, oversized inputs, absolute home paths (including Windows profiles exposed through WSL, Git Bash, Cygwin or Docker Desktop) and credential-shaped text. Admission, corpus and tracked-file checks share a linear lexical path classifier; SDK secret scanning adds credential checks. Public URLs and relative paths remain data. The checks are heuristic, not proof that text is shareable; lexical normalization does not inspect filesystem links. Legacy structured records remain readable; rendering escapes unsafe controls. Default packets omit source bodies. Correction does not erase native history; retention, redaction and deletion use the host's supported policy. Only public fixture inputs are used in the proof corpus.
 
 ## Evidence and limitations
 

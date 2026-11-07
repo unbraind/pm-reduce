@@ -1,11 +1,15 @@
 /** Run the packed public SDK in a real consumer, using only synthetic oracle reports. */
 import assert from 'node:assert/strict';
-import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, validateReductionCertificate, readState, canonical, digest, ReductionRefusal } from 'pm-reduce';
+import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, validateReductionCertificate, readState, canonical, digest, ReductionRefusal } from 'pm-reduce';
 import type { Outcome, ReductionState } from 'pm-reduce';
 import { mountedHomePaths } from './home-paths.ts';
 /** Match one stable packed refusal without depending on its diagnostics. */
 function code(expected: string) { return (error: unknown) => error instanceof ReductionRefusal && error.code === expected; }
 const host = createDirectoryHost(process.cwd() + '/.agents/pm', 'consumer'); const owner = await readReduction(host, 'packed-repro');
+const unavailable = { ...host, fitOutputEnvelope: () => { throw new Error('sensitive host diagnostics'); } };
+for (const read of [nextReductionTrial, reductionCertificate, reductionPacket]) await assert.rejects(read(unavailable, { id: owner.id }), code('output_unavailable'));
+await assert.rejects(createReduction(unavailable, { id: 'packed-fitter', op: 'birth', title: 'Public', definition: owner.state.definition }), code('outcome_unknown'));
+await assert.rejects(readReduction(host, 'packed-fitter'), code('not_found'));
 const { observation_id, request_id, evidence, verification_digest, ...observed } = owner.state.observations[0]; void observation_id; void evidence; void verification_digest;
 const input = { id: owner.id, op: 'packed-sdk-write', revision: owner.revision, request: request_id, outcome: observed };
 const privatePath = mountedHomePaths().forbidden[0]; const privateDefinition = structuredClone(owner.state.definition); privateDefinition.atoms[0].label = privatePath;

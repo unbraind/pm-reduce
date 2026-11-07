@@ -14,7 +14,7 @@ export class ReductionRefusal extends Error {
   /** Construct a refusal without reflecting input. */
   constructor(code: string, message: string, remedy = 'Review the input using the documented schema', details: Record<string, unknown> = {}, nativeExit?: number) {
     super(message); this.name = 'ReductionRefusal'; this.code = code; this.remedy = remedy; this.details = details; this.nativeExit = nativeExit;
-    this.retryable = ['revision_conflict', 'stale_revision', 'stale_cursor', 'stale_proposal'].includes(code);
+    this.retryable = ['revision_conflict', 'stale_revision', 'stale_cursor', 'stale_proposal', 'output_unavailable'].includes(code);
   }
 }
 /** Enforce a domain invariant before writing. */
@@ -35,6 +35,6 @@ export function exitCode(code: string, nativeExit?: number): number {
   if (nativeExit !== undefined) return nativeExit;
   if (code === 'not_found') return 3;
   if (['revision_conflict', 'operation_conflict', 'stale_cursor', 'stale_proposal'].includes(code)) return 4;
-  if (['backend_unsupported', 'permission_denied', 'incomplete_read', 'outcome_unknown'].includes(code)) return 5;
+  if (['backend_unsupported', 'permission_denied', 'incomplete_read', 'outcome_unknown', 'output_unavailable'].includes(code)) return 5;
   return 2;
 }

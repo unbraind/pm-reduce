@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { scanMutationSecrets } from '@unbrained/pm-cli/sdk';
+import { containsPrivateHomePath } from './privacy.ts';
 import { insist, ReductionRefusal } from './errors.ts';
 /** Bounded canonical identity; surrounding whitespace is normalized for every request. */
 export const KeySchema = z.string().trim().min(1).max(96).regex(/^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$/);
@@ -82,7 +83,7 @@ export function guardSubmitted(input: unknown): void {
     if (typeof value === 'string') {
       insist(value.length <= 8000 && value.isWellFormed(), 'invalid_input', 'Text is oversized or malformed Unicode');
       insist(!/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/u.test(value), 'invalid_input', 'Control sequences are forbidden');
-      insist(!/(?:^|[^\p{L}\p{N}_./\\~])(?:-[a-z][a-z0-9_-]*)?(?:file:(?:\/\/(?:localhost)?)?)?(?:[a-z]:[\\/](?:Users|home)[\\/]|\/+mnt\/+[a-z]\/+(?:Users|home)\/|\/(?:home|Users)\/|\/root(?:\/|$))/iu.test(value), 'invalid_input', 'Private home paths are forbidden');
+      insist(!containsPrivateHomePath(value), 'invalid_input', 'Private home paths are forbidden');
       insist(scanMutationSecrets(value).length === 0, 'invalid_input', 'SDK privacy guard detected credential-shaped content');
     } else if (value !== null && typeof value === 'object') {
       insist(Array.isArray(value) || Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null, 'invalid_input', 'Only plain JSON data is supported');

@@ -6,6 +6,7 @@ import { createReduction, readReduction, recordReductionOutcome, reductionPacket
 import { guardSubmitted, parse, DefinitionSchema } from '../dist/src/schema.js';
 import { fixture, definition, hasCode, historyEvents, reserve, outcome } from './helpers.ts';
 import { mountedHomePaths } from './home-paths.ts';
+import { containsPrivateHomePath } from '../dist/src/privacy.js';
 
 test('strict privacy must-refuse and must-allow corpora run before any owner mutation', async t => {
   const { host, native, birth, pmRoot } = await fixture(t);
@@ -23,8 +24,15 @@ test('strict privacy must-refuse and must-allow corpora run before any owner mut
 
 test('mounted profile aliases are refused in every nested JSON value while public paths stay data', () => {
   const { forbidden, allowed } = mountedHomePaths();
-  for (const text of forbidden) for (const input of [text, { label: text }, { outcome: { reason: text } }, { arbitrary: [null, { text }] }]) assert.throws(() => guardSubmitted(input), hasCode('invalid_input'), 'proof:mounted_home');
+  for (const text of forbidden) { assert.equal(containsPrivateHomePath(text), true, 'proof:path_aliases'); for (const input of [text, { label: text }, { outcome: { reason: text } }, { arbitrary: [null, { text }] }]) assert.throws(() => guardSubmitted(input), hasCode('invalid_input'), 'proof:mounted_home'); }
   for (const text of allowed) assert.doesNotThrow(() => guardSubmitted({ arbitrary: [text] }), 'proof:mounted_public');
+});
+
+test('home classification has a linear work budget for overlapping flags and preserves long flags', () => {
+  const hostile = '-a' + '--a'.repeat(2600); const start = process.cpuUsage();
+  for (let attempt = 0; attempt < 20; attempt++) assert.equal(containsPrivateHomePath(hostile), false);
+  const used = process.cpuUsage(start); assert.ok(used.user + used.system < 400000, 'proof:path_complexity');
+  const path = mountedHomePaths().forbidden[0]; assert.equal(containsPrivateHomePath(hostile + path), true, 'proof:long_flag');
 });
 
 test('mounted homes refuse SDK writes before effects and preserve previously persisted text', async t => {

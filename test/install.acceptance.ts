@@ -40,7 +40,7 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       run(['init', 'packed', '--defaults', '--agent-guidance', 'skip', '--no-merge-fence']); run(['package', 'install', './node_modules/pm-reduce']); run(['reduce', '--help']);
       assert.ok(JSON.parse(run(['contracts', '--json', '--output-budget', 'unbounded'])));
       const def = definition(1); const birthInput = JSON.stringify({ title: 'Public reproduction', definition: def });
-      const privatePath = mountedHomePaths().forbidden[0]; const privateDefinition = structuredClone(def); privateDefinition.atoms[0].label = privatePath;
+      const privatePath = mountedHomePaths().forbidden.find(path => path.startsWith('c://'))!; const privateDefinition = structuredClone(def); privateDefinition.atoms[0].label = privatePath;
       for (const format of ['json', 'toon']) {
         const refused = run(['reduce', 'create', '--id', 'packed-private', '--op', 'birth', '--input', '-', ...(format === 'json' ? ['--json'] : [])], JSON.stringify({ title: 'Public', definition: privateDefinition }), 2);
         assert.equal((format === 'json' ? JSON.parse(refused) : decodeToon(refused)).refusal.code, 'invalid_input'); assert.ok(!refused.includes(privatePath));
