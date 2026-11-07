@@ -54,7 +54,7 @@ Writes precompute their complete receipt envelope before mutation. CLI dispatch 
 
 Packets retain summary obligations and a certificate digest while paging observation rows. A cursor binds owner ID/revision, query page size and journal order; stale or changed queries refuse. Returned plus omitted equals the frozen total, including observations on earlier pages. Certificate detail remains complete or refuses its budget; paging never weakens its qualification.
 
-Limits: 1..64 atoms, 256 requests, 512 observations, 512 operation receipts and 256 KiB canonical owner state. Reservations, certification and deliberate repeats all count. The first exceeded limit refuses before effects; no pruning evades limits or loses deduplication identity. Oracle source/recipe/atom changes require a new owner and fresh baseline.
+Limits: 1..64 atoms, 256 requests, 512 observations, 512 operation receipts and 256 KiB canonical owner state. Reservations, certification and deliberate repeats all count. Every write retaining a pending trial reserves one completing receipt and 32 KiB for its maximum valid observation and projection growth. This headroom is retained even when extra observations target older completed requests. Legacy journals remain readable; near-capacity owners refuse new work before the oracle runs. The first exceeded limit refuses before effects; no pruning evades limits or loses deduplication identity. Oracle source/recipe/atom changes require a new owner and fresh baseline.
 
 ## Backend and privacy boundaries
 

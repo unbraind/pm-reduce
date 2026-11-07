@@ -6,11 +6,11 @@ status: in_progress
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:47:18.375Z"
-updated_at: "2026-11-07T07:59:40.300Z"
+updated_at: "2026-11-07T11:01:08.834Z"
 author: codex-agent
 acceptance_criteria: "Three real public failures from at least sixteen atoms; exact provenance, resumes and packed consumers; full source coverage and npm plus Bun release gates."
 parent: reduce-release
-comments[30]{created_at,author,text}:
+comments[36]{created_at,author,text}:
   "2026-11-06T12:36:23.991Z",codex-agent,"Public proof is complete for three reproduced historical defects across two public packages: Beads numeric preservation, Jev Unicode tokenization, and Jev UTF-8 exemplar packing. Each reduces 16 atoms to 1 with independent failing-final and passing-deletion observations, retained caller-owned immutable result snapshots, frozen native source revisions, and public source hashes. Reservations/actual executions are 8/10, 8/10 and 6/8. Five pending-result handoffs and ten independent resume questions pass for each. Packets include frozen oracle identities and latest operation receipts; full JSON evidence retains the complete independently checked reduction snapshots. No synthetic defect is counted as real data."
   "2026-11-06T14:35:52.749Z",codex-agent,"Review-loop checkpoint on b34b0c4: CI test (26) and codeql completed successfully; test (22) remains queued. CodeRabbit automatic review was skipped for the new repository policy and the shared queue is awaiting its manual review request. No review completion or actionable thread is recorded yet; skipped and neutral bot checks are not treated as review approval."
   "2026-11-06T14:43:23.688Z",codex-agent,"Required public CI passed on b34b0c4: test (22), test (26), and codeql. No CI fix is needed on this head. CodeRabbit remains unreviewed while the shared manual-review queue is pending; skipped/neutral reviewer checks are kept separate from the successful build checks."
@@ -41,18 +41,31 @@ comments[30]{created_at,author,text}:
   "2026-11-07T07:31:19.928Z",codex-agent,"Corrected-source full npm run passed all 54 tests and complete independent coverage (569 statements, 360 branches, 127 functions, 497 lines across nine emitted modules), then failed because the public npm advisory endpoint returned a network error. The unchanged npm run audit:prod passed immediately on retry with zero vulnerabilities. This is an external registry failure, not a threshold/test failure or timeout. Restarting the full npm and Bun commands at unchanged thresholds; no audit step is skipped."
   "2026-11-07T07:59:36.583Z",codex-agent,"Auto round 2 final mapping and revert proofs: PRRT_kwDOVlPkts60xK4g plus PRRT_kwDOVlPkts60xipL -> shared linear classification and all native/mounted aliases; polynomial classifier restored fails proof:path_complexity, incomplete/combined normalization restored fails proof:path_aliases, long flag privacy remains tested. PRRT_kwDOVlPkts60xipI -> typed initial/retry SDK fitter errors fail proof:sdk_fitter_read on revert, mutation classification fails proof:sdk_fitter_mutation, preserving pre-write refusal and same-key post-write recovery. PRRT_kwDOVlPkts60xipP -> corpus and identity URL overmatching reverts fail proof:corpus_absolute_scope and proof:identity_path_scope. PRRT_kwDOVlPkts60xipR -> weak active-runtime validation fails proof:runtime_capture_order; moving either CI or release capture after another setup fails proof:release_runtimes. Every reversion runs in disposable copies, reaches its named AssertionError header, and all 48 restored tests pass. All supplied findings and the additional alias comment are valid and fixed; no refusal or omitted review page. No existing regression was removed or weakened."
   "2026-11-07T07:59:38.193Z",codex-agent,"Final source certification: npm run release:check passed in 685 seconds and bun run release:check passed in 911 seconds, serially in about 27 minutes with at most two workers and isolated HOME/Git configuration. Each passed 54 tests including 500 seeded journal sequences, one packed acceptance test, 42 expected behavioral failures, 48 restored tests, and 100 percent of 569 statements / 360 branches / 127 functions / 497 lines across nine emitted modules. Lint, typecheck, zero duplication, 91 documented declarations, zero production audit vulnerabilities, native health, identity/privacy, 44-file pack allowlist, changelog and publish attestation passed at unchanged thresholds. Both accepted archives have SHA-256 5488735b1b2a64fb87986778494be98fd6b45bb9f0e8457a477855e245b3407f; each npm/Bun consumer executed 51 primary CLI commands plus SDK and exact Node runtime probes with Git absent. Focused and native linked verification passed 26 tests. The 2449 forbidden spellings and 566 public/relative controls pass, with legacy records preserved. Earlier manual interruption and transient npm advisory-endpoint failure are retained above; the unchanged audit passed on retry and both final full gates passed. No local timeout or new SDK gap. Local CodeQL executable is unavailable; hosted CI/CodeQL for the forthcoming head remains pending and is separate evidence. No thread replies/resolutions, merge, release, binary commit or dependency-pin change."
-files[26]{path,scope}:
+  "2026-11-07T10:21:52.963Z",codex-agent,"Auto round 3: fetched every unresolved thread and all comments; main is already included and the prior pushed head is clean. Confirmed class rules: an admitted external trial must retain capacity for its maximum valid completion through every intervening write; disposable Git fixtures must not inherit parent event identities; runtime evidence must select an executable with the required exact version; child assertion diagnostics must retain stderr. Will share completion admission across all writes, test non-git SDK and packed CLI consumers in both formats, isolate fixture CI context, and add adversarial runtime/proof regressions without removing existing tests. The earlier schema thread remains fixed; its latest comment identifies the new hosted fixture failure. Latest CodeRabbit review has no Outside diff range section."
+  "2026-11-07T10:27:24.212Z",codex-agent,"Focused round-3 regressions passed ten tests. Capacity admission now reserves one completion receipt and 32 KiB on every write leaving a pending trial; this covers an 8000-byte ISO timestamp, maximum escaped outcome fields, receipt and projection growth, with margin. Added receipt/byte frontier property tests, near-full nongit tracker refusals with unchanged revision/history, intervening extra-observation refusal, and all result/verifier combinations with maximum legal fields and replay. Runtime selection probes each absolute candidate instead of trusting existence; disposable fixture environments remove case-insensitive Git/GitHub context while retaining runtime and coverage evidence. Shared process assertions preserve bounded stderr/stdout/error/signal diagnostics. Initial synthetic timestamp had an off-by-one length and was corrected before the passing focused run. Packed consumers will exercise SDK completion plus JSON/TOON refusal for both npm and Bun."
+  "2026-11-07T10:30:49.018Z",codex-agent,"Class review confirmed that read paths, JSON/TOON command adapters and directory SDK consumers share the same mutation kernel, and only the native repository identity gate should retain real CI event context. Disposable privacy/health/packed fixtures now use the shared isolated environment. Extracted repeat-observation seeding without removing the older capacity assertions to keep the zero-duplication threshold. The preliminary revert gate reached all 42 earlier expected failures, then refused a new mutation whose exact matcher missed emitted whitespace; corrected the matcher before final certification. No unrelated mutation failure was accepted as proof."
+  "2026-11-07T10:41:26.037Z",codex-agent,"Round-3 full npm gate progress: 61 unskipped tests pass and independent coverage remains 100 percent across all nine emitted modules (573 statements, 364 branches, 129 functions, 500 lines). Static, tracker, identity, production audit, pack allowlist, changelog and publication-attestation checks pass. Packed acceptance passed in about five minutes for both npm and Bun consumers, including maximum-size SDK completion and both JSON/TOON capacity refusals with stable revisions. The full behavioral revert gate is now running; the Bun full gate will run serially afterward."
+  "2026-11-07T10:45:19.450Z",codex-agent,"Full npm run release:check passed in 854 seconds. Every one of the 49 behavioral mutations reached its intended named AssertionError, followed by 56 restored passing tests. New thread mappings: PRRT_kwDOVlPkts60z7wU -> proof:completion_reservation (whole admission and byte-headroom reverts), proof:completion_write (request-only admission reverted), proof:completion_frontier (receipt reserve reverted); PRRT_kwDOVlPkts60z7wb -> proof:node_runtime_selection; PRRT_kwDOVlPkts60z7wc -> proof:fixture_environment; PRRT_kwDOVlPkts60z7wh -> proof:gate_diagnostics. All earlier 42 regressions remain. The old unresolved schema thread PRRT_kwDOVlPkts60xipL remains fixed by the prior shared linear classifier and its hosted alias/complexity tests passed; its later CI-failure report is covered by the new fixture isolation. The Bun full gate now runs serially on unchanged source."
+  "2026-11-07T11:01:07.227Z",codex-agent,"Auto round 3 final certification: npm run release:check passed in 854 seconds and bun run release:check passed in 902 seconds, serially in about 29 minutes using at most two workers and isolated HOME/Git configuration. Each passed 61 unskipped tests including 500 seeded journal sequences; 100 percent of 573 statements, 364 branches, 129 functions and 500 lines across nine emitted modules; one packed acceptance test; 49 named behavioral mutation failures; and 56 restored tests. Packed npm/Bun consumers each exercised 56 primary CLI commands plus SDK completion/refusal and exact Node 22.19.0 / 26.13.0 probes with Git absent. Both accepted 44-file archives have SHA-256 a1ff2149e130d23cb9749d9e4b70ba1f5394cfd305757ffd53f5359ab8dc31c5. Typecheck, lint, zero duplication, 94 documented declarations, native health, identity/privacy, zero production audit vulnerabilities, changelog and publication attestation pass at unchanged thresholds. All four new threads are valid and fixed; the earlier unresolved schema thread retains its correct fix and its subsequent CI report is repaired by event isolation. Revert proofs and per-thread mappings are in the preceding certification comment. No local timeout, new SDK gap, dependency-pin change or weakened regression. Four histories inherited from main preserve its exact byte prefix; the fifth changed history is branch-only. Final source is staged explicitly and the 90-file identity/privacy check passes. Hosted checks for the forthcoming pushed head remain pending and separate from these local results; no thread reply/resolution, merge or release."
+files[33]{path,scope}:
   .github/workflows/release.yml,project
+  ARCHITECTURE.md,project
+  scripts/environment.ts,project
   scripts/identity-gate.ts,project
+  src/api.ts,project
   src/errors.ts,project
   src/output.ts,project
   src/privacy.ts,project
   src/schema.ts,project
+  test/capacity-tools.ts,project
+  test/capacity.test.ts,project
   test/contracts.test.ts,project
   test/corpus-privacy.test.ts,project
   test/corpus.ts,project
   test/fixtures/history.ts,project
   test/fixtures/provenance.json,project
+  test/gate-tools.test.ts,project
+  test/gate-tools.ts,project
   test/home-paths.ts,project
   test/install-tools.test.ts,project
   test/install-tools.ts,project
@@ -68,7 +81,7 @@ files[26]{path,scope}:
   test/revert.acceptance.ts,project
   test/workflow-tools.ts,project
   test/workflow.test.ts,project
-tests[4]:
+tests[7]:
   - command: "npm run test:proof"
     scope: project
     timeout_seconds: 600
@@ -98,9 +111,37 @@ tests[4]:
       created_at: "2026-11-07T07:14:30.836Z"
       source_kind: local_mutation
       source_ref: review/reduce-1107
-docs[4]{path,scope}:
-  ARCHITECTURE.md,project
-  docs/real-data-receipt.json,project
-  docs/real-data.md,project
-  README.md,project
+  - command: npm run build && node --test --test-concurrency=2 test/capacity.test.ts test/privacy-gates.test.ts test/install-tools.test.ts test/gate-tools.test.ts test/workflow.test.ts
+    scope: project
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-07T10:27:22.723Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1107
+  - command: "npm run release:check"
+    scope: project
+    timeout_seconds: 3600
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-07T10:58:50.057Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1107
+  - command: "bun run release:check"
+    scope: project
+    timeout_seconds: 3600
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-07T10:58:52.260Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1107
+docs[4]:
+  - path: ARCHITECTURE.md
+    scope: project
+    note: Completion capacity admission and legacy read behavior
+  - path: docs/real-data-receipt.json
+    scope: project
+  - path: docs/real-data.md
+    scope: project
+  - path: README.md
+    scope: project
 body: ""

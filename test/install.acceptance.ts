@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, readFileSync, existsSync, unlinkSync, copyFileSync, chmodSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, readFileSync, unlinkSync, copyFileSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { npmEnvironment } from '../scripts/environment.ts';
+import { fixtureEnvironment, npmEnvironment } from '../scripts/environment.ts';
 import { definition, outcome } from './helpers.ts';
-import { packedRequirement, assertBudgetRefusal } from './install-tools.ts';
+import { packedRequirement, assertBudgetRefusal, selectNodeRuntime } from './install-tools.ts';
 import { mountedHomePaths } from './home-paths.ts';
 import { decodeToon } from '@unbrained/pm-cli/sdk/testing';
 /** Run a credential-free consumer command and preserve only bounded diagnostics. */
@@ -22,7 +22,7 @@ test('one captured artifact supports npm Bun npx bunx and SDK with Git absent', 
     return found.status === 0 && found.stdout.trim() !== '' ? [[name, found.stdout.trim()] as const] : [];
   }));
   assert.equal(packedRequirement(process.platform, [...tools.keys()]), null, packedRequirement(process.platform, [...tools.keys()]) ?? '');
-  const root = mkdtempSync(join(tmpdir(), 'reduce-packed-')); const env = npmEnvironment(process.env); delete env.NODE_V8_COVERAGE;
+  const root = mkdtempSync(join(tmpdir(), 'reduce-packed-')); const env = fixtureEnvironment(process.env); delete env.NODE_V8_COVERAGE;
   try {
     const packed = JSON.parse(execute('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', root], process.cwd(), env)) as { filename: string; files: { path: string }[] }[];
     const archive = join(root, packed[0].filename); const sha256 = createHash('sha256').update(readFileSync(archive)).digest('hex');
@@ -84,7 +84,14 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       for(const name of ['next','certificate','packet']) {const text=run(['reduce',name,'packed-repro']);assert.ok(Buffer.byteLength(text)<=6400);assert.match(text,/schema_version: 1/);}
       writeFileSync(join(cwd, 'sdk-write.ts'), readFileSync('test/packed-sdk-consumer.ts','utf8'));
       copyFileSync('test/home-paths.ts', join(cwd, 'home-paths.ts'));
+      copyFileSync('test/capacity-tools.ts', join(cwd, 'capacity-tools.ts'));
       assert.match(execute(manager === 'npm' ? 'node' : 'bun', ['sdk-write.ts'], cwd, safe), /SDK WRITE AND BOUNDARIES OK/);
+      const capacityNext = JSON.parse(run(['reduce', 'next', 'packed-reservation', '--json']));
+      for (const format of ['json', 'toon']) {
+        const rejected = run(['reduce', 'request', 'packed-reservation', '--op', 'capacity-refusal', '--proposal', capacityNext.data.proposal_digest, '--revision', capacityNext.revision, ...(format === 'json' ? ['--json'] : [])], undefined, 2);
+        assert.equal((format === 'json' ? JSON.parse(rejected) : decodeToon(rejected)).refusal.code, 'capacity_exceeded');
+        assert.equal(JSON.parse(run(['reduce', 'next', 'packed-reservation', '--json'])).revision, capacityNext.revision);
+      }
       assert.equal(JSON.parse(run(['reduce','next','packed-peer','--json'],undefined,2)).refusal.code,'invalid_record');
       writeFileSync(join(cwd, 'sdk.mjs'), "import assert from 'node:assert/strict';import {createDirectoryHost,readReduction,reductionCertificate,recordReductionOutcome} from 'pm-reduce';const host=createDirectoryHost(process.cwd()+'/.agents/pm','consumer');const owner=await readReduction(host,'packed-repro');assert.equal(owner.state.requests.length,2);assert.equal((await reductionCertificate(host,{id:owner.id})).certificate.qualification,'one_minimal_under_recorded_oracle');const {observation_id,request_id,evidence,verification_digest,...outcome}=owner.state.observations[0];assert.equal(outcome.result,'target_fail');void recordReductionOutcome;void observation_id;void request_id;void evidence;void verification_digest;console.log('SDK OK '+(globalThis.Bun?'bun':'node'));\n");
       const runtime = manager === 'npm' ? 'node' : 'bun'; assert.match(execute(runtime, ['sdk.mjs'], cwd, safe), new RegExp(`SDK OK ${runtime}`));
@@ -95,8 +102,7 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
       const installed = join(dirname(dirname(dirname(process.execPath))));
       for (const [version, provided] of [['22.19.0', process.env.PM_REDUCE_NODE_22], ['26.13.0', process.env.PM_REDUCE_NODE_26]]) {
         const candidates = [provided, join(installed, `v${version}`, 'bin/node'), ...(process.env.RUNNER_TOOL_CACHE ? [join(process.env.RUNNER_TOOL_CACHE, 'node', version!, process.arch, 'bin/node')] : [])];
-        const node = candidates.find(candidate => candidate !== undefined && existsSync(candidate));
-        assert.ok(node, `Required Node ${version} runtime is missing; provision both exact acceptance runtimes`);
+        const node = selectNodeRuntime(version!, candidates, cwd, safe);
         assert.equal(execute(node, ['--version'], cwd, safe).trim(), `v${version}`);
         unlinkSync(join(bin, 'node')); symlinkSync(node, join(bin, 'node'));
         assert.match(execute(node, ['sdk.mjs'], cwd, safe), /SDK OK node/);

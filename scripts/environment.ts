@@ -14,3 +14,8 @@ export function npmEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
 export function testEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   return Object.fromEntries(Object.entries(env).filter(([key]) => !/^NODE_TEST_CONTEXT$/i.test(key)));
 }
+
+/** Disposable repositories have their own identities, never the parent CI event or Git context. */
+export function fixtureEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  return Object.fromEntries(Object.entries(testEnvironment(gitEnvironment(npmEnvironment(env)))).filter(([key]) => !/^GITHUB_/i.test(key)));
+}

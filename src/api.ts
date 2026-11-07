@@ -11,6 +11,14 @@ import type { Data, MutationReceiptData, TrialProposalData, ReductionPacketData,
 export type MutationReceipt = MutationReceiptData;
 /** Exact revision-bound proposal or qualified deterministic stop. */
 export type TrialProposal = TrialProposalData;
+/** Reserve a completion before admitting external work: ISO text <=8000 bytes,
+ * escaped outcome text <=3840, keys/digests/framing/receipt <4096, and complete
+ * projection growth <8192. The 32 KiB bound includes margin over that total.
+ * Apply it to every write retaining a pending trial, including extra observations.
+ */
+export function assertCompletionCapacity(receipts: number, bytes: number): void {
+  insist(receipts < 512 && bytes + 32768 <= 262144, 'capacity_exceeded', 'Reduction journal cannot retain this trial and its outcome', 'Create a successor owner; never prune replay identities');
+}
 /** Complete selected-owner read, never a workspace scan or settings migration. */
 export async function readReduction(host: Host, id: string): Promise<Snapshot> {
   capable(host);
@@ -36,7 +44,9 @@ function replay(state: ReductionState, op: string, request_digest: string) {
 function remember(state: ReductionState, op: string, request_digest: string, kind: 'create' | 'request' | 'record', identity: string, content: unknown) {
   insist(state.replay_receipts.length < 512 && state.observations.length <= 512 && state.requests.length <= 256, 'capacity_exceeded', 'Reduction journal capacity reached', 'Create a successor owner; never prune replay identities');
   const result = { kind, identity, sequence: state.replay_receipts.length + 1, digest: digest(content) }; const operation = { operation_id: op, request_digest, result, result_digest: digest(result) };
-  state.replay_receipts.push(operation); projectState(state); readState(state); return operation;
+  state.replay_receipts.push(operation); projectState(state); readState(state);
+  if (state.requests.some(row => row.state === 'pending')) assertCompletionCapacity(state.replay_receipts.length, Buffer.byteLength(canonical(state)));
+  return operation;
 }
 /** Preserve the complete output contract for in-process consumers as well as CLI users. */
 function finish<T extends Data>(host: Host, data: T, budget: number): T { fitEnvelope(host, envelope(data), budget); return data; }
