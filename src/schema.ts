@@ -75,16 +75,18 @@ export function canonical(value: unknown): string {
 export function digest(value: unknown): string { return createHash('sha256').update(canonical(value)).digest('hex'); }
 /** Shared pre-write privacy validation; legacy state is validated structurally, not reclassified. */
 export function guardSubmitted(input: unknown): void {
-  const seen = new Set<object>(); let visits = 0;
-  /** Bound repeated graph visits as well as active-path depth and cycles. */
+  const seen = new Set<object>(); const checked = new Set<string>(); let visits = 0;
+  /** Bound repeated graph visits and identical-text rescans as well as active-path depth and cycles. */
   function visit(value: unknown, depth: number): void {
     insist(++visits <= 32768, 'invalid_input', 'Input traversal exceeds the work limit');
     insist(depth <= 16, 'invalid_input', 'Input nesting exceeds sixteen levels');
     if (typeof value === 'string') {
+      if (checked.has(value)) return;
       insist(value.length <= 8000 && value.isWellFormed(), 'invalid_input', 'Text is oversized or malformed Unicode');
       insist(!/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/u.test(value), 'invalid_input', 'Control sequences are forbidden');
       insist(!containsPrivateHomePath(value), 'invalid_input', 'Private home paths are forbidden');
       insist(scanMutationSecrets(value).length === 0, 'invalid_input', 'SDK privacy guard detected credential-shaped content');
+      checked.add(value);
     } else if (value !== null && typeof value === 'object') {
       insist(Array.isArray(value) || Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null, 'invalid_input', 'Only plain JSON data is supported');
       insist(!seen.has(value), 'invalid_input', 'Cyclic input is forbidden'); seen.add(value);

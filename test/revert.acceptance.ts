@@ -99,6 +99,10 @@ const changes = [
 
   { name: 'Windows drive context discarded before home classification', file: 'privacy', pattern: /        if \(drive\?\.length === 1[^\n]+\)\s+parts.unshift\(drive\);\n/, replacement: '', test: 'privacy', filter: 'root-named public directories', proof: 'proof:public_root_scope' },
 
+  { name: 'repeated string scan cache removed', file: 'schema', pattern: /if \(checked\.has\(value\)\)\n\s+return;\n/, replacement: '', test: 'privacy', filter: 'privacy scans bound repeated string references', proof: 'proof:string_scan_budget' },
+  { name: 'documented tracker initialization removed', file: 'README.md', pattern: /Initialize a native tracker first[^\n]*\n\n```sh\npm init [^\n]+\n```\n\n/, replacement: '', test: 'contracts', filter: 'documented workflows initialize a native tracker', proof: 'proof:install_init_docs' },
+  { name: 'documented SDK tracker requirement removed', file: 'README.md', pattern: /\/\/ The host binds an already initialized tracker[^\n]*\n\/\/[^\n]*\n\/\/[^\n]*\n/, replacement: '', test: 'contracts', filter: 'documented workflows initialize a native tracker', proof: 'proof:sdk_init_docs' },
+
 ];
 for (const change of changes) {
   const root = mkdtempSync(join(tmpdir(), 'reduce-revert-'));

@@ -96,6 +96,37 @@ test('privacy traversal bounds shared graphs while preserving ordinary shared va
   assert.throws(() => guardSubmitted(graph), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:traversal_budget');
 });
 
+test('privacy scans bound repeated string references by distinct content', () => {
+  /** Deterministic regex-execution counter: repeated references must never multiply content scans. */
+  const scanExecutions = (action: () => void): number => {
+    const native = RegExp.prototype.exec; let count = 0;
+    RegExp.prototype.exec = function (this: RegExp, input: string): RegExpExecArray | null { count++; return native.call(this, input); };
+    try { action(); } finally { RegExp.prototype.exec = native; }
+    return count;
+  };
+  const shared = 'public fixture text '.repeat(400);
+  const single = scanExecutions(() => guardSubmitted({ label: shared }));
+  for (const references of [2, 64, 2048]) {
+    const repeated = scanExecutions(() => guardSubmitted({ rows: Array(references).fill(shared), nested: [[shared], { deep: shared }] }));
+    assert.ok(repeated <= single * 2 + 16, `proof:string_scan_budget (${references} references)`);
+  }
+  const distinct = Array.from({ length: 8 }, (_, index) => `distinct public text ${index} `.repeat(40));
+  const scanned = scanExecutions(() => guardSubmitted({ rows: distinct }));
+  assert.ok(scanned > single && scanned <= single * 8 + 16, 'proof:string_scan_budget (distinct content)');
+  guardSubmitted({ first: { text: shared }, second: { text: shared }, third: shared });
+  const privatePath = '/' + ['home', 'example', 'secret'].join('/');
+  for (const input of [Array(64).fill(privatePath), { safe: Array(64).fill('public'), evil: privatePath }]) assert.throws(() => guardSubmitted(input), hasCode('invalid_input'), 'proof:string_scan_refusal');
+});
+
+test('SDK admission bounds repeated string references before any owner mutation', async t => {
+  const { host, native, birth, pmRoot } = await fixture(t, true, definition(1));
+  const filler = 'public fixture text '.repeat(64); const before = await historyEvents(pmRoot, birth.id);
+  const hostile = { ...birth, id: 'corpus-repeated', repeated: Array(4096).fill(filler) };
+  await assert.rejects(createReduction(host, hostile as unknown as Parameters<typeof createReduction>[1]), hasCode('invalid_input'), 'proof:string_scan_sdk');
+  await assert.rejects(native.get('corpus-repeated'), hasCode('item_not_found'));
+  assert.equal(await historyEvents(pmRoot, birth.id), before);
+});
+
 test('compiler flags cannot smuggle private home paths while public URLs remain data', () => {
   const home = '/' + ['home', 'example', 'include'].join('/');
   for (const flag of ['-I', '-L', '-isystem']) assert.throws(() => guardSubmitted(flag + home), hasCode('invalid_input'), 'proof:compiler_home');

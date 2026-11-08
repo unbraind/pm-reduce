@@ -6,7 +6,13 @@ The caller materializes and runs each trial. No package command starts a process
 
 ## Install
 
-Requires Node >=22.19 and pm-cli >=2026.11.5. This local candidate has not been published. After maintainer approval, installation uses:
+Requires Node >=22.19 and pm-cli >=2026.11.5. Initialize a native tracker first so the package can activate its commands. In a fresh project run:
+
+```sh
+pm init my-project --defaults
+```
+
+This local candidate has not been published. After maintainer approval, installation uses:
 
 ```sh
 pm package install pm-reduce
@@ -89,6 +95,9 @@ import {
   reductionPacket, readReduction
 } from 'pm-reduce';
 
+// The host binds an already initialized tracker: run `pm init` (or the native
+// client's init) once before creating owners, or creation refuses with
+// `tracker_not_initialized`.
 const host = createDirectoryHost('.agents/pm', 'debug-agent');
 // Hosting applications must authorize access before constructing or injecting a host.
 await createReduction(host, { id: 'repro', op: 'birth', title: 'Import failure', definition });

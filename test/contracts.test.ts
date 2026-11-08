@@ -35,6 +35,24 @@ test('CLI mounted-home refusals are inert in JSON and TOON and cannot change a n
   await assert.rejects(native.get('corpus-mounted'), hasCode('item_not_found')); assert.equal((await readReduction(host, id)).revision, snapshot.revision); assert.equal(await historyEvents(pmRoot, id), events);
 });
 
+test('CLI repeated string references scan once, refuse inertly and accept valid repeats', async t => {
+  const { pmRoot, id, birth, native } = await fixture(t, true, definition(1)); const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  const events = await historyEvents(pmRoot, id); const filler = 'public fixture text '.repeat(32); const privatePath = mountedHomePaths().forbidden[0];
+  const refused = [
+    { title: 'Public', definition: { ...birth.definition, atoms: birth.definition.atoms.map(atom => ({ ...atom, label: privatePath })) } },
+    { title: 'Public', definition: birth.definition, repeated: Array(96).fill(filler) },
+  ];
+  for (const input of refused) {
+    const ran = await ext.runCommand({ command: 'reduce create', args: [], options: { id: 'corpus-repeated', op: 'birth', input: JSON.stringify(input) }, pmRoot }); if (ran.cause) throw ran.cause;
+    await assertCliPrivacy(ext, 'create', ran.result as ReductionResult, privatePath, 'proof:string_scan_cli');
+  }
+  await assert.rejects(native.get('corpus-repeated'), hasCode('item_not_found'));
+  assert.equal(await historyEvents(pmRoot, id), events);
+  const shared = definition(4); for (const atom of shared.atoms) atom.label = 'shared public label';
+  const created = await ext.runCommand({ command: 'reduce create', args: [], options: { id: 'corpus-shared-labels', op: 'birth', input: JSON.stringify({ title: 'Public', definition: shared }) }, pmRoot }); if (created.cause) throw created.cause;
+  assert.equal((created.result as ReductionResult).ok, true, 'proof:string_scan_cli');
+});
+
 test('native harness contracts dispatch all six commands and scoped renderers through the same SDK', async t => {
   const { pmRoot } = await fixture(t); const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
   for (const name of ['create', 'next', 'request', 'record', 'certificate', 'packet']) ext.assertCommandContract({ command: `reduce ${name}` }); ext.assertItemField({ name: 'reduce_state', type: 'object' }); ext.assertItemType({ name: 'Reduction', folder: 'reductions' });
@@ -106,6 +124,16 @@ test('documented settings budget endpoints match real stored CLI policy without 
     }
     assert.equal((await readSettingsSection(pmRoot, 'reduce')).revision, settings.revision); assert.equal(await historyEvents(pmRoot, id), events);
   }
+});
+test('documented workflows initialize a native tracker before tracker-dependent commands', () => {
+  const lines = readFileSync('README.md', 'utf8').split('\n');
+  const first = (pattern: RegExp): number => lines.findIndex(line => pattern.test(line));
+  assert.ok(first(/pm (?:workspace )?init\b/) >= 0, 'proof:install_init_docs');
+  assert.ok(first(/pm (?:workspace )?init\b/) < first(/pm package install\b/), 'proof:install_init_docs');
+  assert.ok(first(/pm (?:workspace )?init\b/) < first(/pm reduce (?:create|next|request|record|certificate|packet)\b/), 'proof:install_init_docs');
+  const text = lines.join('\n'); const sdk = text.slice(text.indexOf('## SDK'), text.indexOf('## Output and recovery'));
+  assert.match(sdk, /initialized tracker/, 'proof:sdk_init_docs');
+  assert.ok(sdk.indexOf('initialized tracker') < sdk.indexOf('createDirectoryHost('), 'proof:sdk_init_docs');
 });
 test('exact fitting provides usable minimums, hard ceilings and fail-closed host capability errors', async t => {
   const { host, id } = await fixture(t); const value = envelope(await reductionPacket(host, { id })); const fitted = fitEnvelope(host, value); assert.ok(fitted.output_fit.estimated_tokens <= 1600);
