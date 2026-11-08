@@ -37,10 +37,13 @@ export function mountedHomePaths(): { forbidden: string[]; allowed: string[] } {
 export function additionalHomePaths(): { forbidden: string[]; allowed: string[] } {
   const forbidden: string[] = []; const allowed: string[] = [];
   const root = '/' + 'root';
-  for (const suffix of [' ', '\t', '\n', '\r\n', '\u00a0', '\u2003', '\u2028', '\ufeff', '"', "'", '`', ',', ';', ')', ']', '}', '|', '&', '!', '?']) forbidden.push(root + suffix, '"' + root + suffix, 'source:' + root + suffix);
+  for (const suffix of [' ', '\t', '\n', '\r\n', '\u00a0', '\u2003', '\u2028', '\ufeff', '"', "'", '`', ',', ';', ')', ']', '}', '|', '&', '!', '?', '.', '...', '. ', '.\n']) forbidden.push(root + suffix, '"' + root + suffix, 'source:' + root + suffix);
   allowed.push('docs' + root + '\n', 'https://example.com' + root + '\n', String.raw`regex: \/root(?:\/|$)`);
+  // Trimming sentence periods must not widen the policy: public names that merely end in dots stay allowed.
+  allowed.push('/' + 'home.', '/' + 'Users.', root + '.ts', 'docs' + root + '.', '/var/log.', '/public/fixture...', '.'.repeat(5000));
   for (const parts of [['', 'var', 'home'], ['', 'var', 'root'], ['', 'private', 'var', 'root'], ['', 'System', 'Volumes', 'Data', 'Users']]) {
-    forbidden.push(parts.join('/'));
+    // Sentence-final periods are punctuation: every bare alias stays forbidden with one or more trailing dots.
+    for (const tail of ['', '.', '...', '. ']) forbidden.push(parts.join('/') + tail, 'Reproduced as ' + parts.join('/') + tail);
     const canonical = [...parts, 'example', 'fixture'].join('/');
     for (const separator of ['/', '//', '\\', '/\\']) {
       const native = canonical.replaceAll('/', separator);
