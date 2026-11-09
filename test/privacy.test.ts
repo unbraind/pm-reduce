@@ -96,6 +96,13 @@ test('privacy traversal bounds shared graphs while preserving ordinary shared va
   assert.throws(() => guardSubmitted(graph), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:traversal_budget');
 });
 
+test('privacy traversal bounds sparse array length before schema validation walks it', () => {
+  // Few own entries, huge length: the visit counter alone never sees the slots that schema validation iterates.
+  for (const atoms of [new Array(2 ** 31), new Array(32769)]) assert.throws(() => guardSubmitted({ atoms }), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:sparse_array_length');
+  guardSubmitted({ atoms: new Array(64).fill('public') });
+  assert.throws(() => parse(DefinitionSchema, { atoms: new Array(2 ** 31) }), hasCode('invalid_input'), 'proof:sparse_array_parse');
+});
+
 test('privacy scans bound repeated string references by distinct content', () => {
   /** Deterministic regex-execution counter: repeated references must never multiply content scans. */
   const scanExecutions = (action: () => void): number => {
