@@ -125,6 +125,17 @@ test('documented settings budget endpoints match real stored CLI policy without 
     assert.equal((await readSettingsSection(pmRoot, 'reduce')).revision, settings.revision); assert.equal(await historyEvents(pmRoot, id), events);
   }
 });
+test('an explicit budget is not refused by an invalid stored budget setting', async t => {
+  const { pmRoot, id } = await fixture(t, true, definition(1));
+  const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  for (const stored of [0, -1, 1.5, 8193]) {
+    await writeSettingsSection(pmRoot, 'reduce', { output_budget: stored }, { author: 'fixture' });
+    const ran = await ext.runCommand({ command: 'reduce packet', args: [id], options: { budget: '1600' }, pmRoot }); if (ran.cause) throw ran.cause;
+    assert.equal((ran.result as ReductionResult).ok, true, `proof:explicit_budget_over_invalid_setting (${stored})`);
+    const fallback = await ext.runCommand({ command: 'reduce packet', args: [id], pmRoot }); if (fallback.cause) throw fallback.cause;
+    assert.equal((fallback.result as ReductionResult).ok, false, `proof:invalid_setting_still_refused_without_budget (${stored})`);
+  }
+});
 test('documented workflows initialize a native tracker before tracker-dependent commands', () => {
   const lines = readFileSync('README.md', 'utf8').split('\n');
   const first = (pattern: RegExp): number => lines.findIndex(line => pattern.test(line));

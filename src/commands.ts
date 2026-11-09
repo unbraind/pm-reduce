@@ -40,7 +40,8 @@ export async function runCommand(command: string, ctx: CommandHandlerContext): P
     insist(ctx.global.outputInclude === undefined && ctx.global.outputSession === undefined && ctx.global.outputRowContract === undefined, 'invalid_input', 'Generic projection would omit reduction witnesses', 'Use reduce packet --limit');
     insist(flags.budget === undefined || ctx.global.outputBudget === undefined, 'invalid_input', 'Choose one budget transport');
     const requestedBudget = flags.budget === undefined ? ctx.global.outputBudget : flags.budget;
-    const budget = requestedBudget === 'unbounded' ? 8192 : integer(requestedBudget, integer(policy?.output_budget, 1600));
+    // The stored setting is a fallback only: evaluating it eagerly let an invalid stored value refuse an explicit budget.
+    const budget = requestedBudget === 'unbounded' ? 8192 : requestedBudget !== undefined ? integer(requestedBudget, 1600) : integer(policy?.output_budget, 1600);
     insist(command === 'packet' || (ctx.global.outputCursor === undefined && ctx.global.outputLimit === undefined), 'invalid_input', 'Pagination applies only to reduce packet');
     insist(flags.cursor === undefined || ctx.global.outputCursor === undefined, 'invalid_input', 'Choose one continuation transport', 'Use package --cursor');
     insist(flags.limit === undefined || ctx.global.outputLimit === undefined, 'invalid_input', 'Choose one limit transport');
