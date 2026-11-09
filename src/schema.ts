@@ -89,8 +89,9 @@ export function guardSubmitted(input: unknown): void {
       checked.add(value);
     } else if (value !== null && typeof value === 'object') {
       insist(Array.isArray(value) || Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null, 'invalid_input', 'Only plain JSON data is supported');
-      // A sparse array has few own entries but a huge length that schema validation would walk slot by slot.
-      insist(!Array.isArray(value) || value.length <= 32768, 'invalid_input', 'Input traversal exceeds the work limit');
+      // Visits count present entries, but schema validation walks every slot, holes included: charge the holes (length
+      // minus present entries) to the same work budget, so no set of sparse arrays makes validation unbounded.
+      if (Array.isArray(value)) { visits += value.length - Object.keys(value).length; insist(visits <= 32768, 'invalid_input', 'Input traversal exceeds the work limit'); }
       insist(!seen.has(value), 'invalid_input', 'Cyclic input is forbidden'); seen.add(value);
       for (const name of Reflect.ownKeys(value)) { const descriptor = Object.getOwnPropertyDescriptor(value, name)!; insist(typeof name === 'string' && 'value' in descriptor && (descriptor.enumerable || (Array.isArray(value) && name === 'length')), 'invalid_input', 'Only enumerable JSON data properties are supported'); }
       for (const [name, child] of Object.entries(value)) { insist(!['__proto__', 'prototype', 'constructor'].includes(name), 'invalid_input', 'Prototype keys are forbidden'); visit(child, depth + 1); }

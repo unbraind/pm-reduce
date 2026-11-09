@@ -6,12 +6,12 @@ status: in_progress
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:45:23.719Z"
-updated_at: "2026-11-09T14:26:25.779Z"
+updated_at: "2026-11-09T15:13:35.771Z"
 assignee: codex-agent
 claim_principal: codex-agent
 author: codex-agent
 acceptance_criteria: Six CLI and SDK operations share strict schemas; exact journal and replay; qualified certificates; native guarded writes; public reproduction evidence; full release gates.
-comments[11]{created_at,author,text}:
+comments[12]{created_at,author,text}:
   "2026-11-06T11:45:48.529Z",codex-agent,"Implements companion specification pm-cli-website-2glk (read only). One native owner holds reduction state, trial journal and durable operation identities. Caller executes the oracle. Scaffold is isolated on main; implementation is on feat/reduce. No external publication is authorized."
   "2026-11-06T12:36:27.459Z",codex-agent,"Preflight evidence: full suite passed 35/35 with complete production instrumentation at 100 percent statements, branches, functions and lines; later focused checks cover strengthened host capability and certificate validation. Packed npm/Bun, npx/bunx, Git-absent transports and SDK imports passed the captured-artifact rehearsal. Final committed candidate will run both full release checks sequentially with unchanged thresholds. SDK transport limitation is isolated in reduce-sdk-transport; package fallback flags satisfy the delivered contract."
   "2026-11-06T13:14:07.591Z",codex-agent,"Read-only overlap audit confirms boundaries: pm-evidence owns citation freshness and source support; pm-hypothesis owns explanation admission and discriminating observations; pm-http owns declared HTTP requests and response observations. Reduction search, durable trial intent/outcomes and qualified deletion certificates remain pm-reduce-owned. No source package, task status or assurance verdict is modified by domain commands."
@@ -23,6 +23,7 @@ comments[11]{created_at,author,text}:
   "2026-11-09T09:22:29.163Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61MaLN (IMPORTANT): scripts/pack-gate.ts spawns npm.cmd through a shell on win32 (fixed arguments, no user input), so pack:dry-run works on Windows; POSIX unchanged. pack-gate 44 allowlisted files; 'package enumeration' focused test passes; typecheck clean."
   "2026-11-09T12:54:39.773Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61QeVr (IMPORTANT): guardSubmitted bounded visits, not array length, so a sparse new Array(2 ** 31) passed and schema validation would walk every slot before .max(64). Arrays longer than 32768 are now refused with the traversal-limit refusal before validation. Regression 'privacy traversal bounds sparse array length before schema validation walks it' (2^31 and 32769 refused, 64 allowed, parse refuses) fails on revert and passes restored; privacy suite 12/12."
   "2026-11-09T14:26:25.778Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61R5zj (IMPORTANT): the stored reduce.output_budget was evaluated eagerly as the fallback argument, so an invalid stored value (0, -1, 1.5, 8193) refused a command with a valid explicit --budget. The stored value is now read only when no explicit budget is given. Regression 'an explicit budget is not refused by an invalid stored budget setting' (explicit 1600 succeeds; without a budget the invalid setting is still refused) fails on revert, passes restored; contracts suite 14/14."
+  "2026-11-09T15:13:35.770Z","harness:claude-code","Class follow-up (CodeRabbit on pm-screen PRRT_kwDOVll0Ws61TTim): the per-array cap from bf3dff0 still let many sparse arrays below it add up. Holes (length minus present entries) are now charged to the existing 32768 work budget. 16 x 4096 holes are refused; the full suite passes 79/79; the aggregate case fails against the per-array-cap version and passes restored."
 tests[1]{command,scope,timeout_seconds,provenance{author,created_at,source_kind,source_ref}}:
   npm test,project,1200,codex-agent,"2026-11-06T16:49:36.835Z",local_mutation,feat/reduce
 body: ""

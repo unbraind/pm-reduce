@@ -100,6 +100,8 @@ test('privacy traversal bounds sparse array length before schema validation walk
   // Few own entries, huge length: the visit counter alone never sees the slots that schema validation iterates.
   for (const atoms of [new Array(2 ** 31), new Array(32769)]) assert.throws(() => guardSubmitted({ atoms }), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:sparse_array_length');
   guardSubmitted({ atoms: new Array(64).fill('public') });
+  // Many moderately sparse arrays still add up: their holes share the one work budget.
+  assert.throws(() => guardSubmitted({ atoms: Array.from({ length: 16 }, () => ({ refs: new Array(4096) })) }), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:sparse_array_aggregate');
   assert.throws(() => parse(DefinitionSchema, { atoms: new Array(2 ** 31) }), hasCode('invalid_input'), 'proof:sparse_array_parse');
 });
 
