@@ -26,6 +26,8 @@ export function historicalOracle(name: typeof scenarios[number], atoms: string[]
     const actual = editedText({ lines: atoms }, remove);
     const expected = text.replace('"dependencies":["x"]', '"dependencies":[]'); return actual !== expected;
   }
+  // By design the fixture tokenizer is ASCII-only while this oracle matches Unicode letters and digits:
+  // that disagreement IS the historical pm-jev defect the scenario reproduces, not a harness bug.
   if (name === 'jev-unicode') return JSON.stringify(tokenize(text)) !== JSON.stringify(text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []);
   const units = atoms.map(row => JSON.parse(row) as { title: string; body: string; labels: Record<string, string> });
   return Math.ceil(Buffer.byteLength(JSON.stringify(exemplarContext(units, 35))) / 4) > 35;
