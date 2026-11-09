@@ -96,13 +96,17 @@ test('privacy traversal bounds shared graphs while preserving ordinary shared va
   assert.throws(() => guardSubmitted(graph), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:traversal_budget');
 });
 
-test('privacy traversal bounds sparse array length before schema validation walks it', () => {
-  // Few own entries, huge length: the visit counter alone never sees the slots that schema validation iterates.
-  for (const atoms of [new Array(2 ** 31), new Array(32769)]) assert.throws(() => guardSubmitted({ atoms }), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:sparse_array_length');
+test('privacy traversal accepts only dense JSON arrays within the work budget', () => {
+  const refused = (input: unknown, proof: string) => assert.throws(() => guardSubmitted(input), error => hasCode('invalid_input')(error) && error instanceof Error && /work limit|Sparse arrays are not plain JSON data/u.test(error.message), proof);
+  // Holes are never JSON, whatever the length; a key count alone would accept named properties standing in for holes.
+  for (const atoms of [new Array(2 ** 31), new Array(32769), new Array(2), Object.assign(new Array(2), { x: 'public', y: 'public' })]) refused({ atoms }, 'proof:sparse_array_length');
+  refused({ atoms: Array.from({ length: 16 }, () => ({ refs: new Array(4096) })) }, 'proof:sparse_array_aggregate');
   guardSubmitted({ atoms: new Array(64).fill('public') });
-  // Many moderately sparse arrays still add up: their holes share the one work budget.
-  assert.throws(() => guardSubmitted({ atoms: Array.from({ length: 16 }, () => ({ refs: new Array(4096) })) }), error => hasCode('invalid_input')(error) && error instanceof Error && error.message === 'Input traversal exceeds the work limit', 'proof:sparse_array_aggregate');
   assert.throws(() => parse(DefinitionSchema, { atoms: new Array(2 ** 31) }), hasCode('invalid_input'), 'proof:sparse_array_parse');
+  // A credential-shaped value inherited through a hole must never reach validation unscanned.
+  Object.defineProperty(Array.prototype, 0, { value: 'AIza' + 'x'.repeat(35), configurable: true, writable: true });
+  try { refused({ atoms: Object.assign(new Array(2), { 1: 'public' }) }, 'proof:sparse_array_inherited'); }
+  finally { delete (Array.prototype as unknown as Record<number, unknown>)[0]; }
 });
 
 test('privacy scans bound repeated string references by distinct content', () => {
