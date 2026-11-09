@@ -36,6 +36,16 @@ export function mountedHomePaths(): { forbidden: string[]; allowed: string[] } {
 /** Additional lexical aliases and delimiters use only synthetic directory and distribution names. */
 export function additionalHomePaths(): { forbidden: string[]; allowed: string[] } {
   const forbidden: string[] = []; const allowed: string[] = [];
+  for (const editor of ['vscode', 'vscode-insiders', 'vscodium', 'cursor', 'idea', 'zed']) {
+    for (const profile of ['home', 'Users']) {
+      const path = ['', profile, 'example', 'repo', 'src', 'x.ts'].join('/');
+      forbidden.push(`${editor}://file${path}:12`, `${editor}://open?file=${path}`);
+      for (const remote of ['https', 'http', 'ssh', 'git']) allowed.push(`${remote}://file${path}`);
+    }
+    forbidden.push(`${editor}://file/` + 'root', `${editor}://file/` + 'root.');
+    allowed.push(`${editor}://file/public/fixture.ts:12`, `${editor}://extension/publisher.name`);
+  }
+  allowed.push('home', 'root', 'Users', 'plain words');
   const root = '/' + 'root';
   for (const suffix of [' ', '\t', '\n', '\r\n', '\u00a0', '\u2003', '\u2028', '\ufeff', '"', "'", '`', ',', ';', ')', ']', '}', '|', '&', '!', '?', '.', '...', '. ', '.\n']) forbidden.push(root + suffix, '"' + root + suffix, 'source:' + root + suffix);
   allowed.push('docs' + root + '\n', 'https://example.com' + root + '\n', String.raw`regex: \/root(?:\/|$)`);

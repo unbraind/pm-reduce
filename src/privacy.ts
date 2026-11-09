@@ -13,7 +13,7 @@ export function containsPrivateHomePath(text: string): boolean {
     // An index loop keeps long runs of dots linear (a `/\.+$/` replace is quadratic on them).
     let end = match[0].length;
     while (end > 0 && match[0][end - 1] === '.') end--;
-    const token = match[0].slice(0, end);
+    const token = match[0].slice(0, end).replace(/^(?:vscode|vscode-insiders|vscodium|cursor|idea|zed):\/\/file(?=\/)/iu, '');
     if (token === '') continue;
     const protocol = token.split(':', 1)[0].toLowerCase();
     const localScheme = /^(?:[a-z]|source)$/u.test(protocol) || fileProtocol(protocol);
@@ -30,7 +30,7 @@ export function containsPrivateHomePath(text: string): boolean {
         if (drive?.length === 1 && 'abcdefghijklmnopqrstuvwxyz'.includes(drive)) parts.unshift(drive);
         const wsl = local.startsWith('//') && (parts[0] === 'wsl$' || parts[0] === 'wsl.localhost');
         const path = (wsl ? parts.slice(2) : parts).join('/');
-        const after = text[match.index + token.length];
+        const after = text[match.index + end];
         if (/^(?:home|users|root)\//u.test(path) || (/^(?:home|users|root)$/u.test(path) && spelling.endsWith('/')) || (path === 'root' && (after === undefined || after.trim() === '' || '"\'`,;[]{}<>|&!?).'.includes(after)))) return true;
         if (/^(?:[a-z]|cygdrive\/[a-z]|mnt\/(?:host\/)?[a-z]|run\/desktop\/mnt\/host\/[a-z]|var|system\/volumes\/data)\/(?:users|home)(?:\/|$)/u.test(path)) return true;
         if (/^(?:var|private\/var)\/root(?:\/|$)/u.test(path)) return true;

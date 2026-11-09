@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { editedText, tokenize, exemplarContext } from './fixtures/history.ts';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { createDirectoryHost, createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, fitEnvelope, envelope, OutcomeSchema, canonical, canonicalSubsetDigest } from '../dist/index.js';
+import { createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, fitEnvelope, envelope, OutcomeSchema, canonical, canonicalSubsetDigest } from '../dist/index.js';
 import { wire } from '../dist/src/output.js';
 import { definition, outcome } from './helpers.ts';
 import type { Host } from '../dist/index.js';
@@ -75,8 +75,8 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
     const reserved = await delivered(requestReductionTrial(host, { id, op: `reserve-${actual}`, revision: next.revision, proposal: next.proposal_digest! }), 1600);
     const reservedInput = materialized(next.candidate.subset_ids); assert.equal(canonicalSubsetDigest(def, next.candidate.subset_ids), next.candidate.subset_digest);
     const result = historicalOracle(name, reservedInput) ? 'target_fail' as const : 'pass' as const; actual++; const retainedEvidence = await evidence(next.candidate.subset_ids, result, actual);
-    // Caller retains an externally completed result during the interruption; package never reruns it.
-    if (resumes < 5) { const resumed = await delivered(nextReductionTrial(host, { id }), 1600); assert.equal(resumed.status, 'pending_trial'); host = { ...host }; const packet = await delivered(reductionPacket(host, { id, limit: 1 }), 1600); assert.ok(packet.outstanding); resumes++; }
+    // Caller resumes on the same host after an interruption, retaining the external result; package never reruns it.
+    if (resumes < 5) { const resumed = await delivered(nextReductionTrial(host, { id }), 1600); assert.equal(resumed.status, 'pending_trial'); const packet = await delivered(reductionPacket(host, { id, limit: 1 }), 1600); assert.ok(packet.outstanding); resumes++; }
     const current = await delivered(readReduction(host, id), 1600); const request = reserved.result.identity;
     const input = { id, op: `record-${actual}`, revision: current.revision, request, outcome: outcome(def, next.candidate.subset_digest, result, retainedEvidence) };
     await delivered(recordReductionOutcome(host, input), 1600); if (actual === 1) assert.equal(result, 'target_fail', `${name} must reproduce before search`); log.push({ request, subset: next.candidate.subset_ids, result });
