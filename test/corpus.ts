@@ -82,9 +82,7 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
     const current = await delivered(readReduction(host, id), 1600); const request = reserved.result.identity;
     const input = { id, op: `record-${actual}`, revision: current.revision, request, outcome: outcome(def, next.candidate.subset_digest, result, retainedEvidence) };
     await delivered(recordReductionOutcome(host, input), 1600); if (actual === 1) assert.equal(result, 'target_fail', `${name} must reproduce before search`); log.push({ request, subset: next.candidate.subset_ids, result });
-    const beforeReplay = (await readReduction(host, id)).state.observations.length;
     const replay = await delivered(recordReductionOutcome(host, input), 1600); assert.equal(replay.replayed, true);
-    assert.equal((await readReduction(host, id)).state.observations.length, beforeReplay, 'proof:replay_observation_count');
   }
   let certificate = (await delivered(reductionCertificate(host, { id, budget: 8192 }), 8192)).certificate; assert.equal(certificate.qualification, 'one_minimal_under_recorded_oracle');
   const best = certificate.best_subset!; const independent = [best, ...best.map((_, at) => best.filter((__, index) => index !== at))];
@@ -94,6 +92,8 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
     await delivered(recordReductionOutcome(host, { id, op: `independent-${at}`, revision: current.revision, request: request.request_id, outcome: outcome(def, request.subset_digest, result, await evidence(subset, result, actual)) }), 1600);
   }
   certificate = (await delivered(reductionCertificate(host, { id, budget: 8192 }), 8192)).certificate; const snapshot = await delivered(readReduction(host, id), 1600); const packet = await delivered(reductionPacket(host, { id, limit: 1 }), 1600);
+  // Replays are excluded from actual; every distinct trial and independent check records exactly once.
+  assert.equal(snapshot.state.observations.length, actual, 'proof:replay_observation_count');
   const fitted = fitEnvelope(host, envelope(packet)); const packetBytes = Math.max(Buffer.byteLength(wire(fitted, 'json')), Buffer.byteLength(wire(fitted, 'toon')));
   const manualBytes = Buffer.byteLength(JSON.stringify(snapshot.state)); assert.ok(packetBytes * 2 <= manualBytes);
   // Ten independently log-derived resume answers must agree with the bounded packet.
