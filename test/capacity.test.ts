@@ -1,7 +1,7 @@
 import test from 'node:test';
 import type { TestContext } from 'node:test';
 import assert from 'node:assert/strict';
-import { readReduction, readState, recordReductionOutcome, requestReductionTrial, nextReductionTrial, canonical, digest, ReductionRefusal } from '../dist/index.js';
+import { createReduction, readReduction, readState, recordReductionOutcome, requestReductionTrial, nextReductionTrial, canonical, digest, ReductionRefusal } from '../dist/index.js';
 import { assertCompletionCapacity } from '../dist/src/api.js';
 import { projectState } from '../dist/src/kernel.js';
 import { fixture, runTrial, outcome, historyEvents, definition, hasCode } from './helpers.ts';
@@ -69,4 +69,17 @@ test('aggregate state capacity refuses before effects and retains every older re
   const before = await readReduction(host, id); const events = await historyEvents(pmRoot);
   await assert.rejects(recordReductionOutcome(host, { id, op: 'over-capacity', revision: before.revision, request: trial.receipt.result.identity, outcome: outcome(state.definition, state.requests[0].subset_digest, 'target_fail', { reason: 'Public context. '.repeat(16) }) }), (error: unknown) => error instanceof ReductionRefusal && error.code === 'capacity_exceeded');
   assert.equal((await readReduction(host, id)).revision, before.revision); assert.equal(await historyEvents(pmRoot), events); assert.equal((await recordReductionOutcome(host, trial.recordInput)).replayed, true); assert.equal(await historyEvents(pmRoot), events);
+});
+
+ test('declared trial ceiling accepts 255 through completion and rejects 256 before creation', async t => {
+  const def = definition(4); def.max_trials = 255;
+  const { host, id, birth } = await fixture(t, true, def);
+  for (let index = 0; index < 255; index++) {
+    const next = await nextReductionTrial(host, { id });
+    if (!next.candidate) { assert.equal(next.status, 'search_complete'); break; }
+    await runTrial(host, id, `boundary-${index}`, subset => subset.includes('a0') ? 'target_fail' : 'pass');
+  }
+  assert.equal((await readReduction(host, id)).state.trial_budget.pending, 0);
+  assert.equal((await nextReductionTrial(host, { id })).candidate, null);
+  await assert.rejects(createReduction(host, { ...birth, id: 'too-many', op: 'too-many', definition: { ...def, max_trials: 256 } }), hasCode('invalid_input'), 'proof:trial_ceiling');
 });

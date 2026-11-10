@@ -13,8 +13,12 @@ export const SourceRefSchema = z.strictObject({ item_id: KeySchema, item_hash: D
 export const AtomSchema = z.strictObject({ atom_id: KeySchema, payload_digest: DigestSchema, source_ref: SourceRefSchema, label: z.string().max(128).optional() });
 /** Fixed, declared deterministic oracle; no command or executable field exists. */
 export const OracleSchema = z.strictObject({ oracle_key: KeySchema, recipe_digest: DigestSchema, subject_digest: DigestSchema, environment_digest: DigestSchema, target_failure_signature: z.string().min(1).max(128), result_schema_digest: DigestSchema, deterministic_declared: z.literal(true) });
+/** Maximum durable operation receipts, including creation and trial request/result pairs. */
+export const REPLAY_RECEIPT_CAPACITY = 512;
+/** Largest declared trial budget with one creation receipt and two receipts per trial. */
+export const MAX_TRIALS = Math.floor((REPLAY_RECEIPT_CAPACITY - 1) / 2);
 /** Frozen ordered atomization and oracle identity. */
-export const DefinitionSchema = z.strictObject({ atoms: z.array(AtomSchema).min(1).max(64), composition: z.literal('ordered_subset'), original_digest: DigestSchema, oracle: OracleSchema, max_trials: z.number().int().min(1).max(256), predecessor: SourceRefSchema.optional() }).refine(value => new Set(value.atoms.map(atom => atom.atom_id)).size === value.atoms.length);
+export const DefinitionSchema = z.strictObject({ atoms: z.array(AtomSchema).min(1).max(64), composition: z.literal('ordered_subset'), original_digest: DigestSchema, oracle: OracleSchema, max_trials: z.number().int().min(1).max(MAX_TRIALS), predecessor: SourceRefSchema.optional() }).refine(value => new Set(value.atoms.map(atom => atom.atom_id)).size === value.atoms.length);
 /** Replayable read-only proposal derived solely from the journal. */
 export const CandidateSchema = z.strictObject({ subset_ids: z.array(KeySchema).max(64), subset_digest: DigestSchema, oracle_digest: DigestSchema, purpose: z.enum(['baseline', 'subset', 'complement', 'deletion']), partition_cursor: z.string().max(128) });
 /** One durable reservation; completed means an outcome exists, not external exactly-once execution. */
@@ -24,11 +28,11 @@ export const OutcomeSchema = z.strictObject({ result: z.enum(['target_fail', 'pa
 /** Observations are immutable and may disagree; no majority vote is performed. */
 export const ObservationSchema = OutcomeSchema.extend({ observation_id: KeySchema, request_id: KeySchema, evidence: z.enum(['reported_oracle', 'host_verified']), verification_digest: DigestSchema.nullable() });
 /** Compact historical result retains committed identity apart from the current revision. */
-export const CommittedResultSchema = z.strictObject({ kind: z.enum(['create', 'request', 'record']), identity: KeySchema, sequence: z.number().int().min(1).max(512), digest: DigestSchema });
+export const CommittedResultSchema = z.strictObject({ kind: z.enum(['create', 'request', 'record']), identity: KeySchema, sequence: z.number().int().min(1).max(REPLAY_RECEIPT_CAPACITY), digest: DigestSchema });
 /** Durable operation identity; never evicted or repurposed. */
 export const ReplaySchema = z.strictObject({ operation_id: KeySchema, request_digest: DigestSchema, result: CommittedResultSchema, result_digest: DigestSchema });
 /** All authoritative state lives in this single native field. */
-export const ReductionStateSchema = z.strictObject({ version: z.literal(1), package: z.literal('pm-reduce'), algorithm_version: z.literal('ddmin-1'), definition: DefinitionSchema, best_failing_subset: z.array(KeySchema).nullable(), partition_cursor: z.string().max(128), requests: z.array(TrialRequestSchema).max(256), observations: z.array(ObservationSchema).max(512), trial_budget: z.strictObject({ limit: z.number().int(), reserved: z.number().int(), completed: z.number().int(), pending: z.number().int() }), qualification: z.string().max(128), replay_receipts: z.array(ReplaySchema).min(1).max(512) });
+export const ReductionStateSchema = z.strictObject({ version: z.literal(1), package: z.literal('pm-reduce'), algorithm_version: z.literal('ddmin-1'), definition: DefinitionSchema, best_failing_subset: z.array(KeySchema).nullable(), partition_cursor: z.string().max(128), requests: z.array(TrialRequestSchema).max(MAX_TRIALS), observations: z.array(ObservationSchema).max(REPLAY_RECEIPT_CAPACITY), trial_budget: z.strictObject({ limit: z.number().int(), reserved: z.number().int(), completed: z.number().int(), pending: z.number().int() }), qualification: z.string().max(128), replay_receipts: z.array(ReplaySchema).min(1).max(REPLAY_RECEIPT_CAPACITY) });
 const common = { id: KeySchema, budget: z.number().int().positive().max(8192).default(1600) };
 const mutation = { ...common, op: KeySchema, revision: DigestSchema };
 /** Explicit create-if-absent identity and immutable definition. */

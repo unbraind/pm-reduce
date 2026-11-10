@@ -9,7 +9,7 @@ import type { TestContext } from 'node:test';
 export function source() { return { item_id: 'corpus-source', item_hash: digest('source'), field_pointer: '/fixture', content_digest: digest('fixture') }; }
 /** Fixed ordered atoms; labels preserve data whitespace exactly. */
 export function definition(count = 4): ReductionDefinition {
-  return { atoms: Array.from({ length: count }, (_, at) => ({ atom_id: `a${at}`, payload_digest: digest(`atom ${at}`), source_ref: source(), label: `  atom ${at}\n ` })), composition: 'ordered_subset', original_digest: digest('original'), oracle: { oracle_key: 'fixture', recipe_digest: digest('recipe'), subject_digest: digest('subject'), environment_digest: digest('environment'), target_failure_signature: 'target', result_schema_digest: digest('schema'), deterministic_declared: true }, max_trials: 256 };
+  return { atoms: Array.from({ length: count }, (_, at) => ({ atom_id: `a${at}`, payload_digest: digest(`atom ${at}`), source_ref: source(), label: `  atom ${at}\n ` })), composition: 'ordered_subset', original_digest: digest('original'), oracle: { oracle_key: 'fixture', recipe_digest: digest('recipe'), subject_digest: digest('subject'), environment_digest: digest('environment'), target_failure_signature: 'target', result_schema_digest: digest('schema'), deterministic_declared: true }, max_trials: 255 };
 }
 /** Real SDK plain tracker; all cleanup is registered before initialization. */
 export async function fixture(t: TestContext, provision = true, def = definition()) {

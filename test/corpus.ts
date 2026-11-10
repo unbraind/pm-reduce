@@ -82,7 +82,9 @@ export async function reproduce(host: Host, id: string, name: typeof scenarios[n
     const current = await delivered(readReduction(host, id), 1600); const request = reserved.result.identity;
     const input = { id, op: `record-${actual}`, revision: current.revision, request, outcome: outcome(def, next.candidate.subset_digest, result, retainedEvidence) };
     await delivered(recordReductionOutcome(host, input), 1600); if (actual === 1) assert.equal(result, 'target_fail', `${name} must reproduce before search`); log.push({ request, subset: next.candidate.subset_ids, result });
+    const beforeReplay = (await readReduction(host, id)).state.observations.length;
     const replay = await delivered(recordReductionOutcome(host, input), 1600); assert.equal(replay.replayed, true);
+    assert.equal((await readReduction(host, id)).state.observations.length, beforeReplay, 'proof:replay_observation_count');
   }
   let certificate = (await delivered(reductionCertificate(host, { id, budget: 8192 }), 8192)).certificate; assert.equal(certificate.qualification, 'one_minimal_under_recorded_oracle');
   const best = certificate.best_subset!; const independent = [best, ...best.map((_, at) => best.filter((__, index) => index !== at))];

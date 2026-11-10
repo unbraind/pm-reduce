@@ -8,7 +8,7 @@ import { hashCalls } from './kernel-tools.ts';
 /** Pure journal fixture independently admits one observation per exact candidate. */
 function state(count = 16): ReductionState {
   const result = { kind: 'create' as const, identity: 'owner', sequence: 1, digest: digest(definition(count)) };
-  return projectState({ version: 1, package: 'pm-reduce', algorithm_version: 'ddmin-1', definition: definition(count), best_failing_subset: null, partition_cursor: '', requests: [], observations: [], trial_budget: { limit: 256, reserved: 0, completed: 0, pending: 0 }, qualification: '', replay_receipts: [{ operation_id: 'birth', request_digest: digest('birth'), result, result_digest: digest(result) }] });
+  return projectState({ version: 1, package: 'pm-reduce', algorithm_version: 'ddmin-1', definition: definition(count), best_failing_subset: null, partition_cursor: '', requests: [], observations: [], trial_budget: { limit: 255, reserved: 0, completed: 0, pending: 0 }, qualification: '', replay_receipts: [{ operation_id: 'birth', request_digest: digest('birth'), result, result_digest: digest(result) }] });
 }
 /** Test-caller oracle observation; production never invokes a predicate. */
 function observe(s: ReductionState, result: Outcome['result']) {

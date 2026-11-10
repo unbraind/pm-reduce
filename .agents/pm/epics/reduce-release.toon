@@ -6,12 +6,10 @@ status: in_progress
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:45:23.719Z"
-updated_at: "2026-11-10T12:59:00.560Z"
-assignee: codex-agent
-claim_principal: codex-agent
+updated_at: "2026-11-10T21:36:27.627Z"
 author: codex-agent
 acceptance_criteria: Six CLI and SDK operations share strict schemas; exact journal and replay; qualified certificates; native guarded writes; public reproduction evidence; full release gates.
-comments[14]{created_at,author,text}:
+comments[17]{created_at,author,text}:
   "2026-11-06T11:45:48.529Z",codex-agent,"Implements companion specification pm-cli-website-2glk (read only). One native owner holds reduction state, trial journal and durable operation identities. Caller executes the oracle. Scaffold is isolated on main; implementation is on feat/reduce. No external publication is authorized."
   "2026-11-06T12:36:27.459Z",codex-agent,"Preflight evidence: full suite passed 35/35 with complete production instrumentation at 100 percent statements, branches, functions and lines; later focused checks cover strengthened host capability and certificate validation. Packed npm/Bun, npx/bunx, Git-absent transports and SDK imports passed the captured-artifact rehearsal. Final committed candidate will run both full release checks sequentially with unchanged thresholds. SDK transport limitation is isolated in reduce-sdk-transport; package fallback flags satisfy the delivered contract."
   "2026-11-06T13:14:07.591Z",codex-agent,"Read-only overlap audit confirms boundaries: pm-evidence owns citation freshness and source support; pm-hypothesis owns explanation admission and discriminating observations; pm-http owns declared HTTP requests and response observations. Reduction search, durable trial intent/outcomes and qualified deletion certificates remain pm-reduce-owned. No source package, task status or assurance verdict is modified by domain commands."
@@ -26,6 +24,23 @@ comments[14]{created_at,author,text}:
   "2026-11-09T15:13:35.770Z","harness:claude-code","Class follow-up (CodeRabbit on pm-screen PRRT_kwDOVll0Ws61TTim): the per-array cap from bf3dff0 still let many sparse arrays below it add up. Holes (length minus present entries) are now charged to the existing 32768 work budget. 16 x 4096 holes are refused; the full suite passes 79/79; the aggregate case fails against the per-array-cap version and passes restored."
   "2026-11-09T17:29:32.332Z","harness:claude-code","Class closure (CodeRabbit on pm-unit PRRT_kwDOVk5Fqc61W0uO and pm-screen PRRT_kwDOVll0Ws61W80k): charging holes by Object.keys was fooled by named properties, and a hole let schema validation read values inherited from Array.prototype. Arrays are now accepted only when their keys are exactly 0..length-1, and the length is checked against the 32768 work budget before the keys are listed. 'privacy traversal accepts only dense JSON arrays within the work budget' fails against the holes-charge version; full suite 79/79."
   "2026-11-10T12:59:00.560Z",claude-orchestrator,"Orchestrator fix: CI failed only the 0% duplication gate, with one 3-line clone pair (test/contracts.test.ts:114-116 <-> 129-131: the repeated provisioned fixture + extension harness setup that the explicit-budget regression added next to the settings-range test). Both now use a local harnessFixture(t, def). duplication 0/3137, typecheck and lint clean, changelog:check ok, full npm test 79 pass / 0 fail."
-tests[1]{command,scope,timeout_seconds,provenance{author,created_at,source_kind,source_ref}}:
-  npm test,project,1200,codex-agent,"2026-11-06T16:49:36.835Z",local_mutation,feat/reduce
+  "2026-11-10T21:28:59.157Z",codex-smallfix2-1110,"Review follow-up: derive the definition trial ceiling from journal capacity and prove replay leaves stored observation count unchanged. Validate boundary admission, corpus regressions, typecheck, lint and bounded full suite."
+  "2026-11-10T21:32:02.632Z",codex-smallfix2-1110,"Both full review findings verified. Shared REPLAY_RECEIPT_CAPACITY derives MAX_TRIALS; schema and mutation capacity checks share the constants. Budget 255 runs to search completion; 256 is refused before creation. Corpus replay now checks stored observations before and after. Synthetic public snapshots and matching metrics regenerated for the admitted budget. Revert proof: restoring only DefinitionSchema max_trials to 256 makes the declared trial ceiling test fail with Missing expected rejection: proof:trial_ceiling (exit 1). Injecting a valid additional recorded observation on replay makes the beads corpus regression fail at proof:replay_observation_count (exit 1); both mutations restored. Typecheck and lint passed."
+  "2026-11-10T21:36:26.581Z",codex-smallfix2-1110,"Validation complete: focused node --test --test-concurrency=2 test/capacity.test.ts test/real-data.test.ts test/corpus-privacy.test.ts passed 16/16 via pm test --run --only-last --progress. timeout 2700 npm test passed 80/80 with zero failures or skips. npm run typecheck, npm run lint, npm run identity:check and npm run changelog:check passed. No full-gate timeout."
+tests[2]:
+  - command: npm test
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-06T16:49:36.835Z"
+      source_kind: local_mutation
+      source_ref: feat/reduce
+  - command: node --test --test-concurrency=2 test/capacity.test.ts test/real-data.test.ts test/corpus-privacy.test.ts
+    scope: project
+    provenance:
+      author: codex-smallfix2-1110
+      created_at: "2026-11-10T21:31:34.275Z"
+      source_kind: local_mutation
+      source_ref: feat/reduce
 body: ""

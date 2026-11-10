@@ -2,7 +2,7 @@ import { isItemAlreadyExistsError, normalizeItemId } from '@unbrained/pm-cli/sdk
 import { capable } from './host.ts';
 import type { Host, Snapshot } from './host.ts';
 import { insist, ReductionRefusal, refusal } from './errors.ts';
-import { canonical, digest, parse, CreateReductionInputSchema, NextTrialInputSchema, RequestTrialInputSchema, RecordOutcomeInputSchema, CertificateInputSchema, PacketInputSchema } from './schema.ts';
+import { MAX_TRIALS, REPLAY_RECEIPT_CAPACITY, canonical, digest, parse, CreateReductionInputSchema, NextTrialInputSchema, RequestTrialInputSchema, RecordOutcomeInputSchema, CertificateInputSchema, PacketInputSchema } from './schema.ts';
 import type { ReductionState, CreateReductionInput, NextTrialInput, RequestTrialInput, RecordOutcomeInput, CertificateInput, PacketInput } from './schema.ts';
 import { readState, advanceReduction, validateOutcome, projectState, validateReductionCertificate } from './kernel.ts';
 import { envelope, fitEnvelope, TrialProposalSchema } from './output.ts';
@@ -17,7 +17,7 @@ export type TrialProposal = TrialProposalData;
  * Apply it to every write retaining a pending trial, including extra observations.
  */
 export function assertCompletionCapacity(receipts: number, bytes: number): void {
-  insist(receipts < 512 && bytes + 32768 <= 262144, 'capacity_exceeded', 'Reduction journal cannot retain this trial and its outcome', 'Create a successor owner; never prune replay identities');
+  insist(receipts < REPLAY_RECEIPT_CAPACITY && bytes + 32768 <= 262144, 'capacity_exceeded', 'Reduction journal cannot retain this trial and its outcome', 'Create a successor owner; never prune replay identities');
 }
 /** Complete selected-owner read, never a workspace scan or settings migration. */
 export async function readReduction(host: Host, id: string): Promise<Snapshot> {
@@ -42,7 +42,7 @@ function replay(state: ReductionState, op: string, request_digest: string) {
 }
 /** Reserve replay identity without eviction; strict aggregate bounds are checked before effects. */
 function remember(state: ReductionState, op: string, request_digest: string, kind: 'create' | 'request' | 'record', identity: string, content: unknown) {
-  insist(state.replay_receipts.length < 512 && state.observations.length <= 512 && state.requests.length <= 256, 'capacity_exceeded', 'Reduction journal capacity reached', 'Create a successor owner; never prune replay identities');
+  insist(state.replay_receipts.length < REPLAY_RECEIPT_CAPACITY && state.observations.length <= REPLAY_RECEIPT_CAPACITY && state.requests.length <= MAX_TRIALS, 'capacity_exceeded', 'Reduction journal capacity reached', 'Create a successor owner; never prune replay identities');
   const result = { kind, identity, sequence: state.replay_receipts.length + 1, digest: digest(content) }; const operation = { operation_id: op, request_digest, result, result_digest: digest(result) };
   state.replay_receipts.push(operation); projectState(state); readState(state);
   if (state.requests.some(row => row.state === 'pending')) assertCompletionCapacity(state.replay_receipts.length, Buffer.byteLength(canonical(state)));
