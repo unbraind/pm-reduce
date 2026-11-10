@@ -5,7 +5,8 @@ import { fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError, wr
 import { readFileSync } from 'node:fs';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
 import extension, { createReduction, readReduction, nextReductionTrial, reductionCertificate, requestReductionTrial, recordReductionOutcome, reductionPacket, envelope, fitEnvelope, ReductionRefusal, digest, exitCode } from '../dist/index.js';
-import type { ReductionResult, Host } from '../dist/index.js';
+import type { ReductionResult, Host, ReductionDefinition } from '../dist/index.js';
+import type { TestContext } from 'node:test';
 import { runCommand, inputJson } from '../dist/src/commands.js';
 import { persistedSchemaPort } from '../dist/src/host.js';
 import { refusal, insist } from '../dist/src/errors.js';
@@ -108,11 +109,15 @@ test('settings validation and unavailable schemas refuse without domain writes',
   await native.schemaAddField('reduce_state', { type: 'string', description: 'Peer incompatible field' });
   assert.equal((await runCommand('packet', context(undefined)) as ReductionResult).refusal?.code, 'invalid_record');
 });
+/** One provisioned reduction plus a command/schema/renderer harness that deactivates after the test. */
+async function harnessFixture(t: TestContext, def: ReductionDefinition) {
+  const base = await fixture(t, true, def); const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  return { ...base, ext };
+}
 test('documented settings budget endpoints match real stored CLI policy without side effects', async t => {
   const paragraph = readFileSync('README.md', 'utf8').split('\n').find(line => line.startsWith('Settings section'))!;
   assert.match(paragraph, /`1\.\.8192`/u, 'proof:settings_range_docs');
-  const { pmRoot, id } = await fixture(t, true, definition(1));
-  const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  const { pmRoot, id, ext } = await harnessFixture(t, definition(1));
   for (const budget of [0, 1, 1600, 8192, 8193, -1, 1.5]) {
     await writeSettingsSection(pmRoot, 'reduce', { output_budget: budget }, { author: 'fixture' });
     const settings = await readSettingsSection(pmRoot, 'reduce'); const events = await historyEvents(pmRoot, id);
@@ -126,8 +131,7 @@ test('documented settings budget endpoints match real stored CLI policy without 
   }
 });
 test('an explicit budget is not refused by an invalid stored budget setting', async t => {
-  const { pmRoot, id } = await fixture(t, true, definition(1));
-  const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  const { pmRoot, id, ext } = await harnessFixture(t, definition(1));
   for (const stored of [0, -1, 1.5, 8193]) {
     await writeSettingsSection(pmRoot, 'reduce', { output_budget: stored }, { author: 'fixture' });
     const ran = await ext.runCommand({ command: 'reduce packet', args: [id], options: { budget: '1600' }, pmRoot }); if (ran.cause) throw ran.cause;

@@ -6,12 +6,12 @@ status: in_progress
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:45:23.719Z"
-updated_at: "2026-11-09T17:29:32.332Z"
+updated_at: "2026-11-10T12:59:00.560Z"
 assignee: codex-agent
 claim_principal: codex-agent
 author: codex-agent
 acceptance_criteria: Six CLI and SDK operations share strict schemas; exact journal and replay; qualified certificates; native guarded writes; public reproduction evidence; full release gates.
-comments[13]{created_at,author,text}:
+comments[14]{created_at,author,text}:
   "2026-11-06T11:45:48.529Z",codex-agent,"Implements companion specification pm-cli-website-2glk (read only). One native owner holds reduction state, trial journal and durable operation identities. Caller executes the oracle. Scaffold is isolated on main; implementation is on feat/reduce. No external publication is authorized."
   "2026-11-06T12:36:27.459Z",codex-agent,"Preflight evidence: full suite passed 35/35 with complete production instrumentation at 100 percent statements, branches, functions and lines; later focused checks cover strengthened host capability and certificate validation. Packed npm/Bun, npx/bunx, Git-absent transports and SDK imports passed the captured-artifact rehearsal. Final committed candidate will run both full release checks sequentially with unchanged thresholds. SDK transport limitation is isolated in reduce-sdk-transport; package fallback flags satisfy the delivered contract."
   "2026-11-06T13:14:07.591Z",codex-agent,"Read-only overlap audit confirms boundaries: pm-evidence owns citation freshness and source support; pm-hypothesis owns explanation admission and discriminating observations; pm-http owns declared HTTP requests and response observations. Reduction search, durable trial intent/outcomes and qualified deletion certificates remain pm-reduce-owned. No source package, task status or assurance verdict is modified by domain commands."
@@ -25,6 +25,7 @@ comments[13]{created_at,author,text}:
   "2026-11-09T14:26:25.778Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61R5zj (IMPORTANT): the stored reduce.output_budget was evaluated eagerly as the fallback argument, so an invalid stored value (0, -1, 1.5, 8193) refused a command with a valid explicit --budget. The stored value is now read only when no explicit budget is given. Regression 'an explicit budget is not refused by an invalid stored budget setting' (explicit 1600 succeeds; without a budget the invalid setting is still refused) fails on revert, passes restored; contracts suite 14/14."
   "2026-11-09T15:13:35.770Z","harness:claude-code","Class follow-up (CodeRabbit on pm-screen PRRT_kwDOVll0Ws61TTim): the per-array cap from bf3dff0 still let many sparse arrays below it add up. Holes (length minus present entries) are now charged to the existing 32768 work budget. 16 x 4096 holes are refused; the full suite passes 79/79; the aggregate case fails against the per-array-cap version and passes restored."
   "2026-11-09T17:29:32.332Z","harness:claude-code","Class closure (CodeRabbit on pm-unit PRRT_kwDOVk5Fqc61W0uO and pm-screen PRRT_kwDOVll0Ws61W80k): charging holes by Object.keys was fooled by named properties, and a hole let schema validation read values inherited from Array.prototype. Arrays are now accepted only when their keys are exactly 0..length-1, and the length is checked against the 32768 work budget before the keys are listed. 'privacy traversal accepts only dense JSON arrays within the work budget' fails against the holes-charge version; full suite 79/79."
+  "2026-11-10T12:59:00.560Z",claude-orchestrator,"Orchestrator fix: CI failed only the 0% duplication gate, with one 3-line clone pair (test/contracts.test.ts:114-116 <-> 129-131: the repeated provisioned fixture + extension harness setup that the explicit-budget regression added next to the settings-range test). Both now use a local harnessFixture(t, def). duplication 0/3137, typecheck and lint clean, changelog:check ok, full npm test 79 pass / 0 fail."
 tests[1]{command,scope,timeout_seconds,provenance{author,created_at,source_kind,source_ref}}:
   npm test,project,1200,codex-agent,"2026-11-06T16:49:36.835Z",local_mutation,feat/reduce
 body: ""
