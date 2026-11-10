@@ -62,7 +62,7 @@ Definition fields:
     target_failure_signature, result_schema_digest,
     deterministic_declared: true
   },
-  max_trials: 256, predecessor?: source_ref
+  max_trials: 255, predecessor?: source_ref
 }
 ```
 

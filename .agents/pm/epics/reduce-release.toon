@@ -6,10 +6,10 @@ status: in_progress
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:45:23.719Z"
-updated_at: "2026-11-10T21:36:27.627Z"
+updated_at: "2026-11-10T21:58:42.440Z"
 author: codex-agent
 acceptance_criteria: Six CLI and SDK operations share strict schemas; exact journal and replay; qualified certificates; native guarded writes; public reproduction evidence; full release gates.
-comments[17]{created_at,author,text}:
+comments[18]{created_at,author,text}:
   "2026-11-06T11:45:48.529Z",codex-agent,"Implements companion specification pm-cli-website-2glk (read only). One native owner holds reduction state, trial journal and durable operation identities. Caller executes the oracle. Scaffold is isolated on main; implementation is on feat/reduce. No external publication is authorized."
   "2026-11-06T12:36:27.459Z",codex-agent,"Preflight evidence: full suite passed 35/35 with complete production instrumentation at 100 percent statements, branches, functions and lines; later focused checks cover strengthened host capability and certificate validation. Packed npm/Bun, npx/bunx, Git-absent transports and SDK imports passed the captured-artifact rehearsal. Final committed candidate will run both full release checks sequentially with unchanged thresholds. SDK transport limitation is isolated in reduce-sdk-transport; package fallback flags satisfy the delivered contract."
   "2026-11-06T13:14:07.591Z",codex-agent,"Read-only overlap audit confirms boundaries: pm-evidence owns citation freshness and source support; pm-hypothesis owns explanation admission and discriminating observations; pm-http owns declared HTTP requests and response observations. Reduction search, durable trial intent/outcomes and qualified deletion certificates remain pm-reduce-owned. No source package, task status or assurance verdict is modified by domain commands."
@@ -27,6 +27,9 @@ comments[17]{created_at,author,text}:
   "2026-11-10T21:28:59.157Z",codex-smallfix2-1110,"Review follow-up: derive the definition trial ceiling from journal capacity and prove replay leaves stored observation count unchanged. Validate boundary admission, corpus regressions, typecheck, lint and bounded full suite."
   "2026-11-10T21:32:02.632Z",codex-smallfix2-1110,"Both full review findings verified. Shared REPLAY_RECEIPT_CAPACITY derives MAX_TRIALS; schema and mutation capacity checks share the constants. Budget 255 runs to search completion; 256 is refused before creation. Corpus replay now checks stored observations before and after. Synthetic public snapshots and matching metrics regenerated for the admitted budget. Revert proof: restoring only DefinitionSchema max_trials to 256 makes the declared trial ceiling test fail with Missing expected rejection: proof:trial_ceiling (exit 1). Injecting a valid additional recorded observation on replay makes the beads corpus regression fail at proof:replay_observation_count (exit 1); both mutations restored. Typecheck and lint passed."
   "2026-11-10T21:36:26.581Z",codex-smallfix2-1110,"Validation complete: focused node --test --test-concurrency=2 test/capacity.test.ts test/real-data.test.ts test/corpus-privacy.test.ts passed 16/16 via pm test --run --only-last --progress. timeout 2700 npm test passed 80/80 with zero failures or skips. npm run typecheck, npm run lint, npm run identity:check and npm run changelog:check passed. No full-gate timeout."
+  "2026-11-10T21:58:24.237Z",codex-smallfix2-1110,"Documentation follow-through: updated the public definition example from max_trials 256 to the admitted ceiling 255. Source and regression gates remain unchanged from the verified 80/80 full run; focused declaration boundary is rerun after this documentation-only edit."
+files[1]{path,scope}:
+  README.md,project
 tests[2]:
   - command: npm test
     scope: project
