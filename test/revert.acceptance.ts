@@ -63,7 +63,7 @@ const changes = [
   { name: 'combined flag and file URI normalization split', file: 'privacy', pattern: /fileProtocol\(pieces\[index - 1\]\)/, replacement: "pieces[index - 1]?.toLowerCase() === 'file'", test: 'privacy', filter: 'mounted profile aliases', proof: 'proof:path_aliases' },
   { name: 'pending completion admission removed', file: 'api', pattern: /if \(state.requests.some\(row => row.state === 'pending'\)\)\s+assertCompletionCapacity\(state.replay_receipts.length, Buffer.byteLength\(canonical\(state\)\)\);/, replacement: '', test: 'capacity', filter: 'reservation leaves outcome capacity', proof: 'proof:completion_reservation' },
   { name: 'completion reserve applies only to new requests', file: 'api', pattern: /if \(state.requests.some\(row => row.state === 'pending'\)\)/, replacement: "if (kind === 'request' && state.requests.some(row => row.state === 'pending'))", test: 'capacity', filter: 'pending completion headroom', proof: 'proof:completion_write' },
-  { name: 'completion receipt reserve removed', file: 'api', pattern: /receipts < 512 &&/, replacement: '', test: 'capacity', filter: 'completion capacity checks independent', proof: 'proof:completion_frontier' },
+  { name: 'completion receipt reserve removed', file: 'api', pattern: /receipts < REPLAY_RECEIPT_CAPACITY &&/, replacement: '', test: 'capacity', filter: 'completion capacity checks independent', proof: 'proof:completion_frontier' },
   { name: 'completion byte reserve removed', file: 'api', pattern: /bytes \+ 32768/, replacement: 'bytes', test: 'capacity', filter: 'reservation leaves outcome capacity', proof: 'proof:completion_reservation' },
   { name: 'runtime selection trusts the first existing-looking candidate', file: 'test/install-tools.ts', pattern: /export function selectNodeRuntime[\s\S]*/, replacement: "export function selectNodeRuntime(version: string, candidates: readonly (string | undefined)[], cwd: string, env: NodeJS.ProcessEnv): string { return candidates.find(candidate => candidate !== undefined && candidate.startsWith('/'))!; }", test: 'install-tools', filter: 'runtime selection skips', proof: 'proof:node_runtime_selection' },
   { name: 'fixture inherits parent GitHub event context', file: 'scripts/environment.ts', pattern: /!\/\^GITHUB_\/i.test\(key\)/, replacement: 'true', test: 'privacy-gates', filter: 'fixture environments remove', proof: 'proof:fixture_environment' },
@@ -103,12 +103,23 @@ const changes = [
   { name: 'documented tracker initialization removed', file: 'README.md', pattern: /Initialize a native tracker first[^\n]*\n\n```sh\npm init [^\n]+\n```\n\n/, replacement: '', test: 'contracts', filter: 'documented workflows initialize a native tracker', proof: 'proof:install_init_docs' },
   { name: 'documented SDK tracker requirement removed', file: 'README.md', pattern: /\/\/ The host binds an already initialized tracker[^\n]*\n\/\/[^\n]*\n\/\/[^\n]*\n/, replacement: '', test: 'contracts', filter: 'documented workflows initialize a native tracker', proof: 'proof:sdk_init_docs' },
 
+  { name: 'stale seam diagnostics omit neighbours', file: 'test/revert.acceptance.ts', pattern: literalPattern("stale.join('\\n')"), replacement: 'stale[0]', test: 'revert-seams', filter: 'revert acceptance reports all', proof: 'proof:seam_diagnostics' },
+
 ];
+const stale: string[] = [];
+for (const change of changes) {
+  const file = (change.file.includes('/') || change.file.endsWith('.md')) ? change.file : `dist/src/${change.file}.js`;
+  const source = readFileSync(file, 'utf8');
+  const matches = [...source.matchAll(new RegExp(change.pattern.source, change.pattern.flags + 'g'))].length;
+  if (matches !== 1) stale.push(`${file}: ${change.name}: ${matches} matches for ${change.pattern}`);
+}
+assert.equal(stale.length, 0, `Stale revert seams (expected exactly one match):\n${stale.join('\n')}`);
+console.log(`revert-seams: ${changes.length} seams match exactly once`);
 for (const change of changes) {
   const root = mkdtempSync(join(tmpdir(), 'reduce-revert-'));
   try {
     for (const file of ['dist', 'src', 'index.ts', 'test', 'scripts', 'docs', '.github', 'README.md', 'package.json', 'manifest.json']) cpSync(file, join(root, file), { recursive: true }); symlinkSync(join(process.cwd(), 'node_modules'), join(root, 'node_modules'), 'dir');
-    const file = join(root, (change.file.includes('/') || change.file.endsWith('.md')) ? change.file : `dist/src/${change.file}.js`); const source = readFileSync(file, 'utf8'); assert.match(source, change.pattern, `Mutation did not match ${change.name}`); writeFileSync(file, source.replace(change.pattern, change.replacement));
+    const file = join(root, (change.file.includes('/') || change.file.endsWith('.md')) ? change.file : `dist/src/${change.file}.js`); const source = readFileSync(file, 'utf8'); assert.equal([...source.matchAll(new RegExp(change.pattern.source, change.pattern.flags + 'g'))].length, 1, `Revert seam must identify exactly one behavior: ${change.name}`); writeFileSync(file, source.replace(change.pattern, change.replacement));
     const result = spawnSync(process.execPath, ['--test', '--test-reporter=spec', '--test-concurrency=2', `--test-name-pattern=${change.filter}`, `test/${change.test}.test.ts`], { cwd: root, env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: 120000 });
     assertIntendedFailure(result, change.proof); console.log(`EXPECTED FAIL: ${change.name}`);
   } finally { rmSync(root, { recursive: true, force: true }); }
