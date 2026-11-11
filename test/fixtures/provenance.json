@@ -1,0 +1,89 @@
+{
+  "sources": [
+    {
+      "repository": "https://github.com/unbraind/pm-jev",
+      "revision": "78b01cb0690026a79832f460d4a4f40b6bb5bd98",
+      "file": "exemplar-retrieval.ts",
+      "license": "MIT",
+      "source_sha256": "fa5e421481e258594ee81efd6bbd881849168272062d0fdf09ac219ddf3837a2",
+      "excerpts": [
+        {
+          "name": "estimateTokens",
+          "sha256": "7a8d5bca5f5d95a0e76451d0cd48c858c534f44fe38b16a07fa20a2e6d29de9a"
+        },
+        {
+          "name": "tokenize",
+          "sha256": "90ebaad5e8b328316bb46574863f76652769ae0a7c31d0bc2fc073e1efee5845"
+        },
+        {
+          "name": "exemplarContext",
+          "sha256": "0c891196226cc5329f58bc63aded2a9528661f3c33beaea0e162569fbc8e1436"
+        },
+        {
+          "name": "budgetedBody",
+          "sha256": "1c1448a8a8cb293867345ae67453fca707968adf1b8e56efb537b4b535716fe1"
+        }
+      ],
+      "native_anchor": {
+        "item_id": "pm-jev-sdk-unicode",
+        "item_hash": "8d231de09496b2a67eeff003cccef9ed877213f9e9ebf47e29299c904fcd17b1",
+        "field_pointer": "/description",
+        "content_digest": "3f55de11be492c43b4ada82d057f120a4ff0376682b019eb9ee4cd6e9ec2218c",
+        "description": "Validate and fix SDK audit F13 and F15 against origin/main with SDK text primitives and byte-based estimates."
+      }
+    },
+    {
+      "repository": "https://github.com/unbraind/pm-beads",
+      "revision": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d",
+      "file": "index.ts",
+      "license": "MIT",
+      "source_sha256": "2cb4bcb5599c5b079ffb88142a5d114e6a1059193c8a3b3495818f1112fe3721",
+      "excerpts": [
+        {
+          "name": "scalarString",
+          "sha256": "8c110412d4a4a64ff37a9b6f3a80fbaa24603f07f77ef2f41add0686bf2042de"
+        },
+        {
+          "name": "normalizeBeadKey",
+          "sha256": "05ddc7c517d6c336d81c2ad7b09ca6bb9d119f8652f734df34d9036dc2705924"
+        },
+        {
+          "name": "extractBlockerIds",
+          "sha256": "a1c2cd06426242eb648e80463d06d696efed56ccbec8b76decf49381f1985889"
+        }
+      ],
+      "native_anchor": {
+        "item_id": "pm-beads-y6cp",
+        "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+        "field_pointer": "/description",
+        "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+        "description": "Overlap checked against beads validate, core relationship analytics, pm-graph analytics, and pm-csv provenance. This adds Beads JSONL row addresses and exact external identities plus revalidated edge-removal proposals. It does not replace core topology or CSV cell provenance."
+      }
+    },
+    {
+      "repository": "https://github.com/unbraind/pm-beads",
+      "revision": "70cd5d87251d1971d8cbd8bbd01872bdb6b8a28d",
+      "file": "repair.ts",
+      "license": "MIT",
+      "source_sha256": "6efd42efc4709395d140283b8433067cf9458e26655fb562b25f13030d0e3a51",
+      "excerpts": [
+        {
+          "name": "removeEdge",
+          "sha256": "8f91ca630b099045c74a5fbc1b417d70857cb40df1acd0b7b73f3c4304958734"
+        },
+        {
+          "name": "editedText",
+          "sha256": "6481d4f74acd1fc0f19e71e8dd1016cc0c34637ddc2540225d023237e91cbc43"
+        }
+      ],
+      "native_anchor": {
+        "item_id": "pm-beads-y6cp",
+        "item_hash": "7c5562068ad52ce7d3d1fd0032a19a98408b4112d585718839a8021dcbd73a58",
+        "field_pointer": "/description",
+        "content_digest": "74d05fa76bce2e821cd016773919af0ca6f4b831a4d0c3dfef95e1b12e684d8e",
+        "description": "Overlap checked against beads validate, core relationship analytics, pm-graph analytics, and pm-csv provenance. This adds Beads JSONL row addresses and exact external identities plus revalidated edge-removal proposals. It does not replace core topology or CSV cell provenance."
+      }
+    }
+  ],
+  "fixture_sha256": "0dd946bcf08629da4145a1fc15b0a0c8dcafbe6cf8d1dbcbbbf7df36f6db59b7"
+}

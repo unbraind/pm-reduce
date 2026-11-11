@@ -2,15 +2,144 @@ id: reduce-release
 title: Deliver durable failure-input reduction
 description: Implement and certify the first local release of pm-reduce.
 type: Epic
+pm_format_version: 2
 status: in_progress
 priority: 2
-tags: []
+tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:45:23.719Z"
-updated_at: "2026-11-06T11:45:48.529Z"
-assignee: codex-agent
-claim_principal: codex-agent
+updated_at: "2026-11-11T21:28:48.073Z"
 author: codex-agent
 acceptance_criteria: Six CLI and SDK operations share strict schemas; exact journal and replay; qualified certificates; native guarded writes; public reproduction evidence; full release gates.
-comments[1]{created_at,author,text}:
+comments[32]{created_at,author,text}:
   "2026-11-06T11:45:48.529Z",codex-agent,"Implements companion specification pm-cli-website-2glk (read only). One native owner holds reduction state, trial journal and durable operation identities. Caller executes the oracle. Scaffold is isolated on main; implementation is on feat/reduce. No external publication is authorized."
+  "2026-11-06T12:36:27.459Z",codex-agent,"Preflight evidence: full suite passed 35/35 with complete production instrumentation at 100 percent statements, branches, functions and lines; later focused checks cover strengthened host capability and certificate validation. Packed npm/Bun, npx/bunx, Git-absent transports and SDK imports passed the captured-artifact rehearsal. Final committed candidate will run both full release checks sequentially with unchanged thresholds. SDK transport limitation is isolated in reduce-sdk-transport; package fallback flags satisfy the delivered contract."
+  "2026-11-06T13:14:07.591Z",codex-agent,"Read-only overlap audit confirms boundaries: pm-evidence owns citation freshness and source support; pm-hypothesis owns explanation admission and discriminating observations; pm-http owns declared HTTP requests and response observations. Reduction search, durable trial intent/outcomes and qualified deletion certificates remain pm-reduce-owned. No source package, task status or assurance verdict is modified by domain commands."
+  "2026-11-06T14:09:45.682Z",codex-agent,"Orchestrator published the existing candidate as unbraind/pm-reduce PR 1 at b34b0c4. Owning the review loop and CI closeout without merging. Queued CodeRabbit immediately through the shared queue, before CI completion. Existing implementation and local gates are preserved; new changes will be driven by validated review findings or CI failures."
+  "2026-11-06T15:39:47.440Z",codex-agent,"Review handoff for https://github.com/unbraind/pm-reduce/pull/1: one queued review attempt, zero completed review rounds, zero findings, zero fix pushes, and all required CI green on b34b0c4d4d446fb07b07c1ea6c13b1efedbdef00. The bounded 90-minute wait expired before the shared queue reached this PR. Review evidence remains an open risk; skipped notices and zero threads are not approval. No merge or release was performed. Review-phase tracker records are committed locally and held for the next substantive fix push, as instructed; no separate metadata push. Existing later-scope and SDK-transport Features remain open; release implementation and previously recorded gates are unchanged."
+  "2026-11-06T16:41:41.710Z",codex-agent,"Resumed PR #1 at 1c04026 after the first completed CodeRabbit review posted nineteen threads. Read both review batches and all thread bodies with complete pagination; no separate outside-diff section was present. Validate production boundary issues and strengthen evidence checks together, prove behavioral regressions, run both release gates, push all records with fixes, then batch replies and re-queue. No merge."
+  "2026-11-06T18:26:44.270Z",codex-agent,"All nineteen first-review findings are addressed with production fixes or stronger evidence tests, including native normalizer receiver preservation. Both release gates passed on the final source; batch thread responses are prepared. The accompanying fix commit includes every native tracker update. Implementation claims are released for review handoff, with all items left open; continue the queued review and final hosted checks before maintainer merge. No merge, release or publication was performed."
+  "2026-11-06T22:11:57.610Z",codex-agent,"Resumed PR #1 for six new CodeRabbit findings on 3738f4f. Fix and push each finding separately with focused evidence, then perform final release gates and review checks within the explicit 23:30 UTC hard stop. Preserve completed implementation and append-only tracker history."
+  "2026-11-09T09:22:29.163Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61MaLN (IMPORTANT): scripts/pack-gate.ts spawns npm.cmd through a shell on win32 (fixed arguments, no user input), so pack:dry-run works on Windows; POSIX unchanged. pack-gate 44 allowlisted files; 'package enumeration' focused test passes; typecheck clean."
+  "2026-11-09T12:54:39.773Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61QeVr (IMPORTANT): guardSubmitted bounded visits, not array length, so a sparse new Array(2 ** 31) passed and schema validation would walk every slot before .max(64). Arrays longer than 32768 are now refused with the traversal-limit refusal before validation. Regression 'privacy traversal bounds sparse array length before schema validation walks it' (2^31 and 32769 refused, 64 allowed, parse refuses) fails on revert and passes restored; privacy suite 12/12."
+  "2026-11-09T14:26:25.778Z","harness:claude-code","Orchestrator fix for CodeRabbit PRRT_kwDOVlPkts61R5zj (IMPORTANT): the stored reduce.output_budget was evaluated eagerly as the fallback argument, so an invalid stored value (0, -1, 1.5, 8193) refused a command with a valid explicit --budget. The stored value is now read only when no explicit budget is given. Regression 'an explicit budget is not refused by an invalid stored budget setting' (explicit 1600 succeeds; without a budget the invalid setting is still refused) fails on revert, passes restored; contracts suite 14/14."
+  "2026-11-09T15:13:35.770Z","harness:claude-code","Class follow-up (CodeRabbit on pm-screen PRRT_kwDOVll0Ws61TTim): the per-array cap from bf3dff0 still let many sparse arrays below it add up. Holes (length minus present entries) are now charged to the existing 32768 work budget. 16 x 4096 holes are refused; the full suite passes 79/79; the aggregate case fails against the per-array-cap version and passes restored."
+  "2026-11-09T17:29:32.332Z","harness:claude-code","Class closure (CodeRabbit on pm-unit PRRT_kwDOVk5Fqc61W0uO and pm-screen PRRT_kwDOVll0Ws61W80k): charging holes by Object.keys was fooled by named properties, and a hole let schema validation read values inherited from Array.prototype. Arrays are now accepted only when their keys are exactly 0..length-1, and the length is checked against the 32768 work budget before the keys are listed. 'privacy traversal accepts only dense JSON arrays within the work budget' fails against the holes-charge version; full suite 79/79."
+  "2026-11-10T12:59:00.560Z",claude-orchestrator,"Orchestrator fix: CI failed only the 0% duplication gate, with one 3-line clone pair (test/contracts.test.ts:114-116 <-> 129-131: the repeated provisioned fixture + extension harness setup that the explicit-budget regression added next to the settings-range test). Both now use a local harnessFixture(t, def). duplication 0/3137, typecheck and lint clean, changelog:check ok, full npm test 79 pass / 0 fail."
+  "2026-11-10T21:28:59.157Z",codex-smallfix2-1110,"Review follow-up: derive the definition trial ceiling from journal capacity and prove replay leaves stored observation count unchanged. Validate boundary admission, corpus regressions, typecheck, lint and bounded full suite."
+  "2026-11-10T21:32:02.632Z",codex-smallfix2-1110,"Both full review findings verified. Shared REPLAY_RECEIPT_CAPACITY derives MAX_TRIALS; schema and mutation capacity checks share the constants. Budget 255 runs to search completion; 256 is refused before creation. Corpus replay now checks stored observations before and after. Synthetic public snapshots and matching metrics regenerated for the admitted budget. Revert proof: restoring only DefinitionSchema max_trials to 256 makes the declared trial ceiling test fail with Missing expected rejection: proof:trial_ceiling (exit 1). Injecting a valid additional recorded observation on replay makes the beads corpus regression fail at proof:replay_observation_count (exit 1); both mutations restored. Typecheck and lint passed."
+  "2026-11-10T21:36:26.581Z",codex-smallfix2-1110,"Validation complete: focused node --test --test-concurrency=2 test/capacity.test.ts test/real-data.test.ts test/corpus-privacy.test.ts passed 16/16 via pm test --run --only-last --progress. timeout 2700 npm test passed 80/80 with zero failures or skips. npm run typecheck, npm run lint, npm run identity:check and npm run changelog:check passed. No full-gate timeout."
+  "2026-11-10T21:58:24.237Z",codex-smallfix2-1110,"Documentation follow-through: updated the public definition example from max_trials 256 to the admitted ceiling 255. Source and regression gates remain unchanged from the verified 80/80 full run; focused declaration boundary is rerun after this documentation-only edit."
+  "2026-11-10T22:20:06.097Z",codex-smallfix2-1110,"Final corpus assertion uses the existing measured final snapshot: stored observations must equal actual distinct trial and independent-check operations, excluding all replay calls. This is the finding alternate distinct-operation proof and avoids adding unmetered SDK reads to the reproduction harness. Injecting a valid extra recorded observation on replay again fails proof:replay_observation_count (exit 1); mutation restored. Focused linked suite passes 16/16; typecheck and lint pass. A final full gate is queued after the other short package gate, with no additional concurrent workers."
+  "2026-11-10T22:35:12.527Z",codex-smallfix2-1110,"Final authoritative validation: the corpus uses the existing final snapshot and counts distinct external records, with replay excluded. The extra-observation replay mutation fails proof:replay_observation_count. PM-linked focused suite passed 16/16; timeout 2700 npm test passed 80/80, zero failures, cancellations or skips, after this final test refinement. Typecheck and lint passed; installed exact dependencies match the lockfile. All changed files and public documentation receipts are linked."
+  "2026-11-11T08:21:10.303Z",codex-seams-1111,"Investigating Node 26 revert acceptance failure. Reproduce CI build and acceptance, audit every mutation seam for exactly one match, refresh only stale fragments preserving named behavior, and aggregate stale diagnostics before proofs. Run focused tests and both release gates; leave item open and release this claim."
+  "2026-11-11T08:24:00.300Z",codex-seams-1111,Reproduced the original CI failure with bun run build && node test/revert.acceptance.ts under Node 26.13.0. Full preflight audit found one stale seam; all other seams match exactly once. Updated the exact fragment while retaining its original mutation and named failing test. Added a disposable-copy regression for combined missing and ambiguous seam diagnostics before any proof runs.
+  "2026-11-11T08:42:22.949Z",codex-seams-1111,"Every one of the 80 seams matches exactly once and all 80 mutations reach their named distinguishing assertions, including the new combined-diagnostic proof. The restored suite reached 79/80 under inherited HOME; the only failure is the known global pm-github extension host-version skew against the pinned SDK. Repeating acceptance with isolated HOME/Git settings as required by the queue rules; both full release gates use the same isolation. No dependency pin or policy threshold changes."
+  "2026-11-11T08:46:28.831Z",codex-seams-1111,"Isolated-HOME pinned-pm CI-equivalent acceptance passed under Node 26.13.0 and Bun 1.3.5: 80 seams match exactly once, 80 behavioral mutations reach their distinguishing failure, and 80 fixed tests pass. Acceptance stdout has 82 lines and build stderr has 1 line. Focused capacity and diagnostic tests pass 7/7; typecheck, lint, docstring and identity/privacy checks pass. The completion receipt reserve still removes only the receipt frontier, now matched via REPLAY_RECEIPT_CAPACITY; proof:completion_frontier remains the required failure. Full npm/Bun release checks follow with the same isolated environment."
+  "2026-11-11T09:49:18.873Z",codex-seams-1111,"Final local verification: npm run release:check and bun run release:check both passed all 14 sequential gate steps with isolated HOME/Git settings. Each passed 81/81 unit tests (zero skipped), one packed acceptance spanning npm/Bun and Node 22.19.0/26.13.0, and exactly 100 percent coverage: statements 601/601, branches 394/394, functions 131/131, lines 528/528. Standalone CI-equivalent acceptance stdout has 82 lines, plus one build stderr line. Full release links use 3600-second bounds; focused tests and standalone acceptance retain 1200-second caps. Tracker histories remain append-only. Final audit comment and claim release are followed by regenerated changelog and fresh tracker/identity/changelog checks; hosted checks for the pushed head are reported in the PR. Item remains in progress for orchestrator verification. Earlier npm attempts stopped at transient registry audit endpoint errors after passing unit and coverage checks; fresh complete npm and Bun gates subsequently passed without bypassing the audit."
+  "2026-11-11T21:02:09.215Z",codex-agent,"Review round: read all nine unresolved threads and every comment, plus the latest CodeRabbit review (no outside-diff findings). Remote feature head includes main. Working from the fetched feature head in a disposable review worktree. Completion-reserve selector is already repaired in commit 3219a8b; verify its behavioral proof. Remaining work: normalize directory roots; align docs and linked commands; prove trial 255; explain intentional fixture byte disagreement; make artifact verification portable; self-review related instances and run capped gates. No thread replies or resolutions."
+  "2026-11-11T21:07:59.906Z",codex-agent,"All nine threads verified. PRRT_kwDOVlPkts62C9TO: fixed both focused commands missing builds. C9TS: README and architecture now say 255 requests. C9TV: renamed the declaration test to its actual scope and removed its early-exiting search loop; a new 254-pair/509-receipt fixture proves the independent byte refusal, so a valid 511-receipt live boundary cannot be asserted without weakening policy. C9TY: documented the intentional UTF-8/UTF-16 mismatch outside the oracle body so its recipe hash stays unchanged. C9Td: already fixed by 3219a8b; retaining the existing frontier proof. HpZ0: resolve the tracker root once for client, settings and ID normalization; child process exercises relative, dotted and absolute roots in a real nongit tracker. HpZ8: distinguish canonical JSON from SHA-256. HpaD: README metrics checked against preserved receipt. HpaX: portable built-in checksum and strict expected-digest/tamper tests with external tools absent. Self-review found the second missing-build linked test and clarified independent limits in both guides. Initial focused gates: 30/30 passing, zero skips; committed dist is absent in this repository."
+  "2026-11-11T21:09:13.262Z",codex-agent,"Capacity evidence for PRRT_kwDOVlPkts62C9TV: each complete request/observation pair requires 16 SHA-256 values (2 in request, 8 in observation including source references, and 3 in each of 2 replay receipts): 1024 bytes before keys. Request digest-key framing alone adds 37 bytes per pair. Thus even a strict lower bound for 254 pairs is 269494 bytes, above 262144, ignoring all remaining keys, IDs, other fields and the creation receipt. The live trial-255/511-receipt scenario is impossible at unchanged thresholds. The new fixture independently checks 254 requests, 254 observations and 509 receipts parse structurally but readState refuses capacity_exceeded. The declaration test accurately proves limit 255 admission and limit 256 refusal."
+  "2026-11-11T21:09:37.464Z",codex-agent,"Lower-bound arithmetic clarification: the exact canonical two-key request skeleton is 39 bytes, so the stronger bound is 254 * (1024 + 39) = 270002 bytes. The prior 37-byte framing estimate was conservative; either bound already exceeds the unchanged 262144-byte policy. PM-linked focused suite passed 30/30 with no failures, skips or timeouts. Typecheck, lint, duplication (0/3251 duplicated lines) and docstring (101 declarations) passed. Next: fresh-build proof, complete npm/Bun release checks and all behavioral reverts."
+  "2026-11-11T21:19:06.744Z",codex-agent,"Revert proofs: npm run release:check passed all 14 gates. test:revert certified 91 exactly-once seams, 91 intended named assertion failures, and 87 restored tests. New proofs: relative_tracker; linked_test_build (both focused commands); request_limit_docs (README and architecture); canonical_docs; readme_metrics; utf8_intent_docs; portable_checksum; checksum_strict; trial_ceiling. Existing completion_frontier still fails when its receipt condition is removed, verifying 3219a8b. Every mutation runs in a disposable copy; production code remains restored. The GNU checksum control succeeds with coreutils present and the reverted implementation fails the no-tools regression. Fresh-checkout reproduction: without dist, the former focused command fails with ERR_MODULE_NOT_FOUND; adding its build prerequisite passes all 17 focused tests. PM-linked broad focused run passed 30/30. Full npm gate passed 88/88 unit tests plus 1 packed acceptance, covering 80 native commands each for npm and Bun, SDK writes, Git-absent paths and Node 22.19.0/26.13.0. Coverage: statements 602/602, branches 394/394, functions 131/131, lines 529/529; audit prod zero vulnerabilities. No timeout or skipped tests. Bun full gate follows sequentially."
+  "2026-11-11T21:28:45.446Z",codex-agent,"Final thread mapping: PRRT_kwDOVlPkts62C9TO -> both focused linked commands build first (proof:linked_test_build and fresh-checkout 17/17). PRRT_kwDOVlPkts62C9TS -> 255-request docs in both guides (proof:request_limit_docs). PRRT_kwDOVlPkts62C9TV -> accurately scoped declaration test (proof:trial_ceiling), plus structurally valid 254-pair fixture rejected at the independent byte bound; proposed live trial-255 scenario is impossible without weakening that bound. PRRT_kwDOVlPkts62C9TY -> explicit UTF-8/UTF-16 intent outside the oracle body (proof:utf8_intent_docs). PRRT_kwDOVlPkts62C9Td -> already repaired by 3219a8b, verified again with proof:completion_frontier. PRRT_kwDOVlPkts62HpZ0 -> resolve the directory root once for every binding (proof:relative_tracker). PRRT_kwDOVlPkts62HpZ8 -> correct canonical/digest semantics (proof:canonical_docs). PRRT_kwDOVlPkts62HpaD -> README packet measurements match preserved receipts (proof:readme_metrics). PRRT_kwDOVlPkts62HpaX -> built-in checksum verification with exact identity and tamper refusals (proof:portable_checksum and proof:checksum_strict)."
+  "2026-11-11T21:28:46.796Z",codex-agent,"Final local results: npm run release:check and bun run release:check each passed all 14 gates within ten minutes, with isolated HOME and Git settings, unchanged policies and pins. Each passed 88/88 unit tests, 1/1 packed acceptance (80 native CLI commands each under npm and Bun, plus SDK and exact Node 22.19.0/26.13.0 checks), 91/91 intended reversion failures and 87/87 restored tests. Coverage is 602/602 statements, 394/394 branches, 131/131 functions, 529/529 lines. Production audit: zero vulnerabilities. PM-linked focused suite: 30/30; clean-checkout fixed command: 17/17, with missing-dist failure under the old command. PM-linked npm run test:real-data passed all three public historical scenarios, with matching packet estimates 842/835/841. No local timeouts, failures, cancellations or skipped tests remain. No native macOS host was used; the portable-checksum regression removes external tools from PATH. Source review and all history-prefix checks passed. Claim released for orchestrator verification; item remains in progress. Final claim release is followed by regenerated changelog, tracker health, identity/privacy and documentation checks. Exact-head hosted checks will be available at https://github.com/unbraind/pm-reduce/pull/1/checks after push; no thread replies/resolutions, merge or release actions are performed."
+files[18]{path,scope}:
+  docs/real-data-receipt.json,project
+  docs/real-data.md,project
+  README.md,project
+  src/api.ts,project
+  src/host.ts,project
+  src/schema.ts,project
+  test/api.test.ts,project
+  test/capacity.test.ts,project
+  test/corpus-privacy.test.ts,project
+  test/corpus.ts,project
+  test/documentation.test.ts,project
+  test/helpers.ts,project
+  test/install-tools.test.ts,project
+  test/install-tools.ts,project
+  test/install.acceptance.ts,project
+  test/kernel.test.ts,project
+  test/revert-seams.test.ts,project
+  test/revert.acceptance.ts,project
+tests[9]:
+  - command: npm test
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-06T16:49:36.835Z"
+      source_kind: local_mutation
+      source_ref: feat/reduce
+  - command: timeout 2700 npm test
+    scope: project
+    timeout_seconds: 2750
+    provenance:
+      author: codex-smallfix2-1110
+      created_at: "2026-11-10T22:35:14.582Z"
+      source_kind: local_mutation
+      source_ref: feat/reduce
+  - command: "timeout 20m sh -c \"bun run build && node test/revert.acceptance.ts\""
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-seams-1111
+      created_at: "2026-11-11T08:25:27.406Z"
+      source_kind: local_mutation
+  - command: "npm run release:check"
+    scope: project
+    timeout_seconds: 3600
+    provenance:
+      author: codex-seams-1111
+      created_at: "2026-11-11T08:29:39.566Z"
+      source_kind: local_mutation
+    updated_by: codex-seams-1111
+    updated_at: "2026-11-11T08:50:35.608Z"
+  - command: "bun run release:check"
+    scope: project
+    timeout_seconds: 3600
+    provenance:
+      author: codex-seams-1111
+      created_at: "2026-11-11T08:29:40.726Z"
+      source_kind: local_mutation
+    updated_by: codex-seams-1111
+    updated_at: "2026-11-11T08:50:36.807Z"
+  - command: npm run build && node --test --test-concurrency=2 test/capacity.test.ts test/real-data.test.ts test/corpus-privacy.test.ts
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-11T21:04:57.297Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1111-round
+  - command: npm run build && timeout 20m node --test --test-concurrency=2 test/capacity.test.ts test/revert-seams.test.ts
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-11T21:04:58.116Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1111-round
+  - command: npm run build && timeout 20m node --test --test-concurrency=2 test/api.test.ts test/capacity.test.ts test/corpus-privacy.test.ts test/documentation.test.ts test/install-tools.test.ts test/real-data.test.ts test/revert-seams.test.ts
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-11T21:08:01.050Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1111-round
+  - command: "npm run test:real-data"
+    scope: project
+    timeout_seconds: 1200
+    provenance:
+      author: codex-agent
+      created_at: "2026-11-11T21:27:01.887Z"
+      source_kind: local_mutation
+      source_ref: review/reduce-1111-round
+docs[5]{path,scope}:
+  ARCHITECTURE.md,project
+  CHANGELOG.md,project
+  docs/real-data-receipt.json,project
+  docs/real-data.md,project
+  README.md,project
 body: ""

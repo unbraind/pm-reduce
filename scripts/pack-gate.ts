@@ -1,9 +1,12 @@
 /** Prove the package tarball has only public allowlisted text assets. */
+import { captureProcessResult, processDiagnostics } from './process-tools.ts';
 import { runtimeSources } from './inventory.ts';
 import { spawnSync } from 'node:child_process';
 import { npmEnvironment } from './environment.ts';
-const result = spawnSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], { env: npmEnvironment(process.env), encoding: 'utf8' });
-if (result.status !== 0) throw new Error('Package enumeration failed');
+// Windows ships npm as the npm.cmd shim, which spawnSync can only start through a shell; the arguments are fixed.
+const win = process.platform === 'win32';
+const result = captureProcessResult(spawnSync(win ? 'npm.cmd' : 'npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], { env: npmEnvironment(process.env), encoding: 'utf8', shell: win }));
+if (result.status !== 0) throw new Error(`Package enumeration failed: ${processDiagnostics(result)}`);
 const packs = JSON.parse(result.stdout) as { files: { path: string }[] }[];
 const files = packs[0].files.map(file => file.path);
 const sources=runtimeSources();
