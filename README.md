@@ -119,7 +119,7 @@ const packet = await reductionPacket(host, { id: 'repro', limit: 1 });
 const complete = await readReduction(host, 'repro');
 ```
 
-`readReduction` is an authorized unbounded selected-owner SDK read for integrators. The six domain commands apply the budget contract. `advanceReduction(state)`, `canonicalSubsetDigest(definition,ids)` and `validateReductionCertificate(state,claimed?)` are pure APIs. The certificate checker reconstructs the witness set and refuses a mismatched supplied certificate. `readState` validates storage and its journal projections. `canonical` and `digest` hash canonical JSON while preserving array order and exact string whitespace; artifact byte hashes are the caller's responsibility.
+`readReduction` is an authorized unbounded selected-owner SDK read for integrators. The six domain commands apply the budget contract. `advanceReduction(state)`, `canonicalSubsetDigest(definition,ids)` and `validateReductionCertificate(state,claimed?)` are pure APIs. The certificate checker reconstructs the witness set and refuses a mismatched supplied certificate. `readState` validates storage and its journal projections. `canonical` returns canonical JSON; `digest` hashes that JSON with SHA-256. Both preserve array order and exact string whitespace; artifact byte hashes are the caller's responsibility.
 
 An injected `Host` supplies an already authorized native client, certified `native_item_cas` and `create_if_absent` capabilities, and optionally the native whole-envelope fitter, read-only settings, ID normalizer (or explicit native `idPrefix`), create-time schema provisioning and trusted immutable-result verification. Method presence alone is not capability evidence. Creation requires one of these native identity policies; missing guarantees refuse before writes. The directory adapter and an independently injected client contract are tested; database and MCP implementations are not claimed certified.
 
@@ -133,7 +133,7 @@ Default budget: 1600 estimated tokens, using **ceil(final UTF-8 bytes / 4)**. Th
 
 `packet` pages observations (default 20, range 1..100). Its summary always carries the frozen oracle and original input identities, latest operation receipt, best subset, outstanding trial, trial budget, qualification, missing deletions and the complete certificate digest. Omitted counts include every observation outside the current page. Cursors bind owner revision, query and ordering; any mutation invalidates them. `certificate` carries the full witness set and can truthfully require a larger budget.
 
-Settings section `reduce` accepts only the optional `output_budget` key: an integer in `1..8192` estimated tokens (default 1600). Activation and reads never write settings or migrate data. Operation keys are retained up to 512 receipts, without eviction. Bounds also include 1..64 atoms, 256 requests, 512 observations and 256 KiB canonical owner state. A bound stops progress with explicit outstanding obligations.
+Settings section `reduce` accepts only the optional `output_budget` key: an integer in `1..8192` estimated tokens (default 1600). Activation and reads never write settings or migrate data. Operation keys are retained up to 512 receipts, without eviction. Bounds also include 1..64 atoms, 255 requests, 512 observations and 256 KiB canonical owner state. These independent limits can stop progress before the declared trial budget is exhausted, with explicit outstanding obligations.
 
 ## Without git
 
@@ -149,9 +149,9 @@ See [real-data evidence](docs/real-data.md) and its [machine-readable receipts](
 
 | Public reproduction | Atoms | Reserved / actual trials | Packet / raw estimated tokens |
 | --- | --- | --- | --- |
-| beads-precision | 16 → 1 | 8 / 10 | 826 / 3800 |
-| jev-unicode | 16 → 1 | 8 / 10 | 819 / 3756 |
-| jev-utf8-budget | 16 → 1 | 6 / 8 | 826 / 1424 |
+| beads-precision | 16 → 1 | 8 / 10 | 842 / 3800 |
+| jev-unicode | 16 → 1 | 8 / 10 | 835 / 3756 |
+| jev-utf8-budget | 16 → 1 | 6 / 8 | 841 / 1424 |
 
 A certificate says `one_minimal_under_recorded_oracle` only when a witnessed failing candidate has an explicit passing witness for every single-atom deletion. `empty_target_failure` makes no atom-cause claim. Missing, conflicting or unresolved evidence yields a qualified incomplete result. None of these establish a globally smallest input, a root cause or a future reproducibility guarantee.
 

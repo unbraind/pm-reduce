@@ -18,7 +18,10 @@ export function atomsFor(name: typeof scenarios[number]): string[] {
 }
 /** Exact materialization is concatenation in original order, with a frozen separator. */
 export function materialize(name: typeof scenarios[number], atoms: string[]): string { return atoms.join(name === 'jev-unicode' ? ' ' : '\n'); }
-/** Caller-owned historical oracle; no production package API invokes this code. */
+/** Caller-owned historical oracle; no production package API invokes this code.
+ * For jev-utf8-budget, UTF-8 bytes deliberately disagree with exemplarContext's
+ * UTF-16 string.length budget: that disagreement is the historical defect.
+ */
 export function historicalOracle(name: typeof scenarios[number], atoms: string[]): boolean {
   const text = materialize(name, atoms);
   if (name === 'beads-precision') {

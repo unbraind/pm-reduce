@@ -4,6 +4,29 @@ import { PmClient } from '@unbrained/pm-cli/sdk/core';
 import { createReduction, readReduction, nextReductionTrial, requestReductionTrial, recordReductionOutcome, reductionCertificate, reductionPacket, digest, createDirectoryHost, canonical } from '../dist/index.js';
 import type { Host } from '../dist/index.js';
 import { fixture, definition, source, reserve, runTrial, outcome, hasCode, historyEvents } from './helpers.ts';
+import { spawnSync } from 'node:child_process';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { fixtureEnvironment } from '../scripts/environment.ts';
+import { assertProcessStatus } from './gate-tools.ts';
+
+test('directory host binds relative dotted and absolute roots to the same nongit tracker', async t => {
+  const { root, pmRoot, host, birth, id } = await fixture(t, false);
+  const module = pathToFileURL(resolve('dist/index.js')).href;
+  const script = `import assert from 'node:assert/strict'; import { createDirectoryHost, createReduction, readReduction } from ${JSON.stringify(module)};
+    const birth = ${JSON.stringify(birth)};
+    for (const root of ['.agents/pm', './.agents/../.agents/pm', ${JSON.stringify(pmRoot)}]) {
+      const host = createDirectoryHost(root, 'fixture');
+      assert.equal(await host.normalizeId('repro'), birth.id);
+      assert.equal(await host.settings(), undefined);
+      await createReduction(host, birth);
+      assert.equal((await readReduction(host, birth.id)).id, birth.id);
+    }`;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { cwd: root, env: { ...fixtureEnvironment(process.env), HOME: root }, encoding: 'utf8', timeout: 30000 });
+  assertProcessStatus(result, 0, 'proof:relative_tracker');
+  assert.equal((await readReduction(host, id)).id, id);
+  assert.equal(await historyEvents(pmRoot), 1);
+});
 
 test('native no-git round trips preserve exact text, links, comments, replay and complete certificate', async t => {
   const { host, native, id, pmRoot, birth } = await fixture(t, false, definition(4));

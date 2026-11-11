@@ -9,7 +9,7 @@ import { fixtureEnvironment } from '../scripts/environment.ts';
 test('revert acceptance reports all missing and ambiguous seams before running proofs', t => {
   const root = mkdtempSync(join(tmpdir(), 'revert-seam-diagnostics-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  for (const file of ['dist', 'test', 'scripts', 'src', 'index.ts', 'package.json', 'manifest.json', 'README.md', 'docs', '.github']) cpSync(file, join(root, file), { recursive: true });
+  for (const file of ['dist', 'test', 'scripts', 'src', 'index.ts', 'package.json', 'manifest.json', 'README.md', 'ARCHITECTURE.md', '.agents/pm', 'docs', '.github']) cpSync(file, join(root, file), { recursive: true });
   symlinkSync(resolve('node_modules'), join(root, 'node_modules'), 'dir');
 
   const failures = [

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import type { TestContext } from 'node:test';
 import assert from 'node:assert/strict';
-import { createReduction, readReduction, readState, recordReductionOutcome, requestReductionTrial, nextReductionTrial, canonical, digest, ReductionRefusal } from '../dist/index.js';
+import { createReduction, readReduction, readState, recordReductionOutcome, requestReductionTrial, nextReductionTrial, canonical, digest, ReductionRefusal, ReductionStateSchema } from '../dist/index.js';
 import { assertCompletionCapacity } from '../dist/src/api.js';
 import { projectState } from '../dist/src/kernel.js';
 import { fixture, runTrial, outcome, historyEvents, definition, hasCode } from './helpers.ts';
@@ -71,15 +71,30 @@ test('aggregate state capacity refuses before effects and retains every older re
   assert.equal((await readReduction(host, id)).revision, before.revision); assert.equal(await historyEvents(pmRoot), events); assert.equal((await recordReductionOutcome(host, trial.recordInput)).replayed, true); assert.equal(await historyEvents(pmRoot), events);
 });
 
- test('declared trial ceiling accepts 255 through completion and rejects 256 before creation', async t => {
+test('declared trial ceiling accepts a 255 budget and rejects 256 before creation', async t => {
   const def = definition(4); def.max_trials = 255;
   const { host, id, birth } = await fixture(t, true, def);
-  for (let index = 0; index < 255; index++) {
-    const next = await nextReductionTrial(host, { id });
-    if (!next.candidate) { assert.equal(next.status, 'search_complete'); break; }
-    await runTrial(host, id, `boundary-${index}`, subset => subset.includes('a0') ? 'target_fail' : 'pass');
-  }
-  assert.equal((await readReduction(host, id)).state.trial_budget.pending, 0);
-  assert.equal((await nextReductionTrial(host, { id })).candidate, null);
+  assert.equal((await readReduction(host, id)).state.trial_budget.limit, 255, 'proof:declared_trial_budget');
   await assert.rejects(createReduction(host, { ...birth, id: 'too-many', op: 'too-many', definition: { ...def, max_trials: 256 } }), hasCode('invalid_input'), 'proof:trial_ceiling');
+});
+
+test('a structurally valid 254-pair journal exceeds the independent byte capacity', async t => {
+  const { host, id } = await fixture(t, true, definition(1));
+  await runTrial(host, id, 'baseline', () => 'target_fail');
+  const state = (await readReduction(host, id)).state;
+  const request = state.requests[0]; const observation = state.observations[0];
+  for (let index = 1; index < 254; index++) {
+    const row = { ...request, request_id: `r${index}` };
+    const recorded = { ...observation, observation_id: `o${index}`, request_id: row.request_id };
+    state.requests.push(row); state.observations.push(recorded);
+    for (const [kind, content, identity] of [['request', { ...row, state: 'pending' }, row.request_id], ['record', recorded, recorded.observation_id]] as const) {
+      const result = { kind, identity, sequence: state.replay_receipts.length + 1, digest: digest(content) };
+      state.replay_receipts.push({ operation_id: `${kind}-${index}`, request_digest: digest(index), result, result_digest: digest(result) });
+    }
+  }
+  projectState(state);
+  assert.equal(state.requests.length, 254); assert.equal(state.observations.length, 254); assert.equal(state.replay_receipts.length, 509);
+  assert.equal(state.trial_budget.pending, 0); assert.ok(ReductionStateSchema.safeParse(state).success);
+  assert.ok(Buffer.byteLength(canonical(state)) > 262144);
+  assert.throws(() => readState(state), hasCode('capacity_exceeded'), 'proof:independent_byte_capacity');
 });

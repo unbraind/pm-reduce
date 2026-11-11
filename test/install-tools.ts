@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { captureProcessResult } from '../scripts/process-tools.ts';
 import { isAbsolute } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 /** Explain missing acceptance prerequisites without treating absent runtime proof as a pass. */
 export function packedRequirement(platform: NodeJS.Platform, tools?: readonly string[]): string | null {
@@ -14,6 +16,11 @@ export function packedRequirement(platform: NodeJS.Platform, tools?: readonly st
 export function assertBudgetRefusal(flag: string, result: { refusal?: { code?: string }; code?: unknown }): void {
   if (flag === '--budget') assert.equal(result.refusal?.code, 'output_budget', 'proof:package_budget');
   else assert.ok(result.refusal?.code === 'output_budget' || typeof result.code === 'string');
+}
+
+/** Verify the exact captured archive using built-in Node APIs on every supported platform. */
+export function assertArchiveChecksum(archive: string, expected: string): void {
+  assert.equal(createHash('sha256').update(readFileSync(archive)).digest('hex'), expected, 'proof:archive_checksum');
 }
 
 /** Probe every candidate before selection; stale caches and overrides cannot mask a valid runtime. */

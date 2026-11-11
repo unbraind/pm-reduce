@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fixtureEnvironment, npmEnvironment } from '../scripts/environment.ts';
 import { definition, outcome } from './helpers.ts';
-import { packedRequirement, assertBudgetRefusal, selectNodeRuntime } from './install-tools.ts';
+import { packedRequirement, assertBudgetRefusal, selectNodeRuntime, assertArchiveChecksum } from './install-tools.ts';
 import { mountedHomePaths, homeProbePaths } from './home-paths.ts';
 import { captureProcessResult, processDiagnostics } from '../scripts/process-tools.ts';
 import { decodeToon } from '@unbrained/pm-cli/sdk/testing';
@@ -120,10 +120,9 @@ execute(manager, manager === 'npm' ? ['install', '--ignore-scripts', '--no-audit
     writeFileSync(publisher, '#!/usr/bin/env node\nconst fs=require("node:fs"),crypto=require("node:crypto"),path=require("node:path");const target=process.argv[3]||".";const bytes=fs.readFileSync(fs.statSync(target).isFile()?target:path.join(target,"dist/index.js"));process.stdout.write(crypto.createHash("sha256").update(bytes).digest("hex"));\n'); chmodSync(publisher, 0o755);
     const workflow = readFileSync('.github/workflows/release.yml', 'utf8'); const publish = workflow.split('\n').find(line => /^\s*npm publish /.test(line))!.trim();
     const delivered = execute('/bin/bash', ['-c', publish], handoff, { ...env, PATH: publisherBin }); assert.equal(delivered, sha256, 'Publishing must select the validated archive after ignored build mutation');
-    const verify = workflow.split('\n').find(line => line.includes('sha256sum --check --strict'))!.trim();
-    assert.match(execute('/bin/bash', ['-c', verify], handoff, { ...env, ARTIFACT_SHA256: sha256 }), /OK/);
+    assertArchiveChecksum(join(handoff, 'release-artifact/package.tgz'), sha256);
     writeFileSync(join(handoff, 'release-artifact/package.tgz'), 'Unverified replacement archive');
-    const swapped = spawnSync('/bin/bash', ['-c', verify], { cwd: handoff, env: { ...env, ARTIFACT_SHA256: sha256 }, encoding: 'utf8' }); assert.notEqual(swapped.status, 0); assert.match(swapped.stdout + swapped.stderr, /FAILED/);
+    assert.throws(() => assertArchiveChecksum(join(handoff, 'release-artifact/package.tgz'), sha256), /proof:archive_checksum/);
     assert.equal(createHash('sha256').update(readFileSync(archive)).digest('hex'), sha256);
     writeFileSync('packed-receipt.local.json', JSON.stringify({ sha256, files: packed[0].files.map(file => file.path), journeys, git_in_path: false, handoff: { ignored_distribution_mutated: true, captured_archive_selected: true, swapped_archive_refused: true } }, null, 2));
   } finally { rmSync(root, { recursive: true, force: true }); }

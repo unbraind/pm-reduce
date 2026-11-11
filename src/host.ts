@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { PmClient, normalizeItemId } from '@unbrained/pm-cli/sdk/core';
 import { readSettings, fitOutputEnvelope } from '@unbrained/pm-cli/sdk';
 import type { ReductionState } from './schema.ts';
@@ -32,6 +33,7 @@ export function capable(host: Host): void {
 }
 /** Bind a directory tracker through the public SDK; no runtime git dependency. */
 export function createDirectoryHost(pmRoot: string, author: string): Host {
+  pmRoot = resolve(pmRoot);
   const client = new PmClient({ cwd: pmRoot, pmRoot, author, noExtensions: false });
   const port = persistedSchemaPort(client, true);
   return { client: port, capabilities: { native_item_cas: true, create_if_absent: true, provider: 'directory' }, fitOutputEnvelope,

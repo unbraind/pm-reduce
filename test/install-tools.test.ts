@@ -1,10 +1,27 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assertBudgetRefusal, selectNodeRuntime } from './install-tools.ts';
+import { assertBudgetRefusal, selectNodeRuntime, assertArchiveChecksum } from './install-tools.ts';
 import { mkdtempSync, writeFileSync, rmSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { fixtureEnvironment } from '../scripts/environment.ts';
+
+test('archive checksum works without external tools and rejects replaced bytes and wrong digests', t => {
+  const root = mkdtempSync(join(tmpdir(), 'reduce-checksum-')); t.after(() => rmSync(root, { recursive: true, force: true }));
+  const archive = join(root, 'package.tgz'); const bytes = Buffer.from([0, 255, 1, 128]); writeFileSync(archive, bytes);
+  const expected = createHash('sha256').update(bytes).digest('hex');
+  const module = pathToFileURL(resolve('test/install-tools.ts')).href;
+  const script = `import { assertArchiveChecksum } from ${JSON.stringify(module)}; assertArchiveChecksum(${JSON.stringify(archive)}, ${JSON.stringify(expected)});`;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { cwd: root, env: { ...fixtureEnvironment(process.env), PATH: root }, encoding: 'utf8', timeout: 30000 });
+  assert.equal(result.status, 0, `proof:portable_checksum ${result.stderr}`);
+  assertArchiveChecksum(archive, expected);
+  for (const digest of ['', '0'.repeat(64), expected.toUpperCase()]) assert.throws(() => assertArchiveChecksum(archive, digest), /proof:archive_checksum/, 'proof:checksum_strict');
+  writeFileSync(archive, 'replaced archive');
+  assert.throws(() => assertArchiveChecksum(archive, expected), /proof:archive_checksum/, 'proof:checksum_tamper');
+});
 
 test('package budget admission rejects native errors while host budget transport permits them', () => {
   for (const flag of ['--budget', '--output-budget']) assertBudgetRefusal(flag, { refusal: { code: 'output_budget' } });
