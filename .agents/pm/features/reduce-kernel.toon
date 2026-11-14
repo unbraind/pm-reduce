@@ -2,21 +2,22 @@ id: reduce-kernel
 title: Ordered ddmin kernel and strict certificate checker
 description: ""
 type: Feature
-status: in_progress
+status: closed
 priority: 2
 tags: []
 created_at: "2026-11-06T11:47:06.577Z"
-updated_at: "2026-11-06T22:11:55.013Z"
-assignee: codex-agent
-claim_principal: codex-agent
+updated_at: "2026-11-14T10:14:15.158Z"
+closed_at: "2026-11-14T08:59:23.323Z"
+completed_at: "2026-11-11T22:03:14.000Z"
 author: codex-agent
 acceptance_criteria: "Monotone, nonmonotone, unresolved and conflicting outcomes preserve exact order and prevent false minimality claims; every deletion has an explicit pass witness."
 parent: reduce-release
-comments[4]{created_at,author,text}:
+comments[5]{created_at,author,text}:
   "2026-11-06T11:52:40.575Z",codex-agent,"Focused kernel tests passed 4 of 4: monotone and nonmonotone predicates, independent deletion checks, unresolved/baseline/empty/flaky controls, frozen contract mismatch, corruption and certificate tamper refusal. Native protocol tests passed 4 of 4 including real no-git tracker replay, links, exact whitespace, budget preflight and optional host verification."
   "2026-11-06T13:14:00.819Z",codex-agent,"Behavioral revert proof passed: eight individually removed safeguards fail in disposable copies (native CAS, durable replay, explicit caller revision, oracle signature, missing-deletion qualification, SDK secret guard, pre-mutation write budget and fatal UTF-8 decoding). The fixed implementation passes 12 restoration tests. The public pure certificate checker validates the complete frozen journal and signatures before reconstructing witnesses. Read validation also binds the stored creation identity to the selected native owner, preventing transplanted cached journals."
   "2026-11-06T13:28:44.551Z",codex-agent,"Certificate integrity review binds witness_digest to owner identity, algorithm version, the full frozen definition, all reservations and every observation field. A schema-valid ledger with unchanged witness IDs but substituted evidence content now invalidates the original certificate. This protects the qualified receipt independently of outer transport revision checks. The matching disposable behavioral revert is included in the release gate."
   "2026-11-06T17:29:20.575Z",codex-agent,"The build-aware linked command was executed through pm test reduce-kernel --run --progress and passed eight of eight tests. Each mutated journal now asserts its distinguishing refusal detail; the orphan observation fixture preserves the original completed request so the intended orphan invariant is reached. The native test runner reports tracking_disabled under the existing project policy, so this comment records the result without changing that policy."
+  "2026-11-14T10:14:15.158Z",codex-sweep-1114,"Release-attribution correction: completed_at = 2026-11-11T22:03:14Z from https://github.com/unbraind/pm-reduce/pull/1 (merge SHA bd035afe721db2a7d1fe9953bc5c046ed778bf25); no fetched release tag contains that merge commit, so release remains unset and this work is genuinely unreleased."
 files[3]{path,scope}:
   src/kernel.ts,project
   src/schema.ts,project
@@ -25,4 +26,5 @@ tests[1]{command,scope,provenance{author,created_at,source_kind,source_ref}}:
   "npm run test:core",project,codex-agent,"2026-11-06T16:48:19.785Z",local_mutation,feat/reduce
 docs[1]{path,scope}:
   ARCHITECTURE.md,project
+close_reason: "https://github.com/unbraind/pm-reduce/pull/1 merged 2026-11-11T22:03:14Z; merge SHA bd035afe721db2a7d1fe9953bc5c046ed778bf25; PR head c61e28632ce81f8f2613fe5faa3ee6f4e512bb5b. Delivered: Ordered ddmin and strict certificate validation handle monotone, nonmonotone, unresolved and conflicting outcomes with explicit deletion pass witnesses. Green at that head: test (22), codeql, test (26), CodeQL, CodeRabbit. Other check outcomes: enable-auto-merge: SKIPPED; cubic · AI code reviewer: NEUTRAL; Sourcery review: SKIPPED (not counted as green)."
 body: ""

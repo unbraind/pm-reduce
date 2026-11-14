@@ -3,23 +3,24 @@ title: Durable native reduction protocol and bounded CLI SDK
 description: ""
 type: Feature
 pm_format_version: 2
-status: in_progress
+status: closed
 priority: 2
 tags: []
 created_at: "2026-11-06T11:47:12.183Z"
-updated_at: "2026-11-06T22:12:58.351Z"
-assignee: codex-agent
-claim_principal: codex-agent
+updated_at: "2026-11-14T10:14:10.828Z"
+closed_at: "2026-11-14T08:59:21.585Z"
+completed_at: "2026-11-11T22:03:14.000Z"
 author: codex-agent
 acceptance_criteria: "Create next request record certificate packet share contracts; guarded reservations, privacy, budgets, no-git, replay and concurrency survive interruptions."
 parent: reduce-release
-comments[6]{created_at,author,text}:
+comments[7]{created_at,author,text}:
   "2026-11-06T12:14:23.415Z",codex-agent,"Native real-tracker tests passed: every request/record boundary has an interleaved competing write; process interruption before and after guard/update/receipt converges under the original operation key. Two OS reservation writers admit exactly one reservation, rejecting the stale writer with zero history effect. Additional two-OS outcome and create-boundary checks are included for the final full gate. Privacy and byte capacity refuse before writes. The 500 seeded random operation sequences passed against independent journal state and SDK read-back."
   "2026-11-06T12:49:23.275Z",codex-agent,"The first isolated linked protocol group exceeded the native 120-second default on the shared host. Its failure record is retained. Set this newly linked command timeout to 600 seconds and rerun unchanged assertions with two workers; this does not alter any coverage, lint or release threshold."
   "2026-11-06T13:30:26.594Z",codex-agent,"All linked checks now pass: kernel 7, protocol 18, proof/workflow 9 and epic 11 tests on the recorded snapshots. The isolated protocol timeout was retained and the unchanged 18-test group passed with the command-specific 600-second allowance. Final focused checks after certificate and owner-identity strengthening pass 12 tests. Final packed rehearsal passes 45 CLI invocations per npm/Bun journey, SDK writes/replay, capacity and invalid-certificate/unsupported-host boundaries. Final full release checks will run on the committed candidate."
   "2026-11-06T16:50:55.064Z",codex-agent,"Validated and fixed creation identity admission with normalizeId or explicit native idPrefix, bounded fitter-independent refusals, native exit preservation, adapter JSON object-root validation, exact inert TOON round trips, home-path scope, and shared-graph traversal bounds. Regression tests use real native trackers; unsafe creation checks its own absent history file, and legacy privacy fixtures are persisted with consistent journal digests before read-back."
   "2026-11-06T18:14:52.257Z",codex-agent,Final inspection also preserved the receiver of a host-provided normalizeId method before applying it to owner and relationship identities. The real tracker test uses a method that asserts its native receiver; removing the binding fails its named regression. Creation still accepts the explicit idPrefix fallback and refuses an absent identity policy before effects.
   "2026-11-06T22:12:58.314Z",codex-agent,"Compiler-flag home paths now refuse before effects while public URLs and ordinary relative include/library flags remain allowed. Focused privacy suite passed three tests; removing only the attached-flag regex in a disposable emitted-code copy fails proof:compiler_home. Added that removal to the persistent revert gate."
+  "2026-11-14T10:14:10.818Z",codex-sweep-1114,"Release-attribution correction: completed_at = 2026-11-11T22:03:14Z from https://github.com/unbraind/pm-reduce/pull/1 (merge SHA bd035afe721db2a7d1fe9953bc5c046ed778bf25); no fetched release tag contains that merge commit, so release remains unset and this work is genuinely unreleased."
 files[12]{path,scope}:
   index.ts,project
   src/api.ts,project
@@ -37,4 +38,5 @@ tests[1]{command,scope,timeout_seconds,provenance{author,created_at,source_kind,
   "npm run test:protocol",project,600,codex-agent,"2026-11-06T16:49:04.124Z",local_mutation,feat/reduce
 docs[1]{path,scope}:
   README.md,project
+close_reason: "https://github.com/unbraind/pm-reduce/pull/1 merged 2026-11-11T22:03:14Z; merge SHA bd035afe721db2a7d1fe9953bc5c046ed778bf25; PR head c61e28632ce81f8f2613fe5faa3ee6f4e512bb5b. Delivered: Durable guarded create/next/request/record/certificate/packet protocol with replay, concurrency, no-git, privacy and budget contracts. Green at that head: test (22), codeql, test (26), CodeQL, CodeRabbit. Other check outcomes: enable-auto-merge: SKIPPED; cubic · AI code reviewer: NEUTRAL; Sourcery review: SKIPPED (not counted as green)."
 body: ""
