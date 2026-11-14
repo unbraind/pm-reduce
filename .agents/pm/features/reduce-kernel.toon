@@ -2,13 +2,13 @@ id: reduce-kernel
 title: Ordered ddmin kernel and strict certificate checker
 description: ""
 type: Feature
-status: in_progress
+status: closed
 priority: 2
 tags: []
 created_at: "2026-11-06T11:47:06.577Z"
-updated_at: "2026-11-06T22:11:55.013Z"
-assignee: codex-agent
-claim_principal: codex-agent
+updated_at: "2026-11-14T08:59:23.362Z"
+closed_at: "2026-11-14T08:59:23.323Z"
+completed_at: "2026-11-14T08:59:23.323Z"
 author: codex-agent
 acceptance_criteria: "Monotone, nonmonotone, unresolved and conflicting outcomes preserve exact order and prevent false minimality claims; every deletion has an explicit pass witness."
 parent: reduce-release
@@ -25,4 +25,5 @@ tests[1]{command,scope,provenance{author,created_at,source_kind,source_ref}}:
   "npm run test:core",project,codex-agent,"2026-11-06T16:48:19.785Z",local_mutation,feat/reduce
 docs[1]{path,scope}:
   ARCHITECTURE.md,project
+close_reason: "https://github.com/unbraind/pm-reduce/pull/1 merged 2026-11-11T22:03:14Z; merge SHA bd035afe721db2a7d1fe9953bc5c046ed778bf25; PR head c61e28632ce81f8f2613fe5faa3ee6f4e512bb5b. Delivered: Ordered ddmin and strict certificate validation handle monotone, nonmonotone, unresolved and conflicting outcomes with explicit deletion pass witnesses. Green at that head: test (22), codeql, test (26), CodeQL, CodeRabbit. Other check outcomes: enable-auto-merge: SKIPPED; cubic · AI code reviewer: NEUTRAL; Sourcery review: SKIPPED (not counted as green)."
 body: ""

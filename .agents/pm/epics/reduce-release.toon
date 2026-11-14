@@ -3,11 +3,13 @@ title: Deliver durable failure-input reduction
 description: Implement and certify the first local release of pm-reduce.
 type: Epic
 pm_format_version: 2
-status: in_progress
+status: closed
 priority: 2
 tags[1]: "gh:unbraind/pm-reduce#1"
 created_at: "2026-11-06T11:45:23.719Z"
-updated_at: "2026-11-11T21:28:48.073Z"
+updated_at: "2026-11-14T08:59:18.115Z"
+closed_at: "2026-11-14T08:59:18.043Z"
+completed_at: "2026-11-14T08:59:18.043Z"
 author: codex-agent
 acceptance_criteria: Six CLI and SDK operations share strict schemas; exact journal and replay; qualified certificates; native guarded writes; public reproduction evidence; full release gates.
 comments[32]{created_at,author,text}:
@@ -142,4 +144,5 @@ docs[5]{path,scope}:
   docs/real-data-receipt.json,project
   docs/real-data.md,project
   README.md,project
+close_reason: "https://github.com/unbraind/pm-reduce/pull/1 merged 2026-11-11T22:03:14Z; merge SHA bd035afe721db2a7d1fe9953bc5c046ed778bf25; PR head c61e28632ce81f8f2613fe5faa3ee6f4e512bb5b. Delivered: Six shared-schema CLI/SDK operations, exact durable journals and replay, qualified certificates, native guarded writes, public reproduction evidence and complete release gates. Green at that head: test (22), codeql, test (26), CodeQL, CodeRabbit. Other check outcomes: enable-auto-merge: SKIPPED; cubic · AI code reviewer: NEUTRAL; Sourcery review: SKIPPED (not counted as green)."
 body: ""
