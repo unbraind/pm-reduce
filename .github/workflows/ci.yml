@@ -97,7 +97,7 @@ jobs:
           npm run changelog:check
           # Privacy suites consume dist; compile only as their prerequisite.
           npm run build
-          node --test test/privacy.test.ts test/corpus-privacy.test.ts test/privacy-gates.test.ts
+          node --test --test-concurrency=2 test/privacy.test.ts test/corpus-privacy.test.ts test/privacy-gates.test.ts test/documentation.test.ts test/contracts.test.ts
 
       - name: Quick engines floor build and tests
         if: steps.changes.outputs.code == 'true' && matrix.node-version == 22

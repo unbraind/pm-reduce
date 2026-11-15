@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, appendFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { parseDocument } from 'yaml';
 import { decideDailyRelease } from 'pm-ops/daily-release';
 import { verify } from 'pm-ops/attestation';
 import { fixture } from './helpers.ts';
@@ -13,7 +14,7 @@ import { assertProcessStatus } from './gate-tools.ts';
 import { assertAcceptanceRuntimes } from './workflow-tools.ts';
 test('CI and release provision both exact acceptance runtimes before their gates', () => {
   assertAcceptanceRuntimes(readFileSync('.github/workflows/ci.yml','utf8'),'npm run release:check');
-  assertAcceptanceRuntimes(readFileSync('.github/workflows/ci-deep.yml','utf8'),'npm run release:check');
+  for (const manager of ['npm', 'bun']) assertAcceptanceRuntimes(readFileSync('.github/workflows/ci-deep.yml','utf8'), `${manager} run release:check`);
   const manifest = JSON.parse(readFileSync('package.json','utf8')) as { scripts: Record<string,string> };
   const hook = manifest.scripts['release:prepare-runtimes'];
   assert.ok(hook, 'proof:release_runtimes');
@@ -73,4 +74,20 @@ test('canonical pm-ops release planner covers no-change dependency-only collisio
   const collision=decideDailyRelease({...base,releaseTags:['v2026.11.4','v2026.11.5'],publishedToday:true});assert.equal(collision.should_release,false);
   const stale=decideDailyRelease({...base,existingPrs:[{number:4,headRefName:'release/v2026.11.4',isCrossRepository:false,author:{login:'github-actions[bot]'}}]});assert.equal(stale.base_sha,base.mainSha);
 
+});
+
+
+test('quick and deep tiers retain documentation gates and run one full gate per matrix job', () => {
+  const documents = ['ci.yml', 'ci-deep.yml'].map(file => parseDocument(readFileSync(`.github/workflows/${file}`, 'utf8'), { uniqueKeys: true }));
+  for (const document of documents) assert.deepEqual(document.errors, []);
+  const [ci, deep] = documents.map(document => document.toJS());
+  assert.deepEqual(deep.jobs.deep.strategy.matrix, { 'node-version': [22, 26], 'package-manager': ['npm', 'bun'] });
+  const gates = deep.jobs.deep.steps.filter((step: { run?: string }) => step.run?.includes('run release:check'));
+  assert.equal(gates.length, 1);
+  assert.ok(gates[0].run.includes('if [[ "${{ matrix.package-manager }}" == npm ]]'));
+  for (const manager of ['npm', 'bun']) assert.ok(gates[0].run.includes(`${manager} run release:check`));
+  assert.equal(deep.jobs.deep['timeout-minutes'], 120);
+  const cheap = ci.jobs.test.steps.find((step: { name: string }) => step.name === 'Documentation privacy and identity gates');
+  for (const token of ['npm run identity:check', 'npm run changelog:check', 'test/privacy.test.ts', 'test/corpus-privacy.test.ts', 'test/privacy-gates.test.ts', 'test/documentation.test.ts', 'test/contracts.test.ts']) assert.ok(cheap.run.includes(token), token);
+  assert.equal(cheap.if, "steps.changes.outputs.code != 'true'");
 });

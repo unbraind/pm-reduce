@@ -24,9 +24,9 @@ Executable JavaScript/TypeScript under the tracker selects the code tier too.
 | CodeQL | separate required workflow | separate required workflow | required, unfiltered | main pushes and weekly |
 
 Deep runs on main pushes, daily at 02:19 UTC, and dispatch. Release schedules
-remain 05:37 UTC and minute 41 hourly. Deep jobs are `deep (22)` and `deep (26)`,
+remain 05:37 UTC and minute 41 hourly. Deep jobs are `deep (22, npm)`, `deep (22, bun)`, `deep (26, npm)` and `deep (26, bun)`,
 use the local pool unless `PM_LOCAL_DEEP=off`, cancel older runs per ref, and
-have a 120-minute limit. Each executes the complete npm and Bun release gates.
+have a 120-minute limit. Each executes one complete release gate for its package manager.
 Local runners keep their persistent npm cache and preinstalled Bun; hosted
 runners use npm caching and Bun setup. Every deep log prints `bun --version`.
 
@@ -54,3 +54,6 @@ and PR cancellation remain, with a new 30-minute timeout.
 Tracking: [reduce-ci-v2](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/tasks/reduce-ci-v2.toon).
 Companion: `pm-cli-website-dyhg`. Release caller, sync workflows and release
 verifier scripts are unchanged.
+
+Documentation and tracker changes also run the README, linked-evidence and settings
+contract suites (`documentation.test.ts` and `contracts.test.ts`) after building.
