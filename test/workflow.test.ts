@@ -14,9 +14,9 @@ test('CI and release provision both exact acceptance runtimes before their gates
   assertAcceptanceRuntimes(readFileSync('.github/workflows/ci.yml','utf8'),'npm run test:install');
   const manifest = JSON.parse(readFileSync('package.json','utf8')) as { scripts: Record<string,string> };
   const hook = manifest.scripts['release:prepare-runtimes'];
-  assert.ok(hook);
-  for (const token of ['--package=node@22.19.0','--package=node@26.13.0','PM_REDUCE_NODE_22','PM_REDUCE_NODE_26','GITHUB_ENV']) assert.ok(hook.includes(token), token);
-  assert.match(readFileSync('.github/workflows/release.yml','utf8'), /prepare-script: release:prepare-runtimes/u);
+  assert.ok(hook, 'proof:release_runtimes');
+  for (const token of ['--package=node@22.19.0','--package=node@26.13.0','PM_REDUCE_NODE_22','PM_REDUCE_NODE_26','GITHUB_ENV']) assert.ok(hook.includes(token), 'proof:release_runtimes: ' + token);
+  assert.match(readFileSync('.github/workflows/release.yml','utf8'), /prepare-script: release:prepare-runtimes/u, 'proof:release_runtimes');
 });
 
 
