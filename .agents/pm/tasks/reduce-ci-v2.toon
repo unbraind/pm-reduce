@@ -6,14 +6,13 @@ status: in_progress
 priority: 2
 tags[2]: ci,performance
 created_at: "2026-11-15T14:33:54.955Z"
-updated_at: "2026-11-15T14:36:49.042Z"
-assignee: codex-sol
-claim_principal: codex-sol
+updated_at: "2026-11-15T14:38:25.290Z"
 author: codex-sol
-comments[3]{created_at,author,text}:
+comments[4]{created_at,author,text}:
   "2026-11-15T14:34:50.817Z",codex-sol,"Required checks confirmed: test (22), test (26), codeql. CodeQL stays unfiltered. Quick depth uses the original first 50 model sequences and 25 of 100 certificate scenarios, retaining the certificate nonvacuity proof. Packed consumer gate already proves Bun and bunx installs/use. Deep retains all four full npm/Bun and Node 22/26 gates, 120-minute caps and local cache/Bun setup. Preserve runtime-capture names and mutation seams; isolate the plain tracker health fixture from ambient global extensions."
   "2026-11-15T14:35:29.700Z",codex-sol,"Historical successful main run 43680426244: full model 35.653 s; packed acceptance 100.575 s; hosted runner execution 4m41s (22), 7m02s (26). Job-log fallback used because gh run view produced no log. Depth applies only to repetitive seeded model/certificate cases; finite capacity limits remain exact. Scale harness watchdogs with integer ceilings, never product contracts. Docs privacy tests compile their dependencies; strict docs health installs clone-local merge drivers."
   "2026-11-15T14:36:49.041Z",codex-sol,"Local linked proof: typecheck passed in 8.665 s; lint passed in 4.110 s; seven touched test files passed at quick depth and watchdog scale 3 in 41.815 s. Required PR jobs use a 20-minute cap (historical Node 26 execution 7m02s). Strict YAML parse passes with unique-key validation; actionlint unavailable. Quick coverage is running; full depth remains remote-only."
+  "2026-11-15T14:38:23.890Z",codex-sol,"Final quick coverage PASSED in 98.988 s through pm test: 602/602 statements, 394/394 branches, 131/131 functions, 529/529 lines, all 100% across unchanged nine runtime files. No late-seed coverage regressions. Disposable clone merge-install and strict-health proof passes. Changelog and identity checks pass; identity is the required approved automation address. PR #11 opened; initial CI 43725374232 and CodeQL 43725374272 are queued. Required-check wall times unavailable; no CI wait. Full depth and packed/revert acceptance on this head remain remote validation risks."
 files[16]{path,scope}:
   .github/workflows/ci-deep.yml,project
   .github/workflows/ci.yml,project
