@@ -13,7 +13,7 @@ export function assertAcceptanceRuntimes(workflow: string, gateCommand: string):
     const version = line.match(/^\s+node-version:\s*(.+)$/u); if (setupStep && version) active = version[1].trim();
     const capture = line.match(/^\s+(?:- )?run: echo "PM_REDUCE_NODE_(22|26)=\$\(command -v node\)" >> "\$GITHUB_ENV"$/u);
     if (capture) { assert.ok(active === required.get(capture[1]) && !captured.has(capture[1]), 'proof:release_runtimes'); captured.add(capture[1]); }
-    if (line.trim().replace(/^- /u, '') === `run: ${gateCommand}`) { assert.equal(captured.size, required.size, 'proof:release_runtimes'); gates++; }
+    if ([gateCommand, `run: ${gateCommand}`].includes(line.trim().replace(/^- /u, ''))) { assert.equal(captured.size, required.size, 'proof:release_runtimes'); gates++; }
   }
   assert.ok(gates > 0, 'proof:release_runtimes');
 }

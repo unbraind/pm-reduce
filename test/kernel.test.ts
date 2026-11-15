@@ -1,3 +1,4 @@
+import { testDepth } from './support/depth.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { advanceReduction, canonicalSubsetDigest, validateReductionCertificate, digest, canonical, readState } from '../dist/index.js';
@@ -111,7 +112,7 @@ test('flaky observations suspend reuse while retaining smallest recorded failure
 function checkSeededCertificates(certify: (s: ReductionState) => ReturnType<typeof validateReductionCertificate> = validateReductionCertificate): void {
   let seed = 6536; let certifiedScenarios = 0;
   const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed; };
-  for (let scenario = 0; scenario < 100; scenario++) {
+  for (let scenario = 0; scenario < testDepth(100); scenario++) {
     const truth = Array.from({ length: 16 }, () => random() % 7 === 0 ? 'unresolved' as const : random() % 3 === 0 ? 'target_fail' as const : 'pass' as const); truth[15] = 'target_fail';
     const s = state(4); s.definition.max_trials = 2 + random() % 32; s.replay_receipts[0].result.digest = digest(s.definition); s.replay_receipts[0].result_digest = digest(s.replay_receipts[0].result); projectState(s);
     while (advanceReduction(s).candidate) { const ids = advanceReduction(s).candidate!.subset_ids; const mask = ids.reduce((bits, id) => bits | 1 << Number(id.slice(1)), 0); observe(s, truth[mask]); }

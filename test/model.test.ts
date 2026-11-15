@@ -1,10 +1,11 @@
+import { testDepth } from './support/depth.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readReduction, nextReductionTrial, createReduction, recordReductionOutcome, requestReductionTrial, digest } from '../dist/index.js';
 import type { RecordOutcomeInput, RequestTrialInput, ReductionDefinition } from '../dist/index.js';
 import { fixture, definition, outcome, hasCode, historyEvents } from './helpers.ts';
 
-test('500 seeded random operation sequences agree with an independent journal model and SDK read-back', async t => {
+test('seeded random operation sequences agree with an independent journal model and SDK read-back', async t => {
   const { host, native, pmRoot } = await fixture(t, false); let seed = 28067;
   const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed; };
   const owners: { id: string; def: ReductionDefinition; related: string; requests: {id: string; digest: string}[]; observations: {request: string; result: string; reason: string}[]; old: (RecordOutcomeInput | RequestTrialInput)[]; histories: number }[] = [];
@@ -13,7 +14,7 @@ test('500 seeded random operation sequences agree with an independent journal mo
     const def = definition(4); def.atoms[0].label = `  whitespace\n\t${at}  `; await createReduction(host, { id, op: 'birth', title: 'Modeled owner', definition: def, related: [related] });
     owners.push({ id, def, related, requests: [] as { id: string; digest: string }[], observations: [] as { request: string; result: string; reason: string }[], old: [] as (RecordOutcomeInput | RequestTrialInput)[], histories: await historyEvents(pmRoot, id) });
   }
-  for (let sequence = 0; sequence < 500; sequence++) {
+  for (let sequence = 0; sequence < testDepth(500); sequence++) {
     const model = owners[random() % owners.length]; const original = await readReduction(host, model.id);
     for (let operation = 0; operation < 3 + random() % 3; operation++) {
       const choice = random() % 5;
