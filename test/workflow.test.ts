@@ -1,3 +1,4 @@
+import { testTimeout } from './support/time.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, appendFileSync } from 'node:fs';
@@ -11,7 +12,8 @@ import { captureProcessResult } from '../scripts/process-tools.ts';
 import { assertProcessStatus } from './gate-tools.ts';
 import { assertAcceptanceRuntimes } from './workflow-tools.ts';
 test('CI and release provision both exact acceptance runtimes before their gates', () => {
-  assertAcceptanceRuntimes(readFileSync('.github/workflows/ci.yml','utf8'),'npm run test:install');
+  assertAcceptanceRuntimes(readFileSync('.github/workflows/ci.yml','utf8'),'npm run release:check');
+  assertAcceptanceRuntimes(readFileSync('.github/workflows/ci-deep.yml','utf8'),'npm run release:check');
   const manifest = JSON.parse(readFileSync('package.json','utf8')) as { scripts: Record<string,string> };
   const hook = manifest.scripts['release:prepare-runtimes'];
   assert.ok(hook, 'proof:release_runtimes');
@@ -42,11 +44,12 @@ test('runtime capture validation rejects reordered, overwritten and cross-job ca
 
 test('CI health accepts a plain tracker but rejects corrupt native history',async t=>{
   const {root,pmRoot,id}=await fixture(t);const script=resolve('scripts/tracker-health.ts');
-  const env={...fixtureEnvironment(process.env),PM_PATH:pmRoot,PM_AUTHOR:'fixture',HOME:root,GIT_CEILING_DIRECTORIES:root};
-  const accepted=captureProcessResult(spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout:30000}));assertProcessStatus(accepted,0,'tracker health acceptance');assert.equal(JSON.parse(accepted.stdout).ok,true);
+  const env={...fixtureEnvironment(process.env),PM_PATH:pmRoot,PM_GLOBAL_PATH:join(root,'.global-pm'),PM_AUTHOR:'fixture',HOME:root,GIT_CEILING_DIRECTORIES:root};
+  const accepted=captureProcessResult(spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout: testTimeout(30000)}));assertProcessStatus(accepted,0,'tracker health acceptance');assert.equal(JSON.parse(accepted.stdout).ok,true);
   appendFileSync(join(pmRoot,'history',`${id}.jsonl`),'not-json\n');
-  const refused=captureProcessResult(spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout:30000}));assertProcessStatus(refused,1,'tracker health refusal');const result=JSON.parse(refused.stdout);assert.equal(result.ok,false);assert.match(result.failed_because.join(','),/history/,JSON.stringify(result.failed_because));
-  assert.match(readFileSync('.github/workflows/ci.yml','utf8'),/run: npm run tracker:health/);
+  const refused=captureProcessResult(spawnSync(process.execPath,[script],{cwd:root,env,encoding:'utf8',timeout: testTimeout(30000)}));assertProcessStatus(refused,1,'tracker health refusal');const result=JSON.parse(refused.stdout);assert.equal(result.ok,false);assert.match(result.failed_because.join(','),/history/,JSON.stringify(result.failed_because));
+  assert.match(readFileSync('.github/workflows/ci.yml','utf8'),/run: npm run release:check/);
+  assert.match(JSON.parse(readFileSync('package.json','utf8')).scripts['release:check'],/npm run tracker:health/);
 });
 
 test('daily release remains main-only and approval-gated with exact archived provenance publishing',()=>{

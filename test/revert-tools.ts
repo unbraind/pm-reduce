@@ -1,3 +1,4 @@
+import { testTimeout } from './support/time.ts';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { captureProcessResult, processDiagnostics } from '../scripts/process-tools.ts';
@@ -6,7 +7,7 @@ import { npmEnvironment, testEnvironment } from '../scripts/environment.ts';
 /** Certify the fixed baseline for every suite used by a behavioral mutation. */
 export function assertRestoredTests(changes: readonly { test: string }[], cwd = process.cwd()): number {
   const files = [...new Set(changes.map(change => `test/${change.test}.test.ts`))];
-  const restored = captureProcessResult(spawnSync(process.execPath, ['--test', '--test-concurrency=2', ...files], { cwd, env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: 180000 }));
+  const restored = captureProcessResult(spawnSync(process.execPath, ['--test', '--test-concurrency=2', ...files], { cwd, env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: testTimeout(180000) }));
   assert.equal(restored.status, 0, processDiagnostics(restored));
   const count = restored.stdout.match(/tests (\d+)/); assert.ok(count && Number(count[1]) > 0);
   return Number(count[1]);

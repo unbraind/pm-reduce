@@ -1,3 +1,4 @@
+import { testTimeout } from './support/time.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { assertBudgetRefusal, selectNodeRuntime, assertArchiveChecksum } from './install-tools.ts';
@@ -15,7 +16,7 @@ test('archive checksum works without external tools and rejects replaced bytes a
   const expected = createHash('sha256').update(bytes).digest('hex');
   const module = pathToFileURL(resolve('test/install-tools.ts')).href;
   const script = `import { assertArchiveChecksum } from ${JSON.stringify(module)}; assertArchiveChecksum(${JSON.stringify(archive)}, ${JSON.stringify(expected)});`;
-  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { cwd: root, env: { ...fixtureEnvironment(process.env), PATH: root }, encoding: 'utf8', timeout: 30000 });
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { cwd: root, env: { ...fixtureEnvironment(process.env), PATH: root }, encoding: 'utf8', timeout: testTimeout(30000) });
   assert.equal(result.status, 0, `proof:portable_checksum ${result.stderr}`);
   assertArchiveChecksum(archive, expected);
   for (const digest of ['', '0'.repeat(64), expected.toUpperCase()]) assert.throws(() => assertArchiveChecksum(archive, digest), /proof:archive_checksum/, 'proof:checksum_strict');

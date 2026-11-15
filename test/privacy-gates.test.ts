@@ -1,3 +1,4 @@
+import { testTimeout } from './support/time.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
@@ -19,7 +20,7 @@ test('identity privacy checks distinguish absolute homes from public URLs and re
   git(['init', '--quiet']); const { forbidden, allowed } = mountedHomePaths(); const document = join(root, 'public.md');
   writeFileSync(document, [...allowed, ...publicRootPaths()].join('\n')); git(['add', 'public.md', '.github/approved-git-identities.txt']); git(['commit', '--quiet', '-m', 'Synthetic gate fixture']);
   /** Run the real gate against fixture Git identity and content. */
-  const check = (parent = process.env) => spawnSync(process.execPath, [resolve('scripts/identity-gate.ts')], { cwd: root, env: isolate(parent), encoding: 'utf8', timeout: 30000 });
+  const check = (parent = process.env) => spawnSync(process.execPath, [resolve('scripts/identity-gate.ts')], { cwd: root, env: isolate(parent), encoding: 'utf8', timeout: testTimeout(30000) });
   const accepted = check(); assertProcessStatus(accepted, 0, 'proof:identity_path_scope');
   for (const name of ['pull_request', 'push']) {
     const event = join(root, 'event.json'); writeFileSync(event, JSON.stringify({ before: 'f'.repeat(40), after: 'e'.repeat(40), pull_request: { base: { sha: 'f'.repeat(40) }, head: { sha: 'e'.repeat(40) } } }));

@@ -1,3 +1,4 @@
+import { testTimeout } from './support/time.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
@@ -22,7 +23,7 @@ test('directory host binds relative dotted and absolute roots to the same nongit
       await createReduction(host, birth);
       assert.equal((await readReduction(host, birth.id)).id, birth.id);
     }`;
-  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { cwd: root, env: { ...fixtureEnvironment(process.env), HOME: root }, encoding: 'utf8', timeout: 30000 });
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { cwd: root, env: { ...fixtureEnvironment(process.env), HOME: root }, encoding: 'utf8', timeout: testTimeout(30000) });
   assertProcessStatus(result, 0, 'proof:relative_tracker');
   assert.equal((await readReduction(host, id)).id, id);
   assert.equal(await historyEvents(pmRoot), 1);

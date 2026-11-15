@@ -1,3 +1,4 @@
+import { testTimeout } from './support/time.ts';
 /** Behavioral safeguard removals run only in disposable emitted-code copies. */
 import { mkdtempSync, cpSync, symlinkSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
@@ -131,7 +132,7 @@ for (const change of changes) {
   try {
     for (const file of ['dist', 'src', 'index.ts', 'test', 'scripts', 'docs', '.github', '.agents/pm', 'README.md', 'ARCHITECTURE.md', 'package.json', 'manifest.json']) cpSync(file, join(root, file), { recursive: true }); symlinkSync(join(process.cwd(), 'node_modules'), join(root, 'node_modules'), 'dir');
     const file = join(root, (change.file.includes('/') || change.file.endsWith('.md')) ? change.file : `dist/src/${change.file}.js`); const source = readFileSync(file, 'utf8'); assert.equal([...source.matchAll(new RegExp(change.pattern.source, change.pattern.flags + 'g'))].length, 1, `Revert seam must identify exactly one behavior: ${change.name}`); writeFileSync(file, source.replace(change.pattern, change.replacement));
-    const result = spawnSync(process.execPath, ['--test', '--test-reporter=spec', '--test-concurrency=2', `--test-name-pattern=${change.filter}`, `test/${change.test}.test.ts`], { cwd: root, env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: 120000 });
+    const result = spawnSync(process.execPath, ['--test', '--test-reporter=spec', '--test-concurrency=2', `--test-name-pattern=${change.filter}`, `test/${change.test}.test.ts`], { cwd: root, env: testEnvironment(npmEnvironment(process.env)), encoding: 'utf8', timeout: testTimeout(120000) });
     assertIntendedFailure(result, change.proof); console.log(`EXPECTED FAIL: ${change.name}`);
   } finally { rmSync(root, { recursive: true, force: true }); }
 }
