@@ -1,7 +1,7 @@
 # Pinned Daily Release rollout
 
-This package delegates release execution to pm-ops v2026.11.14 at
-`7687a35d7522482bd8361d60dbc2589e9afbc81c`. The package uses the matching
+This package delegates release execution to pm-ops v2026.11.19 at
+`6fa60e56331d0fd831421f2221d46d038d4a2360`. The package uses the matching
 released pm-ops validator and explicitly permits empty changelog sections in
 generation, checking and release notes. Dependabot covers the SHA through its
 root github-actions ecosystem.
@@ -20,7 +20,7 @@ The caller contracts replace assertions about removed private release implementa
 Implementation behavior belongs to the pinned pm-ops release harness. Package-owned
 approval, script and permission contracts remain checked locally.
 
-Tracking: [pm-reduce-release](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/epics/pm-reduce-release.toon)
+Track this rollout in [reduce-pm-reduce-release-caller-rollout](../.agents/pm/tasks/reduce-pm-reduce-release-caller-rollout.toon).
 
 Round 2 preserves package changelog and publication checks independently of the
 shared release implementation. Obsolete copied-workflow verifiers, planners and

@@ -1,0 +1,11 @@
+id: reduce-dev-glob-audit
+title: Resolve the glob dev dependency audit advisory
+description: "Both the base and repin lockfiles report three moderate development findings for c8, test-exclude and glob. The direct advisory is GHSA-3g3m-2fjr-6pw4 on glob 13.0.7 via c8 and test-exclude. The production-only audit reports zero findings. Evaluate a compatible toolchain update and rerun the coverage gate and npm audit."
+type: Chore
+status: open
+priority: 3
+tags[2]: dependencies,security
+created_at: "2026-11-19T18:44:20.534Z"
+updated_at: "2026-11-19T18:44:20.534Z"
+author: codex-sol
+body: ""
