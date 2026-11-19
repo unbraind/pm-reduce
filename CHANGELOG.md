@@ -2,6 +2,10 @@
 
 ## 2026.11.6 - 2026-11-06
 
+No changes.
+
+## 2026.11.19 - 2026-11-19
+
 ### Added
 
 - Durable native reduction protocol and bounded CLI SDK ([reduce-protocol](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/features/reduce-protocol.toon))
