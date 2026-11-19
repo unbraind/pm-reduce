@@ -26,7 +26,7 @@ To evaluate a source commit, start in the checkout. These commands pack it and i
 
 ```sh
 npm ci
-tarball=$(npm pack --silent)
+tarball=$(npm pack --silent) && test -n "$tarball" && test -f "$tarball" || exit 1
 archive="$(pwd)/$tarball"
 consumer=$(mktemp -d -t pm-reduce.XXXXXX)
 cd "$consumer"
@@ -192,4 +192,9 @@ bun run release:check
 npm run test:real-data
 ```
 
-The release gate includes full production-source coverage at 100% statements, branches, functions and lines, typecheck, ESLint, docstrings, zero duplicate token blocks, native health, identity/privacy, pack allowlist, production audit, changelog, attestation, packed npm/Bun consumers and disposable behavioral reverts. CI callers and identity policy follow the fleet scaffold. Scheduled release requires `vars.PM_RELEASE_APPROVED == 'true'`.
+The release gate includes full production-source coverage at 100% statements, branches, functions and lines, typecheck, ESLint, docstrings, zero duplicate token blocks, native health, identity/privacy, pack allowlist, production audit, changelog, attestation, packed npm/Bun consumers and disposable behavioral reverts. CI callers and identity policy follow the fleet scaffold.
+
+Automated npm publication requires the maintainer to configure a GitHub Actions
+[trusted publisher](https://docs.npmjs.com/trusted-publishers/) for this repository
+with workflow filename `release.yml`. `PM_RELEASE_APPROVED=true` gates daily and manual
+releases on `main`. The trusted publisher authorizes the workflow to publish to npm through OIDC.
