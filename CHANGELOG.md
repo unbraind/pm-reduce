@@ -13,4 +13,3 @@
 - Close delivered items and return idle in-progress items to open (2026-11-14 sweep) ([reduce-pm-reduce-sweep-1114](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/chores/reduce-pm-reduce-sweep-1114.toon))
 - Deliver durable failure-input reduction ([reduce-release](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/epics/reduce-release.toon))
 - Apply Fleet CI v2 quick PR and deep tiers ([reduce-ci-v2](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/tasks/reduce-ci-v2.toon))
-- Adopt the released reusable Daily Release caller ([reduce-pm-reduce-release-caller-rollout](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/tasks/reduce-pm-reduce-release-caller-rollout.toon))
