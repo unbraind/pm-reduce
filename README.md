@@ -25,15 +25,17 @@ bunx --bun --no-install pm package install ./node_modules/pm-reduce
 To evaluate a source commit, start in the checkout. These commands pack it and install it in a fresh consumer directory.
 
 ```sh
-npm ci
-tarball=$(npm pack --silent) && test -n "$tarball" && test -f "$tarball" || exit 1
-archive="$(pwd)/$tarball"
-consumer=$(mktemp -d -t pm-reduce.XXXXXX)
-cd "$consumer"
-npm install "$archive" @unbrained/pm-cli
-npx --no-install pm init my-project --defaults --agent-guidance skip
-npx --no-install pm package install ./node_modules/pm-reduce
-npx --no-install pm reduce --help
+(
+  npm ci
+  tarball=$(npm pack --silent) && test -n "$tarball" && test -f "$tarball" || exit 1
+  archive="$(pwd)/$tarball"
+  consumer=$(mktemp -d -t pm-reduce.XXXXXX)
+  cd "$consumer"
+  npm install "$archive" @unbrained/pm-cli
+  npx --no-install pm init my-project --defaults --agent-guidance skip
+  npx --no-install pm package install ./node_modules/pm-reduce
+  npx --no-install pm reduce --help
+)
 ```
 
 All commands default to TOON. Use `--json` for the same versioned result in JSON.
