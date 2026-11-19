@@ -13,7 +13,7 @@ test('identity privacy checks distinguish absolute homes from public URLs and re
   const root = mkdtempSync(join(tmpdir(), 'reduce-identity-')); t.after(() => rmSync(root, { recursive: true, force: true })); mkdirSync(join(root, '.github'));
   copyFileSync('.github/approved-git-identities.txt', join(root, '.github/approved-git-identities.txt'));
   /** Keep fixture identity separate from real and synthetic parent event ranges. */
-  const isolate = (parent: NodeJS.ProcessEnv) => ({ ...fixtureEnvironment(parent), HOME: root, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1', GIT_AUTHOR_NAME: 'SteveBot', GIT_AUTHOR_EMAIL: '1153461+unbraind@users.noreply.github.com', GIT_COMMITTER_NAME: 'SteveBot', GIT_COMMITTER_EMAIL: '1153461+unbraind@users.noreply.github.com' });
+  const isolate = (parent: NodeJS.ProcessEnv) => ({ ...fixtureEnvironment(parent), HOME: root, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1', GIT_AUTHOR_NAME: 'unbrained', GIT_AUTHOR_EMAIL: '1153461+unbraind@users.noreply.github.com', GIT_COMMITTER_NAME: 'unbrained', GIT_COMMITTER_EMAIL: '1153461+unbraind@users.noreply.github.com' });
   const env = isolate(process.env);
   /** Initialize only the disposable development-gate fixture. */
   const git = (args: string[]) => { const result = spawnSync('git', args, { cwd: root, env, encoding: 'utf8' }); assertProcessStatus(result, 0, 'fixture Git command'); };
