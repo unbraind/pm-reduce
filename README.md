@@ -12,7 +12,7 @@ Requires Node >=22.19 and pm-cli >=2026.11.5. Initialize a native tracker first 
 pm init my-project --defaults
 ```
 
-This local candidate has not been published. After maintainer approval, installation uses:
+Install from the npm registry with the pm host or your package manager.
 
 ```sh
 pm package install pm-reduce
@@ -22,7 +22,21 @@ npx --no-install pm package install ./node_modules/pm-reduce
 bunx --bun --no-install pm package install ./node_modules/pm-reduce
 ```
 
-For the local candidate, install its captured `.tgz` instead of the registry name. All commands default to TOON; `--json` preserves the same versioned semantics.
+To evaluate a source commit, start in the checkout. These commands pack it and install it in a fresh consumer directory.
+
+```sh
+npm ci
+tarball=$(npm pack --silent)
+archive="$(pwd)/$tarball"
+consumer=$(mktemp -d -t pm-reduce.XXXXXX)
+cd "$consumer"
+npm install "$archive" @unbrained/pm-cli
+npx --no-install pm init my-project --defaults --agent-guidance skip
+npx --no-install pm package install ./node_modules/pm-reduce
+npx --no-install pm reduce --help
+```
+
+All commands default to TOON. Use `--json` for the same versioned result in JSON.
 
 ## Agent guidance
 
@@ -178,4 +192,4 @@ bun run release:check
 npm run test:real-data
 ```
 
-The release gate includes full production-source coverage at 100% statements, branches, functions and lines, typecheck, ESLint, docstrings, zero duplicate token blocks, native health, identity/privacy, pack allowlist, production audit, changelog, attestation, packed npm/Bun consumers and disposable behavioral reverts. CI callers and identity policy follow the fleet scaffold. Scheduled release requires `vars.PM_RELEASE_APPROVED == 'true'`; no publication is authorized for this candidate.
+The release gate includes full production-source coverage at 100% statements, branches, functions and lines, typecheck, ESLint, docstrings, zero duplicate token blocks, native health, identity/privacy, pack allowlist, production audit, changelog, attestation, packed npm/Bun consumers and disposable behavioral reverts. CI callers and identity policy follow the fleet scaffold. Scheduled release requires `vars.PM_RELEASE_APPROVED == 'true'`.
