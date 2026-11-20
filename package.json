@@ -1,6 +1,6 @@
 {
   "name": "pm-reduce",
-  "version": "2026.11.6",
+  "version": "2026.11.19",
   "description": "Durable failure-input reduction and qualified minimality receipts",
   "repository": {
     "type": "git",
@@ -75,7 +75,7 @@
     "istanbul-reports": "^3.2.0",
     "jscpd": "5.4.3",
     "pm-changelog": "2026.11.13",
-    "pm-ops": "2026.11.14",
+    "pm-ops": "2026.11.19",
     "typescript": "7.0.2",
     "yaml": "2.9.1"
   },
