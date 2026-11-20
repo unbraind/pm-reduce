@@ -1,0 +1,11 @@
+id: reduce-pm-health-linked-worktree
+title: Strict PM health resolves the wrong Git root in a nested linked worktree
+description: "Round EJ observed that git rev-parse --show-toplevel identifies the package worktree, while PM strict health searches for the merge fence in the enclosing checkout. PM merge install --dry-run correctly targets the package worktree. In a standalone checkout of the same staged tree, installing the merge drivers and running full strict health passes. Reproduce with a synthetic nested linked worktree and evaluate the Git-root lookup before changing package CI."
+type: Issue
+status: open
+priority: 2
+tags[1]: "area:tracker"
+created_at: "2026-11-20T00:19:13.840Z"
+updated_at: "2026-11-20T00:19:13.840Z"
+author: codex-sol
+body: ""

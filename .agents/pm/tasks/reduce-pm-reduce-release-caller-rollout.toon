@@ -6,9 +6,9 @@ status: open
 priority: 2
 tags[2]: "area:release","gh:unbraind/pm-ops#272"
 created_at: "2026-11-14T22:00:11.060Z"
-updated_at: "2026-11-19T18:48:46.859Z"
+updated_at: "2026-11-20T00:33:59.938Z"
 author: codex-ops272-1114
-comments[10]{created_at,author,text}:
+comments[21]{created_at,author,text}:
   "2026-11-14T22:00:16.150Z",codex-ops272-1114,"Orient and start the authorized fleet rollout. Verified released v2026.11.14 at 7687a35d7522482bd8361d60dbc2589e9afbc81c. Preserve this package approval, schedule, preparation and publication hooks through canonical inputs. The merged Jira pilot proves cross-repository npm identity acceptance; this package must still pass its own first-run preflight. Run caller contracts, installed attestation, strict YAML, actionlint and regenerated changelog checks. Shared-runner hold gates every push. No review-thread action, merge, dispatch or publication."
   "2026-11-14T22:14:25.811Z",codex-ops272-1114,"Rolled the Jira pilot contract into this package: released workflow pin 7687a35d7522482bd8361d60dbc2589e9afbc81c (v2026.11.14), exact pm-ops 2026.11.14 validator, explicit include-empty changelog generation/check/notes hooks, and declared yaml for caller tests. Preserved package-owned approval, schedule and preparation inputs. Focused gates passed 11/11, zero failures/skips; linked caller test passed 6/6 in a scratch pm project to avoid tracker run artifacts. Reverting only release.yml to the old copy in a disposable fixture failed 5 of 6 contracts. Actionlint passed 1/1, strict workflow/Dependabot YAML parsing 2/2, installed publish-attestation passed 1/1. Regenerate changelog and check after this final tracker write. Full npm/Bun certification remains with CI; no full local pass is claimed. Cross-repository npm OIDC evidence is Jira run 43639146392, recorded on pm-ops#272; first package activation must still pass its preflight. Every push waits on the shared-runner hold. No merge, dispatch, publication or review-thread action. Leave this item open and release only this author claim."
   "2026-11-15T00:17:00.745Z",codex-ops272-1114,"Round 2 audit found release-copy remnants or package-level regression tests needing restoration. Keep the pinned caller and package hooks; remove obsolete local release orchestration and stale references, restore independent package behavior tests, and retarget mutation proofs to the caller contract. Run touched tests, unchanged coverage gates, typecheck and lint, then regenerate and check the changelog after final tracker writes. No merge, dispatch, publication or review-thread actions."
@@ -19,15 +19,27 @@ comments[10]{created_at,author,text}:
   "2026-11-19T18:43:34.699Z",codex-sol,"The v2026.11.14 and v2026.11.19 workflow-call input schemas match. The new restart job uses contents read and actions write within the existing caller permissions. pm-case#23 updates only the pm-ops dev dependency, so the matching validator and lockfile now use 2026.11.19. A read-only replay verified the archived handoff and three required checks on candidate #12. It returned occupied for the protected squash because npm already held 2026.11.6 before preparation. The explicit retirement replay refused the existing npm version. After merge, dispatch release.yml on current main with retire-unpublished=false."
   "2026-11-19T18:47:38.076Z",codex-sol,"Typecheck and 31 focused contracts passed. Lint, release publish attestation, changelog regeneration and check, and all 91 mutation proofs passed. Tracker health passed with an empty global PM configuration, isolating the package SDK from an optional global extension version skew. Production audit reported zero findings. The same dev-only glob advisory appears on the base and repin lockfiles and is tracked in reduce-dev-glob-audit."
   "2026-11-19T18:48:44.881Z",codex-sol,"npm run test:install passed the packed npm and Bun consumer journeys, Git-free CLI and SDK checks, and Node 22.19.0 and 26.13.0 runtime checks. Leave the rollout open for exact-head CI and the orchestrator post-merge dispatch. PR #20 also changes this rollout tracker item and history."
-files[7]{path,scope}:
+  "2026-11-20T00:15:38.178Z",codex-sol,"Round EJ merges main into PR #20 after the Daily Release repin and v2026.11.19 release. With no configured PM merge driver, preserve the main history prefix and reapply branch-only comments and links with PM. Restore the rollout to open, verify the chain and package gates, regenerate the changelog, and check the shared-runner hold before pushing."
+  "2026-11-20T00:15:59.440Z",codex-sol,"Round DP follows up the archive installation and release documentation review. Verify pack failure and empty output with stubbed commands, and run the package installation and changelog gates directly."
+  "2026-11-20T00:16:02.284Z",codex-sol,"Round DP verified the guarded README archive sequences, typecheck, docstring, packed installation, and changelog regeneration and check with fetched tags. Release documentation requires the npm trusted publisher for release.yml and records the separate repository approval gate. Leave this rollout item open and release its claim."
+  "2026-11-20T00:16:06.089Z",codex-sol,"Round EA scopes the README archive commands to a subshell. The regression tests will exercise pack failure, empty output, and a missing archive, and verify that the calling shell continues."
+  "2026-11-20T00:16:10.170Z",codex-sol,"Round EA: The README archive block runs in a subshell. Pack failure, empty output, and a missing archive each abort the archive commands before installation and return control to interactive Bash. README and documentation tests (24), docstring, typecheck, lint, packed install acceptance, and full changelog regeneration and check passed. The rollout item remains open."
+  "2026-11-20T00:16:16.015Z",codex-sol,"Round ED: follow up on npm direct-publish permission and verify that archive examples stop before installing if consumer setup fails, then check the installed version. Exercise the README commands against mocked failure paths and run the package gates."
+  "2026-11-20T00:16:18.745Z",codex-sol,GitHub already reported an existing conflict against main on the pre-Round ED head of PR 20. The follow-up stays on the existing PR branch. Conflict resolution is outside this round.
+  "2026-11-20T00:16:21.303Z",codex-sol,"Round ED verification: verified the npm Allowed actions prerequisite against the linked npm documentation. The README checks cover pack, directory creation, directory entry, installation failure, and matching and mismatched installed versions. README and documentation tests passed (12 passed, 0 skipped). Build, docstring, typecheck, lint, npm run test:install, and full changelog regeneration and check with fetched tags passed."
+  "2026-11-20T00:16:37.033Z",codex-sol,"Round EJ replay appended all seven branch-only comments, four unique test commands, and the documentation test file link. Main already held the other two branch test commands and both doc links. The replay uses new PM provenance while retaining main event bytes."
+  "2026-11-20T00:19:16.957Z",codex-sol,"Round EJ verified the replay with PM history and a byte comparison against the main history prefix. Full strict PM health passed on the staged tree in a standalone checkout with the merge drivers installed. The linked worktree root lookup is tracked in reduce-pm-health-linked-worktree. The machine-global extension is newer than the pinned package CLI, so the CI-style check uses isolated global PM settings."
+  "2026-11-20T00:33:58.986Z",codex-sol,"Round EJ gates passed after merging main: the two Round ED test groups passed 12 and 4 tests, with zero skips. Typecheck, lint, docstring, identity, and packed npm and Bun installation acceptance passed. The tested archive contains the regenerated changelog. Full changelog regeneration with fetched tags reproduced the main changelog, and changelog:check passed. Full strict PM health passed in a standalone checkout of the staged tree with the PM merge drivers installed and isolated global PM settings. Leave the rollout open and release this claim."
+files[8]{path,scope}:
   .github/workflows/release.yml,project
   package-lock.json,project
   package.json,project
   README.md,project
+  test/documentation.test.ts,project
   test/release-workflow.test.ts,project
   test/revert.acceptance.ts,project
   test/workflow.test.ts,project
-tests[12]{command,scope,provenance{author,created_at,source_kind,source_ref}}:
+tests[18]{command,scope,provenance{author,created_at,source_kind,source_ref}}:
   node --test --test-concurrency=2 test/release-workflow.test.ts,project,codex-ops272-1114,"2026-11-14T22:14:15.508Z",local_mutation,codex/ops272-fleet-1114
   node --test --test-concurrency=2 --test-name-pattern='CI and release provision' test/workflow.test.ts,project,codex-ops272-1114,"2026-11-15T00:58:42.414Z",local_mutation,codex/ops272-fleet-1114
   npm run docstring,project,codex-sol,"2026-11-19T09:04:34.645Z",local_mutation,docs/version-independent-install
@@ -40,7 +52,14 @@ tests[12]{command,scope,provenance{author,created_at,source_kind,source_ref}}:
   "npm run test:revert",project,codex-sol,"2026-11-19T18:44:19.622Z",local_mutation,ci/repin-daily-release-1119
   "git fetch --tags origin && npm run changelog:full && npm run changelog:check",project,codex-sol,"2026-11-19T18:44:19.622Z",local_mutation,ci/repin-daily-release-1119
   "npm run verify:release-publish-attestation",project,codex-sol,"2026-11-19T18:44:19.622Z",local_mutation,ci/repin-daily-release-1119
-docs[2]{path,scope}:
+  node --test test/documentation.test.ts,project,codex-sol,"2026-11-20T00:16:23.247Z",local_mutation,docs/readme-release-followups-1119
+  node --test --test-concurrency=2 test/documentation.test.ts test/contracts.test.ts test/corpus-privacy.test.ts,project,codex-sol,"2026-11-20T00:16:23.247Z",local_mutation,docs/readme-release-followups-1119
+  npm run build && node --test --test-concurrency=2 test/documentation.test.ts test/release-workflow.test.ts,project,codex-sol,"2026-11-20T00:16:23.247Z",local_mutation,docs/readme-release-followups-1119
+  npm run build && node --test --test-concurrency=2 --test-name-pattern='documentation|documented|docstring|README|packages runtime' test/workflow.test.ts test/corpus-privacy.test.ts test/contracts.test.ts,project,codex-sol,"2026-11-20T00:16:23.247Z",local_mutation,docs/readme-release-followups-1119
+  "npm run changelog:check",project,codex-sol,"2026-11-20T00:16:33.722Z",local_mutation,docs/readme-release-followups-1119
+  ./node_modules/.bin/pm health --full --strict-exit,project,codex-sol,"2026-11-20T00:16:33.722Z",local_mutation,docs/readme-release-followups-1119
+docs[3]{path,scope}:
+  CHANGELOG.md,project
   docs/release-caller-rollout.md,project
   README.md,project
 body: ""
