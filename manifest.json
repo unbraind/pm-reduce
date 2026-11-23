@@ -1,6 +1,6 @@
 {
   "name": "pm-reduce",
-  "version": "2026.11.20",
+  "version": "2026.11.23",
   "description": "Durable failure-input reduction and qualified minimality receipts",
   "author": "@unbraind",
   "entry": "./dist/index.js",
