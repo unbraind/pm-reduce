@@ -1,0 +1,28 @@
+id: reduce-sdk-1122
+title: Adopt pm-cli 2026.11.24 host-aligned SDK behaviour
+description: "Adopt the current pm-cli host dispatch contract in this package. Companion item: pm-cli-website-spus. The open producer-continuation gap stays on reduce-sdk-transport; this chore does not invent a native cursor binding."
+type: Chore
+status: in_progress
+priority: 2
+tags: []
+created_at: "2026-11-24T02:17:23.717Z"
+updated_at: "2026-11-24T07:01:33.408Z"
+author: codex-agent
+acceptance_criteria: "Dev toolchain pins match npm latest for @unbrained/pm-cli, pm-changelog and pm-ops.; Native harness dispatch expects read_output_cursor_invalid for a package cursor on the native transport, and package --cursor still resumes.; A tiny global outputBudget is host output_budget_exceeded, while package --budget still returns output_budget.; Direct command invocation still refuses the old native-transport paths with invalid_input or output_budget.; Every changelog entry point passes --dependency-updates, and a test fails if one drops it.; Typecheck, lint, tests, coverage, identity and changelog:check pass at unchanged thresholds."
+comments[4]{created_at,author,text}:
+  "2026-11-24T05:41:41.472Z",codex-agent,"Resumed the inherited dependency commit and contract changes. Refresh the pins against npm latest, verify host and direct-call behavior, then run the npm and Bun gates."
+  "2026-11-24T05:46:14.520Z",codex-agent,"Reproduced pm-cli#1775 on the exact 2026.11.24 pin with the public SDK. In JavaScript, import scanMutationSecrets from the SDK and call it on JSON.stringify({title: [\"api\", \"key\"].join(\"_\") + \": $\" + \"{API_KEY}\", updated: \"2026-11-23T00:00:00.000Z\"}). It reports rule credential_key_assignment at path $ for a reference-only title; expected an empty array. This is an upstream scanner reproduction; package tests and fixture guarantees are preserved."
+  "2026-11-24T05:54:43.641Z",codex-agent,"Baseline full-depth npm test ran 98 tests. The only failure was native harness contracts dispatch all six commands and scoped renderers through the same SDK, which expected a package cursor to resume over native transport. The host now rejects it with read_output_cursor_invalid. The adapted test pins host cursor, session, scalar flag and budget refusals while retaining the direct package guards, and package cursor resume, malformed cursor and tiny budget coverage."
+  "2026-11-24T07:01:29.906Z",codex-agent,"Full-depth npm run release:check and bun run release:check both passed 98 of 98 tests and all four coverage dimensions at 100 percent across 9 emitted files. The packed test passed 80 npm and 80 native Bun commands without Git. Each revert gate detected 91 defects and passed 90 restored tests. The linked test run passed 21 tests. Restoring the previous harness contract failed with read_output_cursor_invalid. Removing each dependency-updates flag independently failed the regression. Online workflow attestation, production audit, identity, tracker health and changelog checks passed. The dev-only glob advisory remains tracked by reduce-dev-glob-audit. Branch CI runs are listed in the repository Actions view filtered to deps/adopt-pm-cli-host-alignment-1122."
+files[5]{path,scope}:
+  CHANGELOG.md,project
+  package-lock.json,project
+  package.json,project
+  test/contracts.test.ts,project
+  test/release-workflow.test.ts,project
+tests[1]{command,scope,timeout_seconds,provenance{author,created_at,source_kind,source_ref}}:
+  npm run build && node --test --test-concurrency=2 test/contracts.test.ts test/release-workflow.test.ts,project,300,codex-agent,"2026-11-24T05:47:27.811Z",local_mutation,deps/adopt-pm-cli-host-alignment-1122
+docs[2]{path,scope,note}:
+  CHANGELOG.md,project,Regenerated release history retaining published dependency bullets
+  README.md,project,Package cursor and budget stay off the native producer transport
+body: ""
