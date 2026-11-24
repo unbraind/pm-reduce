@@ -1,10 +1,14 @@
 # Changelog
 
-## Unreleased
+## 2026.11.24 - 2026-11-24
 
 ### Other
 
 - Adopt pm-cli 2026.11.24 host-aligned SDK behaviour ([reduce-sdk-1122](https://github.com/unbraind/pm-reduce/blob/main/.agents/pm/chores/reduce-sdk-1122.toon))
+
+### Dependencies
+
+- Bump @babel/parser
 
 ## 2026.11.23 - 2026-11-23
 
