@@ -1,7 +1,7 @@
 import { defineExtension } from '@unbrained/pm-cli/sdk/authoring';
 import { register } from './src/commands.ts';
 /** Native reduction extension; activation contributes schema and commands only. */
-const extension = defineExtension({ name: 'pm-reduce', version: "2026.11.23", description: 'Durable failure-input reduction', activate: register });
+const extension = defineExtension({ name: 'pm-reduce', version: "2026.11.24", description: 'Durable failure-input reduction', activate: register });
 /** Activate through the authorized native extension host. */
 export default extension;
 /** CLI and in-process integrations share these typed operations. */
