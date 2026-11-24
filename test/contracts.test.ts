@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createExtensionTestHarness, decodeToon } from '@unbrained/pm-cli/sdk/testing';
-import { fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError, writeSettingsSection, readSettingsSection } from '@unbrained/pm-cli/sdk';
+import { createExtensionCommandSdk, fitOutputEnvelope, OutputEnvelopeFitError, createPmCliExpectedError, writeSettingsSection, readSettingsSection } from '@unbrained/pm-cli/sdk';
 import { readFileSync } from 'node:fs';
 import { PmClient } from '@unbrained/pm-cli/sdk/core';
 import extension, { createReduction, readReduction, nextReductionTrial, reductionCertificate, requestReductionTrial, recordReductionOutcome, reductionPacket, envelope, fitEnvelope, ReductionRefusal, digest, exitCode } from '../dist/index.js';
@@ -55,7 +55,7 @@ test('CLI repeated string references scan once, refuse inertly and accept valid 
 });
 
 test('native harness contracts dispatch all six commands and scoped renderers through the same SDK', async t => {
-  const { pmRoot } = await fixture(t); const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
+  const { pmRoot, native } = await fixture(t); const ext = await createExtensionTestHarness(extension, { capabilities: ['commands', 'schema', 'renderers'] }); t.after(() => ext.deactivate());
   for (const name of ['create', 'next', 'request', 'record', 'certificate', 'packet']) ext.assertCommandContract({ command: `reduce ${name}` }); ext.assertItemField({ name: 'reduce_state', type: 'object' }); ext.assertItemType({ name: 'Reduction', folder: 'reductions' });
   const run = async (command: string, args: string[] = ['corpus-cli'], options: Record<string, unknown> = {}, global: Record<string, unknown> = {}) => { const value = await ext.runCommand({ command: `reduce ${command}`, args, options, global, pmRoot }); if (value.cause) throw value.cause; return value.result as ReductionResult; };
   const def = definition(1); const birth = await run('create', [], { id: 'corpus-cli', op: 'birth', input: JSON.stringify({ title: 'CLI reduction', definition: def }) }); assert.equal(birth.ok, true);
@@ -69,14 +69,48 @@ test('native harness contracts dispatch all six commands and scoped renderers th
   assert.equal((await run('certificate')).ok, true);
   const page = await run('packet', undefined, { limit: '1' }); assert.ok(page.next_cursor);
   assert.equal((await run('packet', undefined, { limit: '1', cursor: page.next_cursor })).ok, true);
-  assert.equal((await run('packet', undefined, { limit: '1' }, { outputCursor: page.next_cursor })).ok, true);
+  assert.equal((await run('packet', undefined, { limit: '1', cursor: 'bad' })).refusal?.code, 'stale_cursor');
+  const hostCursorRefusal = { code: 'read_output_cursor_invalid', exitCode: 2 };
+  await assert.rejects(run('packet', undefined, { limit: '1' }, { outputCursor: page.next_cursor }), hostCursorRefusal);
+  await assert.rejects(run('packet', undefined, { cursor: page.next_cursor }, { outputCursor: page.next_cursor }), hostCursorRefusal);
+  await assert.rejects(run('next', undefined, {}, { outputCursor: 'x' }), hostCursorRefusal);
+  await assert.rejects(run('packet', undefined, {}, { outputSession: 'x' }), { code: 'invalid_read_output_session', exitCode: 2 });
+  await assert.rejects(run('record', undefined, { op: 'bad', revision: [], input: '{}' }), { code: 'extension_flag_value_invalid', exitCode: 2 });
+  await assert.rejects(run('packet', undefined, {}, { outputBudget: '1' }), (error: unknown) => {
+    assert.ok(hasCode('output_budget_exceeded')(error));
+    assert.ok(error instanceof Error && 'exitCode' in error && 'context' in error);
+    assert.equal(error.exitCode, 2);
+    assert.ok(error.context && typeof error.context === 'object' && 'required' in error.context);
+    assert.match(String(error.context.required), /outputBudget/u);
+    return true;
+  });
+  const malformedBudgets = [[], 0, '99999999999999999999', '1.5'] as const;
+  for (const outputBudget of malformedBudgets) {
+    await assert.rejects(run('packet', undefined, {}, { outputBudget }), { message: '--output-budget must be a positive integer or unbounded.', exitCode: 2 });
+  }
+  // Keep the package's own refusal coverage for callers that bypass native dispatch.
+  const sdk = createExtensionCommandSdk(pmRoot, native);
+  for (const [command, options, global, expected] of [
+    ['packet', { limit: '1', cursor: page.next_cursor }, { outputCursor: page.next_cursor }, 'invalid_input'],
+    ['next', {}, { outputCursor: 'x' }, 'invalid_input'],
+    ['packet', {}, { outputSession: 'x' }, 'invalid_input'],
+    ['packet', {}, { outputBudget: '1' }, 'output_budget'],
+    ['record', { op: 'bad', revision: [], input: '{}' }, {}, 'invalid_input'],
+    ...malformedBudgets.map(outputBudget => ['packet', {}, { outputBudget }, 'invalid_input'] as const),
+  ] as const) {
+    // Untyped direct callers can still supply malformed values.
+    const direct = await runCommand(command, { command: `reduce ${command}`, args: ['corpus-cli'], options, global: global as CommandHandlerContext['global'], pm_root: pmRoot, sdk }) as ReductionResult;
+    assert.equal(direct.refusal?.code, expected);
+    assert.equal(direct.exit_code, 2);
+  }
   for (const format of ['json', 'toon'] as const) { ext.assertRendererOverride({ format }); const rendered = await ext.runRendererOverride({ format, command: 'reduce packet', result: page }); assert.deepEqual(format === 'json' ? JSON.parse(String(rendered.rendered)) : decodeToon(String(rendered.rendered)), page); }
   for (const [command, options, global] of [
-    ['packet', { cursor: page.next_cursor }, { outputCursor: page.next_cursor }], ['packet', { limit: '1' }, { outputLimit: '1' }], ['packet', { budget: '1600' }, { outputBudget: '1600' }],
-    ['packet', { limit: '1.5' }, {}], ['packet', { limit: '101' }, {}], ['packet', {}, { outputBudget: [] }], ['packet', {}, { outputBudget: 0 }], ['packet', {}, { outputBudget: '99999999999999999999' }], ['packet', {}, { outputBudget: '1.5' }],
-    ['packet', {}, { outputInclude: 'id' }], ['packet', {}, { outputSession: 'x' }], ['packet', {}, { outputRowContract: 'x' }], ['next', {}, { outputCursor: 'x' }], ['next', {}, { outputLimit: '1' }],
-    ['create', { id: 'corpus-bad', op: 'bad', input: '{"id":"overridden"}' }, {}], ['record', { op: 'bad', revision: [], input: '{}' }, {}], ['request', { op: 'bad', proposal: '' }, {}],
+    ['packet', { limit: '1' }, { outputLimit: '1' }], ['packet', { budget: '1600' }, { outputBudget: '1600' }],
+    ['packet', { limit: '1.5' }, {}], ['packet', { limit: '101' }, {}],
+    ['packet', {}, { outputInclude: 'id' }], ['packet', {}, { outputRowContract: 'x' }], ['next', {}, { outputLimit: '1' }],
+    ['create', { id: 'corpus-bad', op: 'bad', input: '{"id":"overridden"}' }, {}], ['request', { op: 'bad', proposal: '' }, {}],
   ] as const) { const result = await run(command, undefined, options, global); assert.equal(result.ok, false); assert.equal(result.refusal?.code, 'invalid_input'); }
+  assert.equal((await run('packet', undefined, { budget: '1' })).refusal?.code, 'output_budget');
   assert.equal((await run('packet', undefined, {}, { outputBudget: 'unbounded', outputLimit: '1' })).ok, true); assert.equal((await run('packet', undefined, { budget: '1600' })).ok, true);
   assert.equal((await runCommand('packet', { command: 'reduce packet', args: [], options: {}, global: {}, pm_root: pmRoot } as CommandHandlerContext) as ReductionResult).refusal?.code, 'backend_unsupported');
 });
