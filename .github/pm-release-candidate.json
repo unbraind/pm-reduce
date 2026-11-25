@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "repository": "unbraind/pm-reduce",
-  "baseSha": "7c1f13eb6f551d45495a01ef85e22d1e149f5370",
+  "baseSha": "1620259f27e54022cda15a72e998fb4275712741",
   "version": "2026.11.24",
-  "runId": 45435612095,
+  "runId": 45650204716,
   "runAttempt": 1,
   "configDigest": "ef9214e4575ce32b3c75f04daf02c2e9da87b443a8649f3f8e3fb2c1e4aec581"
 }
