@@ -8,6 +8,7 @@
 
 ### Dependencies
 
+- Bump the codeql-action group with 2 updates
 - Bump @babel/parser ([#29](https://github.com/unbraind/pm-reduce/pull/29))
 
 ## 2026.11.23 - 2026-11-23
