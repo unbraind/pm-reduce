@@ -8,7 +8,7 @@
 
 ### Dependencies
 
-- Bump @babel/parser
+- Bump @babel/parser ([#29](https://github.com/unbraind/pm-reduce/pull/29))
 
 ## 2026.11.23 - 2026-11-23
 
